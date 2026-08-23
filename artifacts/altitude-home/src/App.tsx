@@ -235,6 +235,10 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 }
 
 function StorePage({ onHome, onAdd }: { onHome: () => void; onAdd: (name: string) => void }) {
+  const [query, setQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Todos');
+  const [selectedBrand, setSelectedBrand] = useState('Todas las marcas');
+  const [selectedFilters, setSelectedFilters] = useState({ Categoría: 'Categoría', Marca: 'Marca', Talla: 'Talla', Precio: 'Precio' });
   const categories = [
     ['Todos', products[0].image],
     ['Poleras', products[1].image],
@@ -244,6 +248,12 @@ function StorePage({ onHome, onAdd }: { onHome: () => void; onAdd: (name: string
     ['Joggers', products[3].image],
   ];
   const brands = ['Todas las marcas', 'YoungLA', 'Breach Divinity', 'Yugi Oh!', 'Gold'];
+  const filterOptions = {
+    Categoría: ['Categoría', 'Poleras', 'Compresión', 'Hoodies'],
+    Marca: ['Marca', 'YoungLA', 'Breach Divinity', 'Yugi Oh!'],
+    Talla: ['Talla', 'S', 'M', 'L', 'XL'],
+    Precio: ['Precio', 'Menor precio', 'Mayor precio'],
+  };
   const filters = [
     ['Categoría', House],
     ['Marca', Tag],
@@ -258,11 +268,11 @@ function StorePage({ onHome, onAdd }: { onHome: () => void; onAdd: (name: string
         <div className="flex items-center gap-5"><button aria-label="Abrir carrito" onClick={() => window.alert('Tu carrito está listo para despegar.')} className="relative"><ShoppingCart size={23} strokeWidth={1.5} /><span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#555] px-1 text-[8px]">3</span></button><button onClick={onHome} aria-label="Abrir menú"><Menu size={25} strokeWidth={1.5} /></button></div>
       </div>
       <div className="px-4 pt-4">
-        <label className="flex h-10 items-center gap-3 rounded-full bg-[#f7f6f4] px-4 text-[#77736e]"><Search size={17} strokeWidth={2} /><span className="sr-only">Buscar productos</span><input aria-label="Buscar productos" placeholder="Buscar productos..." className="w-full bg-transparent text-[11px] outline-none placeholder:text-[#8d8983]" /></label>
-        <div className="scrollbar-hide mt-4 flex gap-2 overflow-x-auto pb-1">{filters.map(([label, Icon]) => <button key={label} className="flex h-8 shrink-0 items-center gap-2 rounded-md border border-[#d2ccc5] bg-white px-3 text-[9px] uppercase"><Icon size={14} strokeWidth={1.4} />{label}<ChevronDown size={12} /></button>)}</div>
-        <div className="scrollbar-hide mt-4 flex gap-3 overflow-x-auto pb-2">{categories.map(([label, image]) => <button key={label} onClick={() => onAdd(label)} className="flex w-[61px] shrink-0 flex-col items-center gap-2"><span className="flex h-[61px] w-[61px] items-center justify-center overflow-hidden rounded-full border border-[#8d8881] bg-white p-1"><img src={image} alt="" className="h-full w-full rounded-full object-cover grayscale" /></span><span className="whitespace-nowrap text-[8px] uppercase tracking-[.04em] text-[#5d5955]">{label}</span></button>)}</div>
-        <div className="scrollbar-hide mt-3 flex gap-2 overflow-x-auto pb-1">{brands.map((brand, index) => <button key={brand} className={`flex h-9 shrink-0 items-center justify-center rounded-full border px-4 text-[8px] uppercase tracking-[.05em] ${index === 0 ? 'border-[#252525] text-[#252525]' : 'border-[#d2ccc5] bg-white text-[#5d5955]'}`}>{brand}</button>)}</div>
-        <article className="relative mt-4 h-[219px] overflow-hidden rounded-lg border border-[#d2ccc5]"><img src={products[3].image} alt="Nueva colección de ropa urbana" className="absolute inset-0 h-full w-full object-cover object-right opacity-65" /><div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent" /><div className="relative z-10 flex h-full max-w-[230px] flex-col justify-center px-5"><p className="text-[8px] uppercase tracking-[.22em] text-[#77716c]">Nueva colección · ropa urbana</p><h1 className="mt-3 text-[30px] font-bold uppercase leading-[.9] tracking-[-.06em]">Nueva<br />colección</h1><p className="mt-3 text-[10px] leading-[1.4] text-[#5d5955]">Nuevos diseños urbanos para llevar tu estilo más allá del entrenamiento.</p><button onClick={() => onAdd('Nueva colección')} className="mt-4 flex h-8 w-fit items-center gap-3 rounded-full bg-white px-4 text-[8px] font-bold uppercase tracking-[.1em] text-black">Ver colección <ArrowRight size={13} /></button></div></article>
+        <label className="flex h-10 items-center gap-3 rounded-full bg-white px-4 text-[#77736e] shadow-sm"><Search size={17} strokeWidth={1.7} /><span className="sr-only">Buscar productos</span><input value={query} onChange={(event) => setQuery(event.target.value)} aria-label="Buscar productos" placeholder="Buscar productos..." className="w-full bg-transparent text-[11px] outline-none placeholder:text-[#8d8983]" /></label>
+        <div className="scrollbar-hide mt-4 flex gap-2 overflow-x-auto pb-1">{filters.map(([label, Icon]) => <label key={label} className="flex h-8 shrink-0 items-center gap-2 rounded-md border border-[#d2ccc5] bg-white px-3 text-[9px] uppercase"><Icon size={14} strokeWidth={1.4} /><select aria-label={`Filtrar por ${label}`} value={selectedFilters[label as keyof typeof selectedFilters]} onChange={(event) => setSelectedFilters((current) => ({ ...current, [label]: event.target.value }))} className="max-w-[76px] appearance-none bg-transparent outline-none">{filterOptions[label as keyof typeof filterOptions].map((option) => <option key={option}>{option}</option>)}</select><ChevronDown size={12} /></label>)}</div>
+        <div className="scrollbar-hide mt-4 flex gap-3 overflow-x-auto pb-2">{categories.map(([label, image]) => <button key={label} onClick={() => { setSelectedCategory(label); onAdd(label); }} className={`flex w-[61px] shrink-0 flex-col items-center gap-2 ${selectedCategory === label ? 'text-[#ca2f2b]' : 'text-[#5d5955]'}`}><span className={`flex h-[61px] w-[61px] items-center justify-center overflow-hidden rounded-full bg-white p-1 ${selectedCategory === label ? 'border-2 border-[#ca2f2b]' : 'border border-[#8d8881]'}`}><img src={image} alt="" className="h-full w-full rounded-full object-cover grayscale" /></span><span className="whitespace-nowrap text-[8px] uppercase tracking-[.04em]">{label}</span></button>)}</div>
+        <div className="scrollbar-hide mt-3 flex gap-2 overflow-x-auto pb-1">{brands.map((brand) => <button key={brand} onClick={() => setSelectedBrand(brand)} className={`flex h-9 shrink-0 items-center justify-center rounded-full border px-4 text-[8px] uppercase tracking-[.05em] ${selectedBrand === brand ? 'border-[#252525] bg-[#252525] text-white' : 'border-[#d2ccc5] bg-white text-[#5d5955]'}`}>{brand}</button>)}</div>
+        <article className="relative mt-4 h-[219px] overflow-hidden rounded-lg border border-[#d2ccc5]"><img src={products[3].image} alt="Nueva colección de ropa urbana" className="absolute inset-0 h-full w-full object-cover object-right opacity-65" /><div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent" /><div className="relative z-10 flex h-full max-w-[230px] flex-col justify-center px-5"><p className="section-label text-[#77716c]">Nueva colección · ropa urbana</p><h1 className="editorial-title mt-3 text-[30px] font-bold uppercase leading-[.9]">Nueva<br />colección</h1><p className="mt-3 text-[10px] leading-[1.4] text-[#5d5955]">{query ? `Resultados para “${query}”` : 'Nuevos diseños urbanos para llevar tu estilo más allá del entrenamiento.'}</p><button onClick={() => onAdd(`Nueva colección${selectedBrand !== 'Todas las marcas' ? ` ${selectedBrand}` : ''}`)} className="mt-4 flex h-8 w-fit items-center gap-3 rounded-full bg-white px-4 text-[8px] font-bold uppercase tracking-[.1em] text-black shadow-sm">Ver colección <ArrowRight size={13} /></button></div></article>
       </div>
     </section>
   );
