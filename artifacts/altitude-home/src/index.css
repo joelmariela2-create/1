@@ -105,11 +105,13 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .bottom-nav button:first-child { color: hsl(4 79% 58%); }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.campaign-hero { height: calc(100vw * 1.098 + 93px); }
 @media (min-width: 768px) {
   .page-shell { max-width: 1280px; margin: 0 auto; background: hsl(var(--card)); box-shadow: 0 0 0 1px hsl(var(--border)); }
   .desktop-header { display: flex !important; }
   .mobile-header { display: none !important; }
   .campaign-hero { min-height: 680px; }
+  .campaign-hero { height: auto; }
   .bottom-nav { display: none !important; }
   .desktop-nav { display: flex !important; }
 }
