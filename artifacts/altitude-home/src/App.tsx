@@ -74,8 +74,11 @@ function scrollToSection(id: string) {
 function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }) {
   return (
     <>
-      <div className="flex h-7 items-center justify-center bg-[#eeece9] px-4 text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]">
-        Envíos a toda Bolivia <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales
+      <div className="announcement-strip flex h-7 items-center overflow-hidden bg-[#eeece9] text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
+        <div className="announcement-track flex min-w-max items-center">
+          <span className="px-4">Envíos a toda Bolivia <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
+          <span className="px-4" aria-hidden="true">Envíos a toda Bolivia <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
+        </div>
       </div>
       <header className="relative z-20 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 md:h-[76px] md:px-8">
         <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group flex h-9 w-9 items-center justify-center">
@@ -133,7 +136,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <div key={`${campaign.id}-content`} className="campaign-content relative z-10 flex h-full flex-col items-start justify-center px-6 py-5 md:justify-end md:pb-12">
         <p className="section-label mb-1 text-[#262626]">{campaign.label}</p>
         <h2 className="editorial-title mb-3 text-[25px] font-bold uppercase leading-[.96] text-[#151515] md:text-[30px]">{campaign.title}</h2>
-        <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="group flex h-9 items-center gap-3 bg-white px-4 text-[9px] font-bold uppercase tracking-[.08em] shadow-sm transition-colors hover:bg-[#ca2f2b] hover:text-white">
+        <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-14 min-w-[240px] items-center justify-between gap-5 border border-white/80 bg-white/90 px-6 text-[11px] font-bold uppercase tracking-[.16em] shadow-sm transition-colors hover:bg-[#ca2f2b] hover:text-white">
           Ver colección <ArrowRight size={14} strokeWidth={1.8} className="text-[#ca2f2b] transition-transform group-hover:translate-x-1 group-hover:text-white" />
         </button>
       </div>

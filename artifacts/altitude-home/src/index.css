@@ -83,6 +83,8 @@
 html { scroll-behavior: smooth; }
 body { min-width: 320px; overflow-x: hidden; }
 button, a { -webkit-tap-highlight-color: transparent; }
+.announcement-track { animation: announcementMarquee 22s linear infinite; }
+@keyframes announcementMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .altitude-wordmark { font-family: var(--font-serif); font-style: italic; letter-spacing: -.09em; font-weight: 700; }
 .section-label { font-family: var(--font-serif); letter-spacing: .14em; text-transform: uppercase; font-size: 10px; font-weight: 600; }
 .editorial-title { font-family: var(--font-serif); letter-spacing: -.055em; }
