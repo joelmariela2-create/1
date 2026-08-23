@@ -109,7 +109,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .page-shell { max-width: 1280px; margin: 0 auto; background: hsl(var(--card)); box-shadow: 0 0 0 1px hsl(var(--border)); }
   .desktop-header { display: flex !important; }
   .mobile-header { display: none !important; }
-  .campaign-hero { min-height: 750px; }
+  .campaign-hero { min-height: 680px; }
   .bottom-nav { display: none !important; }
   .desktop-nav { display: flex !important; }
 }

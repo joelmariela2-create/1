@@ -135,7 +135,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   ];
 
   return (
-    <section id="campaign-hero" className="campaign-hero relative flex min-h-[calc(100dvh-89px)] flex-col overflow-hidden bg-white text-[#151515]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <section id="campaign-hero" className="campaign-hero relative flex min-h-[calc(100dvh-170px)] flex-col overflow-hidden bg-white text-[#151515]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <img
         className="campaign-image absolute inset-0 h-full w-full object-cover"
         src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1800"
@@ -145,16 +145,16 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <video className="hero-video absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline poster={campaign.image} aria-label="Video de entrenamiento ALTITUDE">
         <source src="https://cdn.coverr.co/videos/coverr-man-lifting-weights-1574/1080p.mp4" type="video/mp4" />
       </video>
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,.8)_0%,rgba(255,255,255,.28)_32%,rgba(255,255,255,.3)_62%,rgba(255,255,255,.9)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
-        <div className="flex items-start justify-between text-[9px] font-semibold uppercase tracking-[.2em] text-[#252525]">
+        <div className="flex items-start justify-between text-[9px] font-semibold uppercase tracking-[.2em] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,.75)]">
           <p className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#ef473f]" /> Envíos a todo el país</p>
           <p className="hidden md:block">ALTITUDE / 2025</p>
         </div>
         <div key={`${campaign.id}-content`} className="campaign-content max-w-[520px]">
-          <p className="section-label mb-2 text-[#252525]">Nuevo drop · {campaign.label}</p>
-          <h2 className="editorial-title max-w-[430px] text-[clamp(2.6rem,12vw,5.7rem)] font-bold uppercase leading-[.84] text-[#151515]">20% de<br />descuento</h2>
-          <p className="mt-4 text-[10px] font-semibold uppercase tracking-[.22em] text-[#252525]">Gymshark · YoungLA · Breach Divinity</p>
+          <p className="section-label mb-2 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,.75)]">Nuevo drop · {campaign.label}</p>
+          <h2 className="editorial-title max-w-[430px] text-[clamp(2.6rem,12vw,5.7rem)] font-bold uppercase leading-[.84] text-white drop-shadow-[0_2px_4px_rgba(0,0,0,.8)]">20% de<br />descuento</h2>
+          <p className="mt-4 text-[10px] font-semibold uppercase tracking-[.22em] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,.75)]">Gymshark · YoungLA · Breach Divinity</p>
           <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group mt-7 flex h-[62px] w-full max-w-[420px] items-center justify-between border border-white bg-white/95 px-5 text-[11px] font-bold uppercase tracking-[.19em] shadow-sm backdrop-blur-sm transition-colors hover:bg-[#ec413b] hover:text-white">
             Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
           </button>
