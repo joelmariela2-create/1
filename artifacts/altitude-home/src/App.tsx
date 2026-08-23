@@ -135,7 +135,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   ];
 
   return (
-    <section id="campaign-hero" className="campaign-hero relative flex min-h-[calc(100dvh-89px)] flex-col overflow-hidden bg-[#171817] text-[#f3efe7]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <section id="campaign-hero" className="campaign-hero relative flex min-h-[calc(100dvh-89px)] flex-col overflow-hidden bg-white text-[#151515]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <img
         className="campaign-image absolute inset-0 h-full w-full object-cover"
         src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1800"
@@ -145,39 +145,39 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <video className="hero-video absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline poster={campaign.image} aria-label="Video de entrenamiento ALTITUDE">
         <source src="https://cdn.coverr.co/videos/coverr-man-lifting-weights-1574/1080p.mp4" type="video/mp4" />
       </video>
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,11,10,.58)_0%,rgba(10,11,10,.18)_34%,rgba(10,11,10,.55)_67%,rgba(10,11,10,.96)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,.8)_0%,rgba(255,255,255,.28)_32%,rgba(255,255,255,.3)_62%,rgba(255,255,255,.9)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
-        <div className="flex items-start justify-between text-[9px] font-semibold uppercase tracking-[.2em] text-[#e9e2d8]">
+        <div className="flex items-start justify-between text-[9px] font-semibold uppercase tracking-[.2em] text-[#252525]">
           <p className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#ef473f]" /> Envíos a todo el país</p>
           <p className="hidden md:block">ALTITUDE / 2025</p>
         </div>
         <div key={`${campaign.id}-content`} className="campaign-content max-w-[520px]">
-          <p className="section-label mb-2 text-[#ded6cb]">Nuevo drop · {campaign.label}</p>
-          <h2 className="editorial-title max-w-[430px] text-[clamp(2.6rem,12vw,5.7rem)] font-bold uppercase leading-[.84] text-[#f4f0e9]">20% de<br />descuento</h2>
-          <p className="mt-4 text-[10px] font-semibold uppercase tracking-[.22em] text-[#ddd5ca]">Gymshark · YoungLA · Breach Divinity</p>
-          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group mt-7 flex h-[62px] w-full max-w-[420px] items-center justify-between border border-[#f0ebe2]/75 bg-[#191a19]/50 px-5 text-[11px] font-bold uppercase tracking-[.19em] backdrop-blur-sm transition-colors hover:bg-[#ec413b]">
+          <p className="section-label mb-2 text-[#252525]">Nuevo drop · {campaign.label}</p>
+          <h2 className="editorial-title max-w-[430px] text-[clamp(2.6rem,12vw,5.7rem)] font-bold uppercase leading-[.84] text-[#151515]">20% de<br />descuento</h2>
+          <p className="mt-4 text-[10px] font-semibold uppercase tracking-[.22em] text-[#252525]">Gymshark · YoungLA · Breach Divinity</p>
+          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group mt-7 flex h-[62px] w-full max-w-[420px] items-center justify-between border border-white bg-white/95 px-5 text-[11px] font-bold uppercase tracking-[.19em] shadow-sm backdrop-blur-sm transition-colors hover:bg-[#ec413b] hover:text-white">
             Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
           </button>
-          <button data-testid="button-enter-vip" onClick={() => onShop(campaign)} className="hero-glass mt-3 flex w-full max-w-[420px] items-center justify-between px-5 py-4 text-left transition-colors hover:bg-[#191a19]/85">
+          <button data-testid="button-enter-vip" onClick={() => onShop(campaign)} className="hero-glass mt-3 flex w-full max-w-[420px] items-center justify-between px-5 py-4 text-left transition-colors hover:bg-white/95">
             <span className="flex items-center gap-4">
               <Crown size={25} strokeWidth={1.45} className="text-[#f2dc31]" />
-              <span><strong className="block text-[11px] font-bold uppercase tracking-[.13em]">Acceso anticipado</strong><span className="mt-1 block text-[10px] font-semibold uppercase tracking-[.1em] text-[#e2d9cc]">20% descuento · Batman Compression</span></span>
+              <span><strong className="block text-[11px] font-bold uppercase tracking-[.13em]">Acceso anticipado</strong><span className="mt-1 block text-[10px] font-semibold uppercase tracking-[.1em] text-[#55504a]">20% descuento · Batman Compression</span></span>
             </span>
             <ArrowRight size={19} strokeWidth={1.6} />
           </button>
         </div>
       </div>
-      <div id="vip-access" className="relative z-10 grid grid-cols-4 border-t border-[#f2eee7]/35 bg-[#111211]/80 backdrop-blur-md">
+      <div id="vip-access" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
         {benefits.map(({ label, detail, icon: Icon }, index) => (
-          <div data-testid={`benefit-${index}`} key={label} className={`hero-benefit flex min-h-[93px] flex-col items-center justify-center px-1 text-center ${index < benefits.length - 1 ? 'border-r border-[#f2eee7]/25' : ''}`}>
-            <Icon size={22} strokeWidth={1.45} className="mb-2 text-[#f2eee7]" />
+          <div data-testid={`benefit-${index}`} key={label} className={`hero-benefit flex min-h-[93px] flex-col items-center justify-center px-1 text-center ${index < benefits.length - 1 ? 'border-r border-[#dedad6]' : ''}`}>
+            <Icon size={22} strokeWidth={1.45} className="mb-2 text-[#252525]" />
             <strong className="max-w-[78px] text-[8px] font-bold uppercase leading-[1.18] tracking-[.03em] md:max-w-none md:text-[10px]">{label}</strong>
-            <span className="mt-1 hidden text-[8px] text-[#c4bbb0] md:block">{detail}</span>
+            <span className="mt-1 hidden text-[8px] text-[#77716c] md:block">{detail}</span>
           </div>
         ))}
       </div>
       <div className="absolute bottom-[112px] left-5 z-10 flex items-center gap-2 md:bottom-[120px]" aria-label="Seleccionar campaña">
-        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-1.5 w-8 border border-[#f2eee7]/80 transition-all duration-300 ${index === activeIndex ? 'bg-[#ec413b]' : 'bg-transparent'}`} data-testid={`dot-${item.id}`} />)}
+        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-1.5 w-8 border border-[#252525]/80 transition-all duration-300 ${index === activeIndex ? 'bg-[#ec413b]' : 'bg-transparent'}`} data-testid={`dot-${item.id}`} />)}
       </div>
     </section>
   );
