@@ -147,7 +147,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       </video>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
-        <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[184px] left-5 right-5 max-w-[520px]">
+        <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[52px] left-5 right-5 max-w-[520px]">
           <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[50px] w-fit min-w-[172px] items-center justify-center gap-5 border border-white bg-transparent px-4 text-[11px] font-bold uppercase tracking-[.19em] transition-colors hover:bg-[#ec413b] hover:text-white">
             Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
           </button>
