@@ -17,6 +17,7 @@ import {
   MessageCircle,
   Plus,
   RefreshCw,
+  Search,
   ShieldCheck,
   ShoppingBag,
   ShoppingCart,
@@ -86,11 +87,16 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
         <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
           <Menu size={23} strokeWidth={1.7} className="transition-transform group-hover:scale-90" />
         </button>
-        <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="altitude-wordmark text-[25px] md:text-[32px]">ALTITUDE ATHLETIC</button>
-        <button data-testid="button-open-cart" onClick={() => window.alert('Tu carrito está listo para despegar.')} aria-label="Abrir carrito" className="relative flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
-          <ShoppingCart size={24} strokeWidth={1.7} />
-          {cartCount > 0 && <span data-testid="text-cart-count" className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}
-        </button>
+        <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="altitude-wordmark text-[25px] md:text-[32px]">ALTITUDE</button>
+        <div className="flex items-center gap-2">
+          <button data-testid="button-search" onClick={() => window.alert('La búsqueda estará disponible muy pronto.')} aria-label="Buscar productos" className="flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
+            <Search size={23} strokeWidth={1.7} />
+          </button>
+          <button data-testid="button-open-cart" onClick={() => window.alert('Tu carrito está listo para despegar.')} aria-label="Abrir carrito" className="relative flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
+            <ShoppingCart size={24} strokeWidth={1.7} />
+            {cartCount > 0 && <span data-testid="text-cart-count" className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}
+          </button>
+        </div>
       </header>
       <nav className="desktop-nav hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525]">
         <button data-testid="button-nav-shop" onClick={() => scrollToSection('new-releases')}>Tienda</button>
@@ -143,9 +149,14 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
         <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[52px] left-5 right-5 max-w-[520px]">
-          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[50px] w-fit min-w-[172px] items-center justify-center gap-5 border border-white bg-transparent px-4 text-[11px] font-bold uppercase tracking-[.19em] text-white transition-colors hover:bg-[#ec413b] hover:text-white">
-            Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
-          </button>
+          <div className="flex flex-col items-start gap-2">
+            <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[50px] w-[280px] items-center justify-between border border-white bg-white px-5 text-[11px] font-bold uppercase tracking-[.12em] text-[#151515] transition-colors hover:bg-[#ec413b] hover:text-white">
+              Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
+            </button>
+            <button data-testid={`button-all-products-${campaign.id}`} onClick={() => scrollToSection('new-releases')} className="hero-cta group flex h-[47px] w-[262px] items-center justify-between border border-white bg-transparent px-5 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#151515]">
+              Ver todos los productos <ArrowRight size={19} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
         </div>
       </div>
       <div id="vip-access" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
@@ -157,8 +168,8 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
           </div>
         ))}
       </div>
-      <div className="absolute bottom-[108px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 md:bottom-[116px]" aria-label="Seleccionar campaña">
-        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-2 w-2 rounded-full border border-[#252525]/80 transition-all duration-300 ${index === activeIndex ? 'bg-[#151515]' : 'bg-white/80'}`} data-testid={`dot-${item.id}`} />)}
+      <div className="absolute bottom-[108px] left-10 z-10 flex translate-x-0 items-center gap-3 md:bottom-[116px] md:left-12" aria-label="Seleccionar campaña">
+        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-2 rounded-full border transition-all duration-300 ${index === activeIndex ? 'w-5 border-[#ec413b] bg-[#ec413b]' : 'w-2 border-white/80 bg-white/70'}`} data-testid={`dot-${item.id}`} />)}
       </div>
     </section>
   );
