@@ -1,4 +1,4 @@
-import { type ReactNode, useRef, useState } from 'react';
+import { type ReactNode, type TouchEvent, useEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -97,9 +97,32 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
   );
 }
 
-function CampaignCard({ campaign, onShop }: { campaign: Campaign; onShop: (campaign: Campaign) => void }) {
+function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const campaign = campaigns[activeIndex];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveIndex((index) => (index + 1) % campaigns.length);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const handleTouchStart = (event: TouchEvent<HTMLElement>) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
+    if (touchStartX.current === null) return;
+    const endX = event.changedTouches[0]?.clientX;
+    const delta = endX === undefined ? 0 : endX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 45) return;
+    setActiveIndex((index) => (index + (delta < 0 ? 1 : campaigns.length - 1)) % campaigns.length);
+  };
   return (
-    <article id={campaign.id} className="campaign-card relative min-h-[190px] overflow-hidden border-b border-white bg-[#d8d5d1]">
+    <section id="campaign-hero" className="campaign-hero relative min-h-[calc(100dvh-89px)] overflow-hidden border-b border-white bg-[#d8d5d1]" aria-label="Campañas destacadas" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <img
         className="campaign-image absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-[1.025]"
         src={campaign.image}
@@ -107,17 +130,17 @@ function CampaignCard({ campaign, onShop }: { campaign: Campaign; onShop: (campa
         style={{ objectPosition: campaign.position }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/55 to-transparent md:from-white/90 md:via-white/25 md:to-transparent" />
-      <div className="relative z-10 flex h-full flex-col items-start justify-center px-6 py-5 md:justify-end md:pb-12">
+      <div key={`${campaign.id}-content`} className="campaign-content relative z-10 flex h-full flex-col items-start justify-center px-6 py-5 md:justify-end md:pb-12">
         <p className="section-label mb-1 text-[#262626]">{campaign.label}</p>
         <h2 className="editorial-title mb-3 text-[25px] font-bold uppercase leading-[.96] text-[#151515] md:text-[30px]">{campaign.title}</h2>
         <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="group flex h-9 items-center gap-3 bg-white px-4 text-[9px] font-bold uppercase tracking-[.08em] shadow-sm transition-colors hover:bg-[#ca2f2b] hover:text-white">
           Ver colección <ArrowRight size={14} strokeWidth={1.8} className="text-[#ca2f2b] transition-transform group-hover:translate-x-1 group-hover:text-white" />
         </button>
       </div>
-      <div className="absolute bottom-3 left-6 z-10 flex gap-1.5" aria-label={`Slide ${campaign.label}`}>
-        {campaigns.map((item, index) => <span key={item.id} className={`h-1.5 w-1.5 rounded-full border border-white ${item.id === campaign.id ? 'bg-white' : 'bg-transparent'}`} data-testid={`dot-${campaign.id}-${index}`} />)}
+      <div className="absolute bottom-5 left-6 z-10 flex items-center gap-2" aria-label="Seleccionar campaña">
+        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-2.5 w-2.5 rounded-full border border-white transition-all duration-300 ${index === activeIndex ? 'scale-110 bg-white' : 'bg-transparent'}`} data-testid={`dot-${item.id}`} />)}
       </div>
-    </article>
+    </section>
   );
 }
 
@@ -247,9 +270,7 @@ function Home() {
     <div id="top" className="page-shell min-h-[100dvh] bg-white pb-[80px]">
       <Header cartCount={cartCount} onMenu={() => setMenuOpen(true)} />
       <main>
-        <section className="campaign-grid" aria-label="Campañas destacadas">
-          {campaigns.map((campaign) => <CampaignCard key={campaign.id} campaign={campaign} onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} />)}
-        </section>
+        <CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} />
         <BenefitsPanel onVip={openVip} />
         <ProductRail onAdd={addToCart} />
         <section id="showroom" ref={showroomRef} className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8">
