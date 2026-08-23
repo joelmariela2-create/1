@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "ALTITUDE Home"
+description = "A mobile-first ALTITUDE fashion storefront home screen inspired by the provided reference, with premium athleticwear merchandising, hero campaigns, VIP access, launches, and bottom navigation."
+version = "1.0.0"
+id = "artifacts/altitude-home"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19105
+
+[services.development]
+run = "pnpm --filter @workspace/altitude-home run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/altitude-home", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/altitude-home/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19105"
+BASE_PATH = "/"
