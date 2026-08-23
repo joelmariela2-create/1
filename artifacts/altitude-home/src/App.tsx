@@ -140,7 +140,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   ];
 
   return (
-    <section id="campaign-hero" className="campaign-hero relative flex min-h-[calc(100dvh-170px)] flex-col overflow-hidden bg-[#050505] text-[#151515]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <section id="campaign-hero" className="campaign-hero relative flex h-[calc(100svh-170px)] min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
        <img
          className="campaign-image absolute inset-0 h-full w-full object-contain"
          src={campaign.image}
