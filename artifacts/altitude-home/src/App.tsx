@@ -15,13 +15,12 @@ import {
   MapPin,
   Menu,
   MessageCircle,
-  PackageCheck,
   Plus,
   RefreshCw,
+  ShieldCheck,
   ShoppingBag,
   ShoppingCart,
   Truck,
-  UserRound,
   X,
 } from 'lucide-react';
 
@@ -128,9 +127,9 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
     setActiveIndex((index) => (index + (delta < 0 ? 1 : campaigns.length - 1)) % campaigns.length);
   };
   const benefits = [
-    { label: 'Envíos rápidos', detail: 'A toda Bolivia', icon: Truck },
-    { label: 'Pago contra entrega', detail: 'Seguro y simple', icon: CreditCard },
-    { label: 'Productos premium', detail: 'Marcas originales', icon: PackageCheck },
+    { label: 'Envíos nacionales', detail: 'A toda Bolivia', icon: Truck },
+    { label: 'Productos originales', detail: 'Marcas 100% auténticas', icon: ShieldCheck },
+    { label: 'Pago seguro', detail: 'Contra entrega', icon: CreditCard },
     { label: 'Cambios fáciles', detail: 'Compra con confianza', icon: RefreshCw },
   ];
 
@@ -148,7 +147,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
         <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[52px] left-5 right-5 max-w-[520px]">
-          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[50px] w-fit min-w-[172px] items-center justify-center gap-5 border border-white bg-transparent px-4 text-[11px] font-bold uppercase tracking-[.19em] transition-colors hover:bg-[#ec413b] hover:text-white">
+          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[50px] w-fit min-w-[172px] items-center justify-center gap-5 border border-white bg-transparent px-4 text-[11px] font-bold uppercase tracking-[.19em] text-white transition-colors hover:bg-[#ec413b] hover:text-white">
             Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
           </button>
         </div>
@@ -232,9 +231,9 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 function BottomNav({ onVip }: { onVip: () => void }) {
   const items = [
     { label: 'Inicio', icon: House, action: () => scrollToSection('top'), id: 'home' },
-    { label: 'Sucursales', icon: MapPin, action: () => scrollToSection('showroom'), id: 'showroom' },
     { label: 'Tienda', icon: ShoppingBag, action: () => scrollToSection('new-releases'), id: 'shop' },
-    { label: 'Inscríbete', icon: UserRound, action: onVip, id: 'vip' },
+    { label: 'Showroom', icon: MapPin, action: () => scrollToSection('showroom'), id: 'showroom' },
+    { label: 'VIP', icon: Crown, action: onVip, id: 'vip' },
     { label: 'WhatsApp', icon: MessageCircle, action: () => window.open('https://wa.me/59170000000', '_blank'), id: 'whatsapp' },
   ];
   return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">{items.map(({ label, icon: Icon, action, id }) => <button data-testid={`button-bottom-${id}`} key={id} onClick={action} className="flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em]"><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
