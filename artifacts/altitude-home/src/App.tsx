@@ -150,7 +150,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
         <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[52px] left-5 right-5 max-w-[520px]">
           <div className="flex flex-col items-start gap-2">
-            <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[50px] w-[280px] items-center justify-between border border-white bg-white px-5 text-[11px] font-bold uppercase tracking-[.12em] text-[#151515] transition-colors hover:bg-[#ec413b] hover:text-white">
+            <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[50px] w-[280px] items-center justify-between border border-white bg-transparent px-5 text-[11px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-white hover:text-[#151515]">
               Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
             </button>
             <button data-testid={`button-all-products-${campaign.id}`} onClick={() => scrollToSection('new-releases')} className="hero-cta group flex h-[47px] w-[262px] items-center justify-between border border-white bg-transparent px-5 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#151515]">
