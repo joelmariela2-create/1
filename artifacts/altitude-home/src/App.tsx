@@ -39,8 +39,8 @@ const campaigns: Campaign[] = [
   {
     label: 'YoungLA',
     title: 'Nuevo drop',
-    image: 'https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1400',
-    position: 'center 35%',
+    image: '/naruto-collection.png',
+    position: 'center',
     tone: 'light',
     id: 'youngla',
   },
@@ -134,16 +134,12 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   ];
 
   return (
-    <section id="campaign-hero" className="campaign-hero relative flex min-h-[calc(100dvh-170px)] flex-col overflow-hidden bg-white text-[#151515]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <img
-        className="campaign-image absolute inset-0 h-full w-full object-cover"
-        src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1800"
-        alt="Atleta entrenando con ALTITUDE"
-        style={{ objectPosition: 'center 35%' }}
-      />
-      <video className="hero-video absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline poster={campaign.image} aria-label="Video de entrenamiento ALTITUDE">
-        <source src="https://cdn.coverr.co/videos/coverr-man-lifting-weights-1574/1080p.mp4" type="video/mp4" />
-      </video>
+    <section id="campaign-hero" className="campaign-hero relative flex min-h-[calc(100dvh-170px)] flex-col overflow-hidden bg-[#050505] text-[#151515]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+       <img
+         className="campaign-image absolute inset-0 h-full w-full object-contain"
+         src={campaign.image}
+         alt={`${campaign.label} ${campaign.title}`}
+       />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
         <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[52px] left-5 right-5 max-w-[520px]">
