@@ -147,23 +147,9 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       </video>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
-        <div className="flex items-start justify-between text-[9px] font-semibold uppercase tracking-[.2em] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,.75)]">
-          <p className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#ef473f]" /> Envíos a todo el país</p>
-          <p className="hidden md:block">ALTITUDE / 2025</p>
-        </div>
         <div key={`${campaign.id}-content`} className="campaign-content max-w-[520px]">
-          <p className="section-label mb-2 text-white drop-shadow-[0_1px_3px_rgba(0,0,0,.75)]">Nuevo drop · {campaign.label}</p>
-          <h2 className="editorial-title max-w-[430px] text-[clamp(2.6rem,12vw,5.7rem)] font-bold uppercase leading-[.84] text-white drop-shadow-[0_2px_4px_rgba(0,0,0,.8)]">20% de<br />descuento</h2>
-          <p className="mt-4 text-[10px] font-semibold uppercase tracking-[.22em] text-white drop-shadow-[0_1px_3px_rgba(0,0,0,.75)]">Gymshark · YoungLA · Breach Divinity</p>
-          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group mt-7 flex h-[62px] w-full max-w-[420px] items-center justify-between border border-white bg-white/95 px-5 text-[11px] font-bold uppercase tracking-[.19em] shadow-sm backdrop-blur-sm transition-colors hover:bg-[#ec413b] hover:text-white">
+          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group mt-auto flex h-[62px] w-full max-w-[420px] items-center justify-between border border-white bg-white/95 px-5 text-[11px] font-bold uppercase tracking-[.19em] shadow-sm backdrop-blur-sm transition-colors hover:bg-[#ec413b] hover:text-white">
             Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
-          </button>
-          <button data-testid="button-enter-vip" onClick={() => onShop(campaign)} className="hero-glass mt-3 flex w-full max-w-[420px] items-center justify-between px-5 py-4 text-left transition-colors hover:bg-white/95">
-            <span className="flex items-center gap-4">
-              <Crown size={25} strokeWidth={1.45} className="text-[#f2dc31]" />
-              <span><strong className="block text-[11px] font-bold uppercase tracking-[.13em]">Acceso anticipado</strong><span className="mt-1 block text-[10px] font-semibold uppercase tracking-[.1em] text-[#55504a]">20% descuento · Batman Compression</span></span>
-            </span>
-            <ArrowRight size={19} strokeWidth={1.6} />
           </button>
         </div>
       </div>
@@ -176,8 +162,8 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
           </div>
         ))}
       </div>
-      <div className="absolute bottom-[112px] left-5 z-10 flex items-center gap-2 md:bottom-[120px]" aria-label="Seleccionar campaña">
-        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-1.5 w-8 border border-[#252525]/80 transition-all duration-300 ${index === activeIndex ? 'bg-[#ec413b]' : 'bg-transparent'}`} data-testid={`dot-${item.id}`} />)}
+      <div className="absolute bottom-[108px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 md:bottom-[116px]" aria-label="Seleccionar campaña">
+        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-2 w-2 rounded-full border border-[#252525]/80 transition-all duration-300 ${index === activeIndex ? 'bg-[#ec413b]' : 'bg-white/80'}`} data-testid={`dot-${item.id}`} />)}
       </div>
     </section>
   );
