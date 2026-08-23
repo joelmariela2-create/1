@@ -30,49 +30,49 @@
 }
 
 :root {
-  --background: 35 25% 97%;
-  --foreground: 210 20% 12%;
-  --border: 35 14% 87%;
-  --card: 0 0% 100%;
-  --card-foreground: 210 20% 12%;
-  --primary: 3 78% 47%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 35 25% 95%;
-  --secondary-foreground: 210 20% 12%;
-  --muted: 35 20% 93%;
-  --muted-foreground: 210 9% 43%;
-  --accent: 3 78% 47%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 3 78% 47%;
-  --destructive-foreground: 0 0% 100%;
-  --input: 35 14% 82%;
-  --ring: 3 78% 47%;
+  --background: 33 22% 94%;
+  --foreground: 35 12% 13%;
+  --border: 34 11% 79%;
+  --card: 35 22% 97%;
+  --card-foreground: 35 12% 13%;
+  --primary: 4 79% 49%;
+  --primary-foreground: 35 22% 97%;
+  --secondary: 34 18% 89%;
+  --secondary-foreground: 35 12% 13%;
+  --muted: 34 16% 87%;
+  --muted-foreground: 32 8% 43%;
+  --accent: 4 79% 49%;
+  --accent-foreground: 35 22% 97%;
+  --destructive: 4 79% 49%;
+  --destructive-foreground: 35 22% 97%;
+  --input: 34 11% 76%;
+  --ring: 4 79% 49%;
   --app-font-sans: 'DM Sans', sans-serif;
   --app-font-serif: 'Space Grotesk', sans-serif;
   --app-font-mono: 'Space Grotesk', monospace;
-  --radius: .35rem;
-  --shadow-sm: 0 5px 16px hsl(210 20% 12% / .07);
-  --shadow-md: 0 14px 38px hsl(210 20% 12% / .12);
+  --radius: .3rem;
+  --shadow-sm: 0 5px 16px hsl(35 12% 13% / .08);
+  --shadow-md: 0 16px 44px hsl(35 12% 13% / .18);
 }
 
 .dark {
-  --background: 210 20% 12%;
-  --foreground: 35 25% 97%;
-  --border: 210 12% 25%;
-  --card: 210 16% 16%;
-  --card-foreground: 35 25% 97%;
-  --primary: 3 78% 52%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 210 14% 21%;
-  --secondary-foreground: 35 25% 97%;
-  --muted: 210 14% 21%;
-  --muted-foreground: 35 8% 70%;
-  --accent: 3 78% 52%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 3 78% 52%;
-  --destructive-foreground: 0 0% 100%;
-  --input: 210 12% 30%;
-  --ring: 3 78% 52%;
+  --background: 35 12% 13%;
+  --foreground: 35 22% 94%;
+  --border: 35 7% 27%;
+  --card: 35 10% 17%;
+  --card-foreground: 35 22% 94%;
+  --primary: 4 79% 52%;
+  --primary-foreground: 35 22% 94%;
+  --secondary: 35 8% 22%;
+  --secondary-foreground: 35 22% 94%;
+  --muted: 35 8% 22%;
+  --muted-foreground: 34 10% 69%;
+  --accent: 4 79% 52%;
+  --accent-foreground: 35 22% 94%;
+  --destructive: 4 79% 52%;
+  --destructive-foreground: 35 22% 94%;
+  --input: 35 7% 31%;
+  --ring: 4 79% 52%;
 }
 
 @layer base {
@@ -94,12 +94,22 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .campaign-hero .campaign-content { animation: campaignContentFade .65s ease both; }
 @keyframes campaignFade { from { opacity: .2; transform: scale(1.015); } to { opacity: 1; transform: scale(1); } }
 @keyframes campaignContentFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.hero-video { filter: saturate(.78) contrast(1.08); }
+.hero-glass { background: hsl(35 12% 13% / .68); border: 1px solid hsl(35 22% 94% / .5); backdrop-filter: blur(3px); }
+.hero-benefit { transition: background-color .25s ease, color .25s ease, transform .25s ease; }
+.hero-benefit:hover { background-color: hsl(4 79% 49% / .93); color: hsl(35 22% 97%); transform: translateY(-2px); }
+.hero-benefit:hover svg { color: hsl(35 22% 97%); }
+.bottom-nav { background: hsl(0 0% 100% / .97); color: hsl(210 20% 12%); border-color: hsl(35 14% 87%); }
+.bottom-nav button { transition: color .2s ease, transform .2s ease; }
+.bottom-nav button:active { transform: scale(.92); }
+.bottom-nav button:first-child { color: hsl(4 79% 58%); }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 @media (min-width: 768px) {
-  .page-shell { max-width: 1180px; margin: 0 auto; background: hsl(var(--card)); box-shadow: 0 0 0 1px hsl(var(--border)); }
+  .page-shell { max-width: 1280px; margin: 0 auto; background: hsl(var(--card)); box-shadow: 0 0 0 1px hsl(var(--border)); }
   .desktop-header { display: flex !important; }
   .mobile-header { display: none !important; }
-  .campaign-hero { min-height: 590px; }
-  .benefit-panel { margin: 24px 20px; }
+  .campaign-hero { min-height: 750px; }
   .bottom-nav { display: none !important; }
   .desktop-nav { display: flex !important; }
 }

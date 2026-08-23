@@ -9,6 +9,7 @@ import {
   ArrowRight,
   ChevronRight,
   Crown,
+  CreditCard,
   Heart,
   House,
   MapPin,
@@ -19,6 +20,8 @@ import {
   RefreshCw,
   ShoppingBag,
   ShoppingCart,
+  Truck,
+  UserRound,
   X,
 } from 'lucide-react';
 
@@ -36,7 +39,7 @@ type Campaign = {
 const campaigns: Campaign[] = [
   {
     label: 'YoungLA',
-    title: 'New Drop',
+    title: 'Nuevo drop',
     image: 'https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1400',
     position: 'center 35%',
     tone: 'light',
@@ -44,7 +47,7 @@ const campaigns: Campaign[] = [
   },
   {
     label: 'Gymshark',
-    title: 'New Arrivals',
+    title: 'Nuevos ingresos',
     image: 'https://images.pexels.com/photos/416809/pexels-photo-416809.jpeg?auto=compress&cs=tinysrgb&w=1400',
     position: 'center 42%',
     tone: 'light',
@@ -52,7 +55,7 @@ const campaigns: Campaign[] = [
   },
   {
     label: 'Altitude VIP',
-    title: 'Early Access',
+    title: 'Acceso anticipado',
     image: 'https://images.pexels.com/photos/2294361/pexels-photo-2294361.jpeg?auto=compress&cs=tinysrgb&w=1400',
     position: 'center 38%',
     tone: 'light',
@@ -61,10 +64,10 @@ const campaigns: Campaign[] = [
 ];
 
 const products = [
-  { id: 'elevated-tee', name: 'Essential Core Tee', brand: 'ALTITUDE', price: 'Bs. 249', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=800', color: 'Carbon' },
-  { id: 'everyday-tee', name: 'Everyday Heavy Tee', brand: 'YoungLA', price: 'Bs. 289', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=800', color: 'Stone' },
-  { id: 'pace-short', name: 'Pace 5” Training Short', brand: 'Gymshark', price: 'Bs. 319', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=800', color: 'Black' },
-  { id: 'studio-hoodie', name: 'Studio Zip Hoodie', brand: 'ALTITUDE VIP', price: 'Bs. 429', image: 'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=800', color: 'Espresso' },
+  { id: 'elevated-tee', name: 'Camiseta Essential Core', brand: 'ALTITUDE', price: 'Bs. 249', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=800', color: 'Carbón' },
+  { id: 'everyday-tee', name: 'Camiseta Everyday Heavy', brand: 'YoungLA', price: 'Bs. 289', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=800', color: 'Piedra' },
+  { id: 'pace-short', name: 'Short de entrenamiento Pace 5”', brand: 'Gymshark', price: 'Bs. 319', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=800', color: 'Negro' },
+  { id: 'studio-hoodie', name: 'Hoodie con cierre Studio', brand: 'ALTITUDE VIP', price: 'Bs. 429', image: 'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=800', color: 'Espresso' },
 ];
 
 function scrollToSection(id: string) {
@@ -76,24 +79,24 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
     <>
       <div className="announcement-strip flex h-7 items-center overflow-hidden bg-[#eeece9] text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
         <div className="announcement-track flex min-w-max items-center">
-          <span className="px-4">Envíos a toda Bolivia <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
-          <span className="px-4" aria-hidden="true">Envíos a toda Bolivia <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
+          <span className="px-4">Envíos a todo el país <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
+          <span className="px-4" aria-hidden="true">Envíos a todo el país <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
         </div>
       </div>
-      <header className="relative z-20 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 md:h-[76px] md:px-8">
-        <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group flex h-9 w-9 items-center justify-center">
+      <header className="relative z-20 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
+        <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
           <Menu size={23} strokeWidth={1.7} className="transition-transform group-hover:scale-90" />
         </button>
-        <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="altitude-wordmark text-[25px] md:text-[32px]">ALTITUDE</button>
-        <button data-testid="button-open-cart" onClick={() => window.alert('Tu carrito está listo para despegar.')} aria-label="Abrir carrito" className="relative flex h-9 w-9 items-center justify-center">
+        <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="altitude-wordmark text-[25px] md:text-[32px]">ALTITUDE ATHLETIC</button>
+        <button data-testid="button-open-cart" onClick={() => window.alert('Tu carrito está listo para despegar.')} aria-label="Abrir carrito" className="relative flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
           <ShoppingCart size={24} strokeWidth={1.7} />
           {cartCount > 0 && <span data-testid="text-cart-count" className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}
         </button>
       </header>
-      <nav className="desktop-nav hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em]">
+      <nav className="desktop-nav hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525]">
         <button data-testid="button-nav-shop" onClick={() => scrollToSection('new-releases')}>Tienda</button>
         <button data-testid="button-nav-showroom" onClick={() => scrollToSection('showroom')}>Showroom</button>
-        <button data-testid="button-nav-vip" onClick={() => scrollToSection('vip-access')} className="text-[#ca2f2b]">VIP Access</button>
+        <button data-testid="button-nav-vip" onClick={() => scrollToSection('vip-access')} className="text-[#ec413b]">Acceso VIP</button>
         <button data-testid="button-nav-benefits" onClick={() => scrollToSection('vip-access')}>Beneficios</button>
       </nav>
     </>
@@ -124,56 +127,57 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
     if (Math.abs(delta) < 45) return;
     setActiveIndex((index) => (index + (delta < 0 ? 1 : campaigns.length - 1)) % campaigns.length);
   };
-  return (
-    <section id="campaign-hero" className="campaign-hero relative min-h-[calc(100dvh-89px)] overflow-hidden border-b border-white bg-[#d8d5d1]" aria-label="Campañas destacadas" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <img
-        className="campaign-image absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-[1.025]"
-        src={campaign.image}
-        alt={`${campaign.label} ${campaign.title}`}
-        style={{ objectPosition: campaign.position }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/55 to-transparent md:from-white/90 md:via-white/25 md:to-transparent" />
-      <div key={`${campaign.id}-content`} className="campaign-content relative z-10 flex h-full flex-col items-start justify-center px-6 py-5 md:justify-end md:pb-12">
-        <p className="section-label mb-1 text-[#262626]">{campaign.label}</p>
-        <h2 className="editorial-title mb-3 text-[25px] font-bold uppercase leading-[.96] text-[#151515] md:text-[30px]">{campaign.title}</h2>
-        <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-14 min-w-[240px] items-center justify-between gap-5 border border-white/80 bg-white/90 px-6 text-[11px] font-bold uppercase tracking-[.16em] shadow-sm transition-colors hover:bg-[#ca2f2b] hover:text-white">
-          Ver colección <ArrowRight size={14} strokeWidth={1.8} className="text-[#ca2f2b] transition-transform group-hover:translate-x-1 group-hover:text-white" />
-        </button>
-      </div>
-      <div className="absolute bottom-5 left-6 z-10 flex items-center gap-2" aria-label="Seleccionar campaña">
-        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-2.5 w-2.5 rounded-full border border-white transition-all duration-300 ${index === activeIndex ? 'scale-110 bg-white' : 'bg-transparent'}`} data-testid={`dot-${item.id}`} />)}
-      </div>
-    </section>
-  );
-}
+  const benefits = [
+    { label: 'Envíos rápidos', detail: 'A toda Bolivia', icon: Truck },
+    { label: 'Pago contra entrega', detail: 'Seguro y simple', icon: CreditCard },
+    { label: 'Productos premium', detail: 'Marcas originales', icon: PackageCheck },
+    { label: 'Cambios fáciles', detail: 'Compra con confianza', icon: RefreshCw },
+  ];
 
-function BenefitsPanel({ onVip }: { onVip: () => void }) {
   return (
-    <section id="vip-access" className="benefit-panel mx-5 my-5 overflow-hidden rounded-sm border border-[#e1ddda] bg-white">
-      <div className="grid md:grid-cols-[1.1fr_1fr]">
-        <div className="px-5 py-5 md:px-8 md:py-8">
-          <p className="section-label mb-2">Altitude <span className="text-[#ca2f2b]">VIP</span></p>
-          <h2 className="editorial-title max-w-[240px] text-[24px] font-bold uppercase leading-[.98]">Acceso exclusivo<br />a lo mejor</h2>
-          <p className="mt-2 max-w-[280px] text-[10px] leading-[1.4] text-[#5d5955]">Accede antes que nadie a nuevos drops, unidades limitadas y lanzamientos exclusivos.</p>
-          <button data-testid="button-enter-vip" onClick={onVip} className="mt-3 flex h-8 items-center gap-3 bg-[#ca2f2b] px-4 text-[9px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-[#a82321]">Entrar al VIP <ArrowRight size={14} /></button>
+    <section id="campaign-hero" className="campaign-hero relative flex min-h-[calc(100dvh-89px)] flex-col overflow-hidden bg-[#171817] text-[#f3efe7]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <img
+        className="campaign-image absolute inset-0 h-full w-full object-cover"
+        src="https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=1800"
+        alt="Atleta entrenando con ALTITUDE"
+        style={{ objectPosition: 'center 35%' }}
+      />
+      <video className="hero-video absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline poster={campaign.image} aria-label="Video de entrenamiento ALTITUDE">
+        <source src="https://cdn.coverr.co/videos/coverr-man-lifting-weights-1574/1080p.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,11,10,.58)_0%,rgba(10,11,10,.18)_34%,rgba(10,11,10,.55)_67%,rgba(10,11,10,.96)_100%)]" />
+      <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
+        <div className="flex items-start justify-between text-[9px] font-semibold uppercase tracking-[.2em] text-[#e9e2d8]">
+          <p className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#ef473f]" /> Envíos a todo el país</p>
+          <p className="hidden md:block">ALTITUDE / 2025</p>
         </div>
-        <div className="grid grid-cols-3 border-t border-[#e1ddda] md:border-l md:border-t-0">
-          <div className="flex flex-col items-center justify-center border-r border-[#e1ddda] px-2 py-5 text-center">
-            <PackageCheck size={24} strokeWidth={1.25} className="mb-2" />
-            <strong className="text-[9px] uppercase leading-[1.2]">Productos<br />premium</strong>
-            <span className="mt-2 text-[8px] text-[#77716c]">Marcas originales</span>
-          </div>
-          <div className="flex flex-col items-center justify-center border-r border-[#e1ddda] px-2 py-5 text-center">
-            <RefreshCw size={23} strokeWidth={1.25} className="mb-2" />
-            <strong className="text-[9px] uppercase leading-[1.2]">Cambios<br />fáciles</strong>
-            <span className="mt-2 text-[8px] text-[#77716c]">Compra con confianza</span>
-          </div>
-          <div className="flex flex-col items-center justify-center px-2 py-5 text-center">
-            <Crown size={23} strokeWidth={1.25} className="mb-2" />
-            <strong className="text-[9px] uppercase leading-[1.2]">Acceso<br />anticipado</strong>
-            <span className="mt-2 text-[8px] text-[#77716c]">Drops limitados</span>
-          </div>
+        <div key={`${campaign.id}-content`} className="campaign-content max-w-[520px]">
+          <p className="section-label mb-2 text-[#ded6cb]">Nuevo drop · {campaign.label}</p>
+          <h2 className="editorial-title max-w-[430px] text-[clamp(2.6rem,12vw,5.7rem)] font-bold uppercase leading-[.84] text-[#f4f0e9]">20% de<br />descuento</h2>
+          <p className="mt-4 text-[10px] font-semibold uppercase tracking-[.22em] text-[#ddd5ca]">Gymshark · YoungLA · Breach Divinity</p>
+          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group mt-7 flex h-[62px] w-full max-w-[420px] items-center justify-between border border-[#f0ebe2]/75 bg-[#191a19]/50 px-5 text-[11px] font-bold uppercase tracking-[.19em] backdrop-blur-sm transition-colors hover:bg-[#ec413b]">
+            Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
+          </button>
+          <button data-testid="button-enter-vip" onClick={() => onShop(campaign)} className="hero-glass mt-3 flex w-full max-w-[420px] items-center justify-between px-5 py-4 text-left transition-colors hover:bg-[#191a19]/85">
+            <span className="flex items-center gap-4">
+              <Crown size={25} strokeWidth={1.45} className="text-[#f2dc31]" />
+              <span><strong className="block text-[11px] font-bold uppercase tracking-[.13em]">Acceso anticipado</strong><span className="mt-1 block text-[10px] font-semibold uppercase tracking-[.1em] text-[#e2d9cc]">20% descuento · Batman Compression</span></span>
+            </span>
+            <ArrowRight size={19} strokeWidth={1.6} />
+          </button>
         </div>
+      </div>
+      <div id="vip-access" className="relative z-10 grid grid-cols-4 border-t border-[#f2eee7]/35 bg-[#111211]/80 backdrop-blur-md">
+        {benefits.map(({ label, detail, icon: Icon }, index) => (
+          <div data-testid={`benefit-${index}`} key={label} className={`hero-benefit flex min-h-[93px] flex-col items-center justify-center px-1 text-center ${index < benefits.length - 1 ? 'border-r border-[#f2eee7]/25' : ''}`}>
+            <Icon size={22} strokeWidth={1.45} className="mb-2 text-[#f2eee7]" />
+            <strong className="max-w-[78px] text-[8px] font-bold uppercase leading-[1.18] tracking-[.03em] md:max-w-none md:text-[10px]">{label}</strong>
+            <span className="mt-1 hidden text-[8px] text-[#c4bbb0] md:block">{detail}</span>
+          </div>
+        ))}
+      </div>
+      <div className="absolute bottom-[112px] left-5 z-10 flex items-center gap-2 md:bottom-[120px]" aria-label="Seleccionar campaña">
+        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-1.5 w-8 border border-[#f2eee7]/80 transition-all duration-300 ${index === activeIndex ? 'bg-[#ec413b]' : 'bg-transparent'}`} data-testid={`dot-${item.id}`} />)}
       </div>
     </section>
   );
@@ -213,8 +217,8 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
   const links = [
     ['Nuevos lanzamientos', 'new-releases'],
-    ['YoungLA New Drop', 'youngla'],
-    ['Gymshark New Arrivals', 'gymshark'],
+    ['YoungLA Nuevo drop', 'youngla'],
+    ['Gymshark Nuevos ingresos', 'gymshark'],
     ['ALTITUDE VIP', 'vip-access'],
     ['Showroom La Paz', 'showroom'],
   ];
@@ -242,12 +246,12 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 function BottomNav({ onVip }: { onVip: () => void }) {
   const items = [
     { label: 'Inicio', icon: House, action: () => scrollToSection('top'), id: 'home' },
+    { label: 'Sucursales', icon: MapPin, action: () => scrollToSection('showroom'), id: 'showroom' },
     { label: 'Tienda', icon: ShoppingBag, action: () => scrollToSection('new-releases'), id: 'shop' },
-    { label: 'Showroom', icon: MapPin, action: () => scrollToSection('showroom'), id: 'showroom' },
-    { label: 'VIP', icon: Crown, action: onVip, id: 'vip' },
+    { label: 'Inscríbete', icon: UserRound, action: onVip, id: 'vip' },
     { label: 'WhatsApp', icon: MessageCircle, action: () => window.open('https://wa.me/59170000000', '_blank'), id: 'whatsapp' },
   ];
-  return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t border-[#dedad6] bg-white/95 px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">{items.map(({ label, icon: Icon, action, id }) => <button data-testid={`button-bottom-${id}`} key={id} onClick={action} className={`flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em] ${id === 'home' ? 'text-[#ca2f2b]' : 'text-[#272727]'}`}><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
+  return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">{items.map(({ label, icon: Icon, action, id }) => <button data-testid={`button-bottom-${id}`} key={id} onClick={action} className="flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em]"><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
 }
 
 function Home() {
@@ -270,11 +274,10 @@ function Home() {
   };
 
   return (
-    <div id="top" className="page-shell min-h-[100dvh] bg-white pb-[80px]">
+    <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]">
       <Header cartCount={cartCount} onMenu={() => setMenuOpen(true)} />
       <main>
         <CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} />
-        <BenefitsPanel onVip={openVip} />
         <ProductRail onAdd={addToCart} />
         <section id="showroom" ref={showroomRef} className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8">
           <div className="flex items-center justify-between">
@@ -285,7 +288,7 @@ function Home() {
       </main>
       <footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8">
         <div className="altitude-wordmark text-[27px]">ALTITUDE</div>
-        <p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Train higher. Move different.</p>
+         <p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p>
         <div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button data-testid="button-footer-help" onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button data-testid="button-footer-shipping" onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button data-testid="button-footer-vip" onClick={openVip}>ALTITUDE VIP</button></div>
       </footer>
       <BottomNav onVip={openVip} />
