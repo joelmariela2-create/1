@@ -153,9 +153,6 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
             <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[50px] w-[280px] items-center justify-between border border-white bg-transparent px-5 text-[11px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-white hover:text-[#151515]">
               Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
             </button>
-            <button data-testid={`button-all-products-${campaign.id}`} onClick={() => scrollToSection('new-releases')} className="hero-cta group flex h-[47px] w-[262px] items-center justify-between border border-white bg-transparent px-5 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#151515]">
-              Ver todos los productos <ArrowRight size={19} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
-            </button>
           </div>
         </div>
       </div>
@@ -168,9 +165,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
           </div>
         ))}
       </div>
-      <div className="absolute bottom-[108px] left-10 z-10 flex translate-x-0 items-center gap-3 md:bottom-[116px] md:left-12" aria-label="Seleccionar campaña">
-        {campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Mostrar ${item.label}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)} className={`h-2 rounded-full border transition-all duration-300 ${index === activeIndex ? 'w-5 border-[#ec413b] bg-[#ec413b]' : 'w-2 border-white/80 bg-white/70'}`} data-testid={`dot-${item.id}`} />)}
-      </div>
+      <span className="absolute bottom-[105px] left-1/2 z-10 -translate-x-1/2 text-[22px] leading-none text-white" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>•</span>
     </section>
   );
 }
