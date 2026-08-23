@@ -10,6 +10,8 @@ import {
   ChevronRight,
   Crown,
   CreditCard,
+  CircleDollarSign,
+  ChevronDown,
   Heart,
   House,
   MapPin,
@@ -17,9 +19,12 @@ import {
   MessageCircle,
   PackageCheck,
   Plus,
+  Ruler,
   RefreshCw,
+  Search,
   ShoppingBag,
   ShoppingCart,
+  Tag,
   Truck,
   UserRound,
   X,
@@ -229,21 +234,56 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
-function BottomNav({ onVip }: { onVip: () => void }) {
+function StorePage({ onHome, onAdd }: { onHome: () => void; onAdd: (name: string) => void }) {
+  const categories = [
+    ['Todos', products[0].image],
+    ['Poleras', products[1].image],
+    ['Compresión', products[2].image],
+    ['Hoodies', products[3].image],
+    ['Shorts', products[2].image],
+    ['Joggers', products[3].image],
+  ];
+  const brands = ['Todas las marcas', 'YoungLA', 'Breach Divinity', 'Yugi Oh!', 'Gold'];
+  const filters = [
+    ['Categoría', House],
+    ['Marca', Tag],
+    ['Talla', Ruler],
+    ['Precio', CircleDollarSign],
+  ] as const;
+  return (
+    <section className="store-page min-h-[calc(100dvh-67px)] bg-[#050505] pb-[84px] text-[#f5f3ef]">
+      <div className="flex h-[38px] items-center justify-between border-b border-[#222] px-4 text-[8px] uppercase tracking-[.24em] text-[#ddd9d2]"><span>100% americana</span><Crown size={12} strokeWidth={1.2} /><span>Altitude athletic</span></div>
+      <div className="flex h-[64px] items-center justify-between border-b border-[#242424] px-4">
+        <button onClick={onHome} aria-label="Volver al inicio" className="flex items-center gap-2"><span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#716e69]"><Crown size={14} strokeWidth={1.2} /></span><span className="altitude-wordmark text-[18px]">ALTITUDE ATHLETIC</span></button>
+        <div className="flex items-center gap-5"><button aria-label="Abrir carrito" onClick={() => window.alert('Tu carrito está listo para despegar.')} className="relative"><ShoppingCart size={23} strokeWidth={1.5} /><span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#555] px-1 text-[8px]">3</span></button><button onClick={onHome} aria-label="Abrir menú"><Menu size={25} strokeWidth={1.5} /></button></div>
+      </div>
+      <div className="px-4 pt-4">
+        <label className="flex h-10 items-center gap-3 rounded-full bg-[#f7f6f4] px-4 text-[#77736e]"><Search size={17} strokeWidth={2} /><span className="sr-only">Buscar productos</span><input aria-label="Buscar productos" placeholder="Buscar productos..." className="w-full bg-transparent text-[11px] outline-none placeholder:text-[#8d8983]" /></label>
+        <div className="scrollbar-hide mt-4 flex gap-2 overflow-x-auto pb-1">{filters.map(([label, Icon]) => <button key={label} className="flex h-8 shrink-0 items-center gap-2 rounded-md border border-[#292929] bg-[#111] px-3 text-[9px] uppercase"><Icon size={14} strokeWidth={1.4} />{label}<ChevronDown size={12} /></button>)}</div>
+        <div className="scrollbar-hide mt-4 flex gap-3 overflow-x-auto pb-2">{categories.map(([label, image]) => <button key={label} onClick={() => onAdd(label)} className="flex w-[61px] shrink-0 flex-col items-center gap-2"><span className="flex h-[61px] w-[61px] items-center justify-center overflow-hidden rounded-full border border-[#777] bg-[#1c1c1c] p-1"><img src={image} alt="" className="h-full w-full rounded-full object-cover grayscale" /></span><span className="whitespace-nowrap text-[8px] uppercase tracking-[.04em] text-[#bdb8b1]">{label}</span></button>)}</div>
+        <div className="scrollbar-hide mt-3 flex gap-2 overflow-x-auto pb-1">{brands.map((brand, index) => <button key={brand} className={`flex h-9 shrink-0 items-center justify-center rounded-full border px-4 text-[8px] uppercase tracking-[.05em] ${index === 0 ? 'border-[#d7d2c9] text-[#f3efe8]' : 'border-[#232323] bg-[#171717] text-[#bdb8b1]'}`}>{brand}</button>)}</div>
+        <article className="relative mt-4 h-[219px] overflow-hidden rounded-lg border border-[#292929]"><img src={products[3].image} alt="Nueva colección de ropa urbana" className="absolute inset-0 h-full w-full object-cover object-right opacity-65" /><div className="absolute inset-0 bg-gradient-to-r from-[#080808] via-[#080808]/80 to-transparent" /><div className="relative z-10 flex h-full max-w-[230px] flex-col justify-center px-5"><p className="text-[8px] uppercase tracking-[.22em] text-[#aaa49b]">Nueva colección · ropa urbana</p><h1 className="mt-3 text-[30px] font-bold uppercase leading-[.9] tracking-[-.06em]">Nueva<br />colección</h1><p className="mt-3 text-[10px] leading-[1.4] text-[#aaa49b]">Nuevos diseños urbanos para llevar tu estilo más allá del entrenamiento.</p><button onClick={() => onAdd('Nueva colección')} className="mt-4 flex h-8 w-fit items-center gap-3 rounded-full bg-white px-4 text-[8px] font-bold uppercase tracking-[.1em] text-black">Ver colección <ArrowRight size={13} /></button></div></article>
+      </div>
+    </section>
+  );
+}
+
+function BottomNav({ onVip, activeTab, onShop }: { onVip: () => void; activeTab: 'home' | 'shop'; onShop: () => void }) {
   const items = [
     { label: 'Inicio', icon: House, action: () => scrollToSection('top'), id: 'home' },
     { label: 'Sucursales', icon: MapPin, action: () => scrollToSection('showroom'), id: 'showroom' },
-    { label: 'Tienda', icon: ShoppingBag, action: () => scrollToSection('new-releases'), id: 'shop' },
+    { label: 'Tienda', icon: ShoppingBag, action: onShop, id: 'shop' },
     { label: 'Inscríbete', icon: UserRound, action: onVip, id: 'vip' },
     { label: 'WhatsApp', icon: MessageCircle, action: () => window.open('https://wa.me/59170000000', '_blank'), id: 'whatsapp' },
   ];
-  return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">{items.map(({ label, icon: Icon, action, id }) => <button data-testid={`button-bottom-${id}`} key={id} onClick={action} className="flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em]"><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
+  return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">{items.map(({ label, icon: Icon, action, id }) => <button data-testid={`button-bottom-${id}`} key={id} onClick={action} className={`flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em] ${activeTab === id ? 'text-[#ca2f2b]' : 'text-[#272727]'}`}><Icon size={21} strokeWidth={activeTab === id ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
 }
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [toast, setToast] = useState('');
+  const [activeTab, setActiveTab] = useState<'home' | 'shop'>('home');
   const showroomRef = useRef<HTMLElement>(null);
 
   const notify = (message: string) => {
@@ -258,6 +298,16 @@ function Home() {
     scrollToSection('vip-access');
     notify('Bienvenido al acceso ALTITUDE VIP');
   };
+
+  if (activeTab === 'shop') {
+    return (
+      <div className="page-shell min-h-[100dvh] bg-[#050505]">
+        <StorePage onHome={() => setActiveTab('home')} onAdd={(name) => notify(`${name} seleccionado`)} />
+        <BottomNav onVip={openVip} activeTab="shop" onShop={() => setActiveTab('shop')} />
+        {toast && <div data-testid="status-toast" className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}
+      </div>
+    );
+  }
 
   return (
     <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]">
@@ -277,7 +327,7 @@ function Home() {
          <p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p>
         <div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button data-testid="button-footer-help" onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button data-testid="button-footer-shipping" onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button data-testid="button-footer-vip" onClick={openVip}>ALTITUDE VIP</button></div>
       </footer>
-      <BottomNav onVip={openVip} />
+      <BottomNav onVip={openVip} activeTab="home" onShop={() => setActiveTab('shop')} />
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />
       {toast && <div data-testid="status-toast" className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}
     </div>
