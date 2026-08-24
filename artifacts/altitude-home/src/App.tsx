@@ -528,10 +528,10 @@ function CollectionPage() {
     <div className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]">
       <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} onBenefits={() => setLocation('/')} />
       <main className="collection-page">
-        <div className="px-5 pb-5 pt-8 md:px-10 md:pb-7 md:pt-10">
+        <div className="px-5 pb-3 pt-4 md:px-10 md:pb-4 md:pt-6">
           <p className="section-label text-[#ca2f2b]">ALTITUDE / selección</p>
           <h1 className="editorial-title mt-2 text-[clamp(2.4rem,7vw,5rem)] font-bold uppercase leading-[.88] tracking-[-.065em]">Colección</h1>
-          <p className="mt-3 max-w-[420px] text-[11px] leading-[1.5] text-[#6b6660]">Descubre los drops que están marcando el ritmo.</p>
+          <p className="mt-1 max-w-[420px] text-[11px] leading-[1.5] text-[#6b6660]">Descubre los drops que están marcando el ritmo.</p>
         </div>
         <div className="campaign-stack-list">
           {collectionCampaigns.map((campaign) => (
