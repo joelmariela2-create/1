@@ -360,8 +360,8 @@ function CollectionPage() {
   const { cartItems, toast, notify } = useShop();
   const [, setLocation] = useLocation();
   const collectionCampaigns: Campaign[] = [
-    { id: 'youngla-new-drop', label: 'YoungLA', title: 'New Drop', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=1200', position: 'center 35%', tone: 'light' },
-    { id: 'gymshark-new-arrivals', label: 'Gymshark', title: 'New Arrivals', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=1200', position: 'center 28%', tone: 'light' },
+    { id: 'youngla-new-drop', label: 'YoungLA', title: 'New Drop', image: '/youngla-cover.jpg', position: 'center center', tone: 'light' },
+    { id: 'gymshark-new-arrivals', label: 'Gymshark', title: 'New Arrivals', image: '/gymshark-cover.jpg', position: 'center center', tone: 'light' },
     { id: 'altitude-vip-early-access', label: 'ALTITUDE VIP', title: 'Early Access', image: '/vip-athlete.png', position: 'center 26%', tone: 'light' },
   ];
   return (
