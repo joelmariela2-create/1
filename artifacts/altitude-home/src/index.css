@@ -93,16 +93,14 @@ button, a {
 .swipe-rail {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: 20px;
+  scroll-behavior: auto;
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
+  will-change: scroll-position;
 }
 .swipe-rail.inertial-active {
-  scroll-snap-type: none;
   scroll-behavior: auto;
 }
 .swipe-rail:active {
