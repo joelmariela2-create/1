@@ -336,6 +336,45 @@ function ProductsPage() {
   );
 }
 
+function VipAccessSection() {
+  const whatsappGroupUrl = 'https://wa.me/59170000000';
+
+  return (
+    <section id="vip-access" aria-labelledby="vip-access-title" className="vip-access-section bg-black">
+      <div className="relative mx-auto w-full max-w-[469px]">
+        <img
+          src="/vip-early-access.jpg"
+          alt="ALTITUDE VIP Early Access: beneficios exclusivos, nuevos drops, preventas y stock limitado"
+          className="block h-auto w-full"
+          loading="lazy"
+          decoding="async"
+        />
+        <h2 id="vip-access-title" className="sr-only">ALTITUDE VIP Early Access</h2>
+        <a
+          href={whatsappGroupUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Entrar al VIP por WhatsApp"
+          data-testid="button-enter-vip-hero"
+          className="absolute left-[6.3%] top-[38.7%] h-[4.5%] w-[34%] rounded-[3px]"
+        >
+          <span className="sr-only">Entrar al VIP</span>
+        </a>
+        <a
+          href={whatsappGroupUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Entrar al grupo privado de WhatsApp"
+          data-testid="button-enter-vip-final"
+          className="absolute left-[21.8%] top-[81.8%] h-[4.5%] w-[55%] rounded-[3px]"
+        >
+          <span className="sr-only">Entrar al VIP por WhatsApp</span>
+        </a>
+      </div>
+    </section>
+  );
+}
+
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
@@ -361,20 +400,7 @@ function Home() {
       <main>
         <CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} />
         <ProductRail onAdd={addToCart} />
-        <section id="vip-access" className="mx-5 mb-5 overflow-hidden bg-[#111111] px-6 py-9 text-white md:mx-8 md:px-10 md:py-12">
-          <div className="max-w-[620px]">
-            <p className="section-label mb-3 text-[#e04a43]">Early access</p>
-            <h2 className="editorial-title text-[29px] font-bold uppercase leading-[.95] tracking-[-.06em] md:text-[42px]">ALTITUDE VIP</h2>
-            <p className="mt-4 max-w-[470px] text-[15px] leading-[1.45] text-white/75 md:text-[17px]">Accede antes que nadie a nuevos drops, unidades limitadas y lanzamientos exclusivos.</p>
-            <button
-              data-testid="button-enter-vip"
-              onClick={() => window.open('https://wa.me/59170000000', '_blank', 'noopener,noreferrer')}
-              className="group mt-7 inline-flex h-11 items-center gap-3 border border-white px-5 text-[10px] font-bold uppercase tracking-[.12em] transition-colors hover:bg-white hover:text-[#111111]"
-            >
-              Entrar al VIP <ArrowRight size={17} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
-            </button>
-          </div>
-        </section>
+        <VipAccessSection />
         <section id="showroom" ref={showroomRef} className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8">
           <div className="flex items-center justify-between">
             <div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">Showroom La Paz</h2><p className="mt-1 text-[11px] text-[#6b6660]">Zona Sur · Av. Montenegro 1140</p></div>
