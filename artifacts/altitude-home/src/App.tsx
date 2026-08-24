@@ -123,8 +123,8 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
     <>
       <div className="announcement-strip flex h-7 items-center overflow-hidden bg-[#eeece9] text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
         <div className="announcement-track flex min-w-max items-center">
-           <span className="px-4">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-16 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
-           <span className="px-4" aria-hidden="true">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-16 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
+           <span className="px-4">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
+           <span className="px-4" aria-hidden="true">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
         </div>
       </div>
       <header className="sticky top-0 z-30 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
@@ -201,7 +201,7 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 
 function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; onShowroom?: () => void; active?: string }) {
   const [, setLocation] = useLocation();
-  const items = [{ label: 'Inicio', icon: House, action: () => setLocation('/'), id: 'home' }, { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' }, { label: 'Colección', icon: Box, action: () => setLocation('/collection'), id: 'collection' }, { label: 'Showroom', icon: MapPin, action: onShowroom ?? (() => scrollToSection('showroom')), id: 'showroom' }, { label: 'VIP', icon: Crown, action: onVip, id: 'vip' }, { label: 'WhatsApp', icon: MessageCircle, action: () => window.open(vipWhatsAppUrl, '_blank'), id: 'whatsapp' }];
+   const items = [{ label: 'Inicio', icon: House, action: () => setLocation('/'), id: 'home' }, { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' }, { label: 'Showroom', icon: MapPin, action: onShowroom ?? (() => scrollToSection('showroom')), id: 'showroom' }, { label: 'VIP', icon: Crown, action: onVip, id: 'vip' }, { label: 'WhatsApp', icon: MessageCircle, action: () => window.open(vipWhatsAppUrl, '_blank'), id: 'whatsapp' }];
   return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md" aria-label="Navegación principal móvil">{items.map(({ label, icon: Icon, action, id }) => <button key={id} data-testid={`nav-${id}`} onClick={action} className={`flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em] ${active === id ? 'active-nav' : ''}`}><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
 }
 
