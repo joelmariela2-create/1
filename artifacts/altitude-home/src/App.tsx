@@ -6,6 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import {
+  ArrowLeft,
   ArrowRight,
   ChevronRight,
   Crown,
@@ -13,6 +14,7 @@ import {
   Heart,
   House,
   MapPin,
+  ListFilter,
   Menu,
   MessageCircle,
   Plus,
@@ -22,6 +24,7 @@ import {
   ShoppingBag,
   ShoppingCart,
   Truck,
+  UserRound,
   X,
 } from 'lucide-react';
 
@@ -48,7 +51,7 @@ const campaigns: Campaign[] = [
   {
     label: 'Gymshark',
     title: 'Nuevos ingresos',
-    image: '/gymshark-logo.png',
+    image: '/naruto-live-now.jpg',
     position: 'center 35%',
     tone: 'light',
     id: 'gymshark',
@@ -212,8 +215,10 @@ function ProductRail({ onAdd }: { onAdd: (name: string) => void }) {
 }
 
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [, setLocation] = useLocation();
   if (!open) return null;
   const links = [
+    ['Productos', 'products'],
     ['Nuevos lanzamientos', 'new-releases'],
     ['YoungLA Nuevo drop', 'youngla'],
     ['Gymshark Nuevos ingresos', 'gymshark'],
@@ -230,7 +235,7 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
         </div>
         <p className="section-label mt-9 text-[#8b857e]">Explorar</p>
         <nav className="mt-4 flex flex-col">
-          {links.map(([label, id]) => <button data-testid={`button-drawer-${id}`} key={id} onClick={() => { onClose(); scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}
+          {links.map(([label, id]) => <button data-testid={`button-drawer-${id}`} key={id} onClick={() => { onClose(); id === 'products' ? setLocation('/products') : scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}
         </nav>
         <div className="absolute bottom-8 left-6 right-6 border-t border-[#e6e2de] pt-5 text-[11px] leading-[1.7] text-[#6c6660]">
           <p className="font-semibold text-[#252525]">Compra con confianza</p>
@@ -242,14 +247,63 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 }
 
 function BottomNav({ onVip }: { onVip: () => void }) {
+  const [, setLocation] = useLocation();
   const items = [
     { label: 'Inicio', icon: House, action: () => scrollToSection('top'), id: 'home' },
-    { label: 'Tienda', icon: ShoppingBag, action: () => scrollToSection('new-releases'), id: 'shop' },
+    { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' },
     { label: 'Showroom', icon: MapPin, action: () => scrollToSection('showroom'), id: 'showroom' },
     { label: 'VIP', icon: Crown, action: onVip, id: 'vip' },
     { label: 'WhatsApp', icon: MessageCircle, action: () => window.open('https://wa.me/59170000000', '_blank'), id: 'whatsapp' },
   ];
   return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">{items.map(({ label, icon: Icon, action, id }) => <button data-testid={`button-bottom-${id}`} key={id} onClick={action} className="flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em]"><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
+}
+
+const productCategories = [
+  'Todos los productos',
+  'Camisetas y tops',
+  'Shorts',
+  'Sudaderas con capucha y sudaderas',
+  'Joggers y pantalones deportivos',
+  'Pantalones',
+  'Camisetas sin mangas',
+  'Conjuntos deportivos',
+  'Camisetas de manga larga',
+  'Camisetas sin mangas',
+  'Chaquetas',
+  'Ropa de abrigo',
+  'Primera capa',
+];
+
+function ProductsPage() {
+  const [, setLocation] = useLocation();
+
+  return (
+    <div className="products-page min-h-[100dvh] bg-white text-[#111]">
+      <header className="flex h-[76px] items-center border-b border-[#f0f0f0] px-[18px]">
+        <button data-testid="button-products-back" onClick={() => setLocation('/')} aria-label="Volver al inicio" className="flex h-10 w-10 items-center justify-start">
+          <ArrowLeft size={25} strokeWidth={1.7} />
+        </button>
+        <h1 className="flex-1 pr-10 text-center text-[15px] font-bold uppercase tracking-[-.02em]">Productos</h1>
+      </header>
+      <main className="px-[17px] pb-[78px]">
+        <div className="border-t border-[#f0f0f0]">
+          {productCategories.map((category) => (
+            <button data-testid={`button-product-category-${category}`} key={category} className="flex h-[61px] w-full items-center justify-between border-b border-[#f0f0f0] text-left text-[15px] font-normal">
+              <span>{category}</span>
+              <ChevronRight size={18} strokeWidth={1.5} />
+            </button>
+          ))}
+        </div>
+      </main>
+      <nav className="fixed bottom-0 left-0 right-0 flex h-[67px] items-center justify-around border-t border-[#f0f0f0] bg-white px-2 text-[#a8a8a8]">
+        <button data-testid="button-products-tab-home" onClick={() => setLocation('/')} aria-label="Inicio" className="flex h-12 w-12 items-center justify-center"><House size={25} strokeWidth={1.5} /></button>
+        <button data-testid="button-products-tab-categories" aria-label="Productos" className="flex h-12 w-12 items-center justify-center text-[#111]"><ListFilter size={25} strokeWidth={1.6} /></button>
+        <button data-testid="button-products-tab-bag" aria-label="Bolsa de compras" className="flex h-12 w-12 items-center justify-center"><ShoppingBag size={24} strokeWidth={1.5} /></button>
+        <button data-testid="button-products-tab-favorites" aria-label="Favoritos" className="flex h-12 w-12 items-center justify-center"><Heart size={25} strokeWidth={1.5} /></button>
+        <button data-testid="button-products-tab-account" aria-label="Cuenta" className="flex h-12 w-12 items-center justify-center"><UserRound size={25} strokeWidth={1.5} /></button>
+      </nav>
+    </div>
+  );
 }
 
 function Home() {
@@ -301,6 +355,7 @@ function Router() {
     <RoutedErrorBoundary>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/products" component={ProductsPage} />
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>
