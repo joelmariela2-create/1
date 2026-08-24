@@ -577,7 +577,6 @@ button, a {
     background-size: 50% 100%;
   }
   .detail-photo-wrap {
-    aspect-ratio: 1.2;
     box-shadow: 7px 7px 0 #e7e1da;
   }
   .detail-info {

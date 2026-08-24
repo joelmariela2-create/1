@@ -140,28 +140,6 @@ function OrderConfirmed({ customer, cartItems, total, onClose }: { customer: Cus
   </div>;
 }
 
-function ProductDetailsPanel() {
-  return <section className="mt-8 border-t border-[#d9d3cc] pt-6" aria-labelledby="product-details-title">
-    <p className="section-label text-[#8b857e]">Información del producto</p>
-    <h2 id="product-details-title" className="editorial-title mt-2 text-[20px] font-bold uppercase">Detalles</h2>
-    <dl className="mt-5 space-y-4 text-[11px] leading-[1.55] text-[#514c47]">
-      <div><dt className="text-[9px] font-bold uppercase tracking-[.12em] text-[#171717]">Material</dt><dd className="mt-1">72% Polyamide, 21% Polyester, 7% Elastane.</dd></div>
-      <div><dt className="text-[9px] font-bold uppercase tracking-[.12em] text-[#171717]">Fabric weight</dt><dd className="mt-1">300 GSM.</dd></div>
-      <div><dt className="text-[9px] font-bold uppercase tracking-[.12em] text-[#171717]">Fit</dt><dd className="mt-1">Fitted.</dd></div>
-      <div><dt className="text-[9px] font-bold uppercase tracking-[.12em] text-[#171717]">Design</dt><dd className="mt-1">This compression tee hugs close with a structured, armored-style pattern. It’s lightweight, supportive, and moves with you. Whether you’re hitting chest day or just trying to look mysterious at the gym. The crisp Batman emblem seals the deal being sleek and tough.</dd></div>
-      <div><dt className="text-[9px] font-bold uppercase tracking-[.12em] text-[#171717]">Model</dt><dd className="mt-1">The model in the first photo is wearing a size XL.<br />Weight: 215lb<br />Height: 6'1.</dd></div>
-      <div><dd className="mt-1 text-[10px] leading-[1.5] text-[#716b65]">THE DARK KNIGHT TRILOGY and all related characters and elements © &amp; TM DC and Warner Bros. Entertainment Inc. WB SHIELD: © &amp; TM WBEI. (s26)</dd></div>
-    </dl>
-    <div className="mt-6 overflow-x-auto border-y border-[#d9d3cc]">
-      <h3 className="py-3 text-[9px] font-bold uppercase tracking-[.12em]">4259 Size Chart (inches)</h3>
-      <table className="w-full min-w-[360px] border-collapse text-left text-[10px] text-[#514c47]">
-        <thead><tr className="border-t border-[#e6e2de] text-[9px] font-bold uppercase tracking-[.1em] text-[#171717]"><th className="py-3 pr-3"> </th><th className="py-3 px-2">S</th><th className="py-3 px-2">M</th><th className="py-3 px-2">L</th><th className="py-3 px-2">XL</th><th className="py-3 px-2">XXL</th></tr></thead>
-        <tbody><tr className="border-t border-[#e6e2de]"><th className="py-3 pr-3 font-semibold text-[#171717]">Length</th><td className="px-2">24.5</td><td className="px-2">25</td><td className="px-2">25.5</td><td className="px-2">25.9</td><td className="px-2">26.4</td></tr><tr className="border-t border-[#e6e2de]"><th className="py-3 pr-3 font-semibold text-[#171717]">Chest</th><td className="px-2">14.2</td><td className="px-2">15.4</td><td className="px-2">16.3</td><td className="px-2">17.3</td><td className="px-2">18.3</td></tr></tbody>
-      </table>
-    </div>
-  </section>;
-}
-
 function CheckoutPage() {
   const [, setLocation] = useLocation();
   const { cartItems } = useShop();
@@ -639,7 +617,7 @@ function ProductDetailPage() {
               <span>{product.category} / {product.brand}</span>
             </div>
             <div className="grid gap-0 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
-              <div className="detail-photo-wrap relative -mx-5 overflow-hidden bg-[#e7e3dd] md:mx-0">
+              <div className="detail-photo-wrap relative overflow-hidden bg-[#e7e3dd]">
                 <img data-testid={`img-product-detail-${product.id}`} src={product.image} alt={`${product.name}, ${product.brand}`} className="detail-photo h-full w-full object-cover" />
                 <div className="absolute left-3 top-3 flex gap-2"><span className="bg-[#f6f4f0] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em]">{product.status}</span>{product.isBestSeller && <span className="bg-[#d93731] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em] text-white">Favorito</span>}</div>
                 <button data-testid="button-detail-favorite" onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar' : 'Añadir'} ${product.name} de favoritos`} className={`absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-white ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={18} strokeWidth={1.5} /></button>
@@ -658,7 +636,6 @@ function ProductDetailPage() {
                 <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-6 flex h-14 w-full items-center justify-between bg-[#d93731] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717]"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
                  <button data-testid="button-detail-buy-whatsapp" onClick={handleBuy} className="mt-2 flex h-14 w-full items-center justify-between bg-[#25D366] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#1da851]"><span className="flex items-center gap-2"><MessageCircle size={17} strokeWidth={1.8} /> Comprar por WhatsApp</span><ArrowRight size={18} /></button>
                 {added && <p data-testid="status-detail-added" role="status" className="mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.08em] text-[#4e6a50]"><Check size={14} /> Producto guardado · puedes seguir comprando</p>}
-                 <ProductDetailsPanel />
                 <div className="detail-spec-grid mt-8 border-y border-[#d9d3cc]">
                   <div><span>Material</span><strong data-testid="text-detail-material">{detail.material}</strong></div>
                   <div><span>GSM / peso</span><strong data-testid="text-detail-weight">{detail.fabricWeight}</strong></div>
