@@ -51,7 +51,7 @@ const campaigns: Campaign[] = [
   {
     label: 'Gymshark',
     title: 'Nuevos ingresos',
-    image: '/naruto-live-now.jpg',
+    image: '/gymshark-logo.png',
     position: 'center 35%',
     tone: 'light',
     id: 'gymshark',
