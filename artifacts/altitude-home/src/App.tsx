@@ -1,14 +1,14 @@
-import { type ReactNode, type TouchEvent, useEffect, useRef, useState } from 'react';
+import { type ReactNode, type TouchEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
+import { Link, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import {
   ArrowLeft, ArrowRight, Box, ChevronRight, Crown, CreditCard, Flame, Heart, House,
   LockKeyhole, MapPin, Menu, MessageCircle, Plus, RefreshCw, Search, ShieldCheck,
-  ShoppingBag, ShoppingCart, Tag, Truck, X, Zap,
+  ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, X, Zap,
 } from 'lucide-react';
 
 const queryClient = new QueryClient();
@@ -30,18 +30,36 @@ const campaigns: Campaign[] = [
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.png', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
 ];
 
-const products = [
-  { id: 'elevated-tee', name: 'Camiseta Essential Core', brand: 'ALTITUDE', price: 'Bs. 249', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'everyday-tee', name: 'Camiseta Everyday Heavy', brand: 'YoungLA', price: 'Bs. 289', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'pace-short', name: 'Short de entrenamiento Pace 5”', brand: 'Gymshark', price: 'Bs. 319', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'studio-hoodie', name: 'Hoodie con cierre Studio', brand: 'ALTITUDE VIP', price: 'Bs. 429', image: 'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=800' },
+type Product = {
+  id: string;
+  name: string;
+  brand: 'ALTITUDE' | 'YoungLA' | 'Gymshark' | 'Breathe Divinity';
+  price: string;
+  priceValue: number;
+  image: string;
+  category: 'Compresión' | 'Hoodies' | 'Joggers' | 'Shorts' | 'Poleras';
+  status: 'Nuevo' | 'Disponible' | 'Últimas unidades';
+  isBestSeller?: boolean;
+};
+
+const products: Product[] = [
+  { id: 'altitude-core-tee', name: 'Polera Essential Core', brand: 'ALTITUDE', price: 'Bs. 249', priceValue: 249, category: 'Poleras', status: 'Nuevo', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
+  { id: 'youngla-everyday-heavy', name: 'Polera Everyday Heavy', brand: 'YoungLA', price: 'Bs. 289', priceValue: 289, category: 'Poleras', status: 'Disponible', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
+  { id: 'gymshark-pace-short', name: 'Short de entrenamiento Pace 5”', brand: 'Gymshark', price: 'Bs. 319', priceValue: 319, category: 'Shorts', status: 'Nuevo', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'altitude-studio-hoodie', name: 'Hoodie con cierre Studio', brand: 'ALTITUDE', price: 'Bs. 429', priceValue: 429, category: 'Hoodies', status: 'Disponible', image: 'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
+  { id: 'breathe-sculpt-longline', name: 'Top Sculpt Longline', brand: 'Breathe Divinity', price: 'Bs. 365', priceValue: 365, category: 'Compresión', status: 'Últimas unidades', image: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'youngla-boxy-jogger', name: 'Jogger Boxy Essential', brand: 'YoungLA', price: 'Bs. 399', priceValue: 399, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311653/pexels-photo-6311653.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'gymshark-arrival-tee', name: 'Polera Arrival Seamless', brand: 'Gymshark', price: 'Bs. 279', priceValue: 279, category: 'Compresión', status: 'Nuevo', image: 'https://images.pexels.com/photos/6311387/pexels-photo-6311387.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
+  { id: 'altitude-training-short', name: 'Short Training Utility', brand: 'ALTITUDE', price: 'Bs. 299', priceValue: 299, category: 'Shorts', status: 'Disponible', image: 'https://images.pexels.com/photos/6551133/pexels-photo-6551133.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'breathe-ritual-hoodie', name: 'Hoodie Ritual Fleece', brand: 'Breathe Divinity', price: 'Bs. 449', priceValue: 449, category: 'Hoodies', status: 'Últimas unidades', image: 'https://images.pexels.com/photos/5698851/pexels-photo-5698851.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'youngla-combat-jogger', name: 'Jogger Combat Core', brand: 'YoungLA', price: 'Bs. 419', priceValue: 419, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311606/pexels-photo-6311606.jpeg?auto=compress&cs=tinysrgb&w=800' },
 ];
 
 function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function Header({ cartCount, onMenu, onShop, onShowroom }: { cartCount: number; onMenu: () => void; onShop?: () => void; onShowroom?: () => void }) {
+function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, onCart }: { cartCount: number; onMenu: () => void; onShop?: () => void; onShowroom?: () => void; onBenefits?: () => void; onSearch?: () => void; onCart?: () => void }) {
   const [, setLocation] = useLocation();
   return (
     <>
@@ -53,16 +71,17 @@ function Header({ cartCount, onMenu, onShop, onShowroom }: { cartCount: number; 
       </div>
       <header className="relative z-20 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
         <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
+        <Link href="/" data-testid="link-home-logo" aria-label="ALTITUDE, inicio" className="header-wordmark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[62%] text-[24px] text-[#151515] md:text-[29px]">ALTITUDE</Link>
         <div className="relative -right-3 -top-2 flex items-center gap-2">
-          <button data-testid="button-search" onClick={() => window.alert('La búsqueda estará disponible muy pronto.')} aria-label="Buscar productos" className="flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Search size={20} strokeWidth={1.7} /></button>
-          <button data-testid="button-open-cart" onClick={() => window.alert('Tu carrito está listo para despegar.')} aria-label="Abrir carrito" className="relative flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><ShoppingCart size={21} strokeWidth={1.7} />{cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}</button>
+          <button data-testid="button-search" onClick={onSearch ?? (() => window.alert('La búsqueda estará disponible muy pronto.'))} aria-label="Buscar productos" className="flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Search size={20} strokeWidth={1.7} /></button>
+          <button data-testid="button-open-cart" onClick={onCart ?? (() => window.alert('Tu carrito está listo para despegar.'))} aria-label="Abrir carrito" className="relative flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><ShoppingCart size={21} strokeWidth={1.7} />{cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}</button>
         </div>
       </header>
       <nav className="desktop-nav hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525]">
         <button onClick={() => onShop ? onShop() : scrollToSection('new-releases')}>Tienda</button>
         <button onClick={() => onShowroom ? onShowroom() : scrollToSection('showroom')}>Showroom</button>
         <button onClick={() => setLocation('/vip')} className="text-[#ec413b]">Acceso VIP</button>
-        <button onClick={() => scrollToSection('benefits')}>Beneficios</button>
+        <button onClick={onBenefits ?? (() => scrollToSection('benefits'))}>Beneficios</button>
       </nav>
     </>
   );
@@ -117,19 +136,174 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location, setLocation] = useLocation();
   if (!open) return null;
   const links = [['Productos', 'products'], ['Nuevos lanzamientos', 'new-releases'], ['Nuevo drop Naruto', 'youngla'], ['Naruto', 'gymshark'], ['ALTITUDE VIP', 'vip-access'], ['Showroom La Paz', 'showroom']];
-  return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); if (id === 'products') setLocation('/products'); else if (id === 'vip-access') setLocation('/vip'); else if (location === '/vip') { setLocation('/'); window.setTimeout(() => scrollToSection(id), 80); } else scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
+  return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); if (id === 'products') setLocation('/products'); else if (id === 'vip-access') setLocation('/vip'); else if (location !== '/') { setLocation('/'); window.setTimeout(() => scrollToSection(id), 80); } else scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
 }
 
-function BottomNav({ onVip, onShowroom }: { onVip: () => void; onShowroom?: () => void }) {
+function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; onShowroom?: () => void; active?: string }) {
   const [, setLocation] = useLocation();
   const items = [{ label: 'Inicio', icon: House, action: () => setLocation('/'), id: 'home' }, { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' }, { label: 'Showroom', icon: MapPin, action: onShowroom ?? (() => scrollToSection('showroom')), id: 'showroom' }, { label: 'VIP', icon: Crown, action: onVip, id: 'vip' }, { label: 'WhatsApp', icon: MessageCircle, action: () => window.open(vipWhatsAppUrl, '_blank'), id: 'whatsapp' }];
-  return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">{items.map(({ label, icon: Icon, action, id }) => <button key={id} onClick={action} className="flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em]"><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
+  return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md" aria-label="Navegación principal móvil">{items.map(({ label, icon: Icon, action, id }) => <button key={id} data-testid={`nav-${id}`} onClick={action} className={`flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em] ${active === id ? 'active-nav' : ''}`}><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
 }
 
 function ProductsPage() {
   const [, setLocation] = useLocation();
-  const categories = ['Todos los productos', 'Camisetas y tops', 'Shorts', 'Sudaderas con capucha y sudaderas', 'Joggers y pantalones deportivos', 'Pantalones', 'Camisetas sin mangas', 'Conjuntos deportivos', 'Camisetas de manga larga', 'Chaquetas', 'Ropa de abrigo', 'Primera capa'];
-  return <div className="products-page min-h-[100dvh] bg-white text-[#111]"><header className="flex h-[76px] items-center border-b border-[#f0f0f0] px-[18px]"><button onClick={() => setLocation('/')} aria-label="Volver al inicio" className="flex h-10 w-10 items-center justify-start"><ArrowLeft size={25} strokeWidth={1.7} /></button><h1 className="flex-1 pr-10 text-center text-[15px] font-bold uppercase tracking-[-.02em]">Productos</h1></header><main className="px-[17px] pb-[78px]"><div className="border-t border-[#f0f0f0]">{categories.map((category) => <button key={category} className="flex h-[61px] w-full items-center justify-between border-b border-[#f0f0f0] text-left text-[15px] font-normal"><span>{category}</span><ChevronRight size={18} strokeWidth={1.5} /></button>)}</div></main></div>;
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [toast, setToast] = useState('');
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('Todas');
+  const [brand, setBrand] = useState('Todas');
+  const [sort, setSort] = useState('newest');
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [catalogError, setCatalogError] = useState(false);
+  const categories = ['Todas', 'Compresión', 'Hoodies', 'Joggers', 'Shorts', 'Poleras'];
+  const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'ALTITUDE'];
+  const sortOptions = [
+    { value: 'newest', label: 'Novedades' },
+    { value: 'best', label: 'Más vendidos' },
+    { value: 'available', label: 'Disponibles' },
+    { value: 'price', label: 'Precio' },
+  ];
+  const notify = (message: string) => {
+    setToast(message);
+    window.setTimeout(() => setToast(''), 2500);
+  };
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsLoading(false), 320);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    const result = products.filter((product) => {
+      const matchesQuery = !normalizedQuery || `${product.name} ${product.brand} ${product.category}`.toLowerCase().includes(normalizedQuery);
+      const matchesCategory = category === 'Todas' || product.category === category;
+      const matchesBrand = brand === 'Todas' || product.brand === brand;
+      return matchesQuery && matchesCategory && matchesBrand;
+    });
+    return result.sort((a, b) => {
+      if (sort === 'best') return Number(Boolean(b.isBestSeller)) - Number(Boolean(a.isBestSeller));
+      if (sort === 'available') return (a.status === 'Últimas unidades' ? 1 : 0) - (b.status === 'Últimas unidades' ? 1 : 0);
+      if (sort === 'price') return a.priceValue - b.priceValue;
+      return products.indexOf(a) - products.indexOf(b);
+    });
+  }, [brand, category, query, sort]);
+
+  const addToCart = (product: Product) => {
+    setCartItems((items) => [...items, product]);
+    notify(`${product.name} añadido al carrito`);
+  };
+  const removeFromCart = (id: string) => setCartItems((items) => {
+    const index = items.findIndex((item) => item.id === id);
+    return index < 0 ? items : [...items.slice(0, index), ...items.slice(index + 1)];
+  });
+  const toggleFavorite = (id: string) => {
+    setFavorites((items) => items.includes(id) ? items.filter((item) => item !== id) : [...items, id]);
+  };
+  const clearFilters = () => {
+    setQuery('');
+    setCategory('Todas');
+    setBrand('Todas');
+    setSort('newest');
+  };
+  const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
+  const openShowroom = () => {
+    setLocation('/');
+    window.setTimeout(() => scrollToSection('showroom'), 80);
+  };
+
+  return (
+    <div className="products-page page-shell min-h-[100dvh] pb-[78px]">
+      <Header
+        cartCount={cartItems.length}
+        onMenu={() => setMenuOpen(true)}
+        onShop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onShowroom={openShowroom}
+        onBenefits={() => { setLocation('/'); window.setTimeout(() => scrollToSection('benefits'), 80); }}
+        onSearch={() => searchRef.current?.focus()}
+        onCart={() => setCartOpen(true)}
+      />
+      <main className="products-content">
+        <section className="border-b border-[#ddd8d2] px-5 pb-8 pt-8 md:px-10 md:pb-12 md:pt-12" aria-labelledby="products-title">
+          <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[.16em] text-[#8b857e]">
+            <Link href="/" data-testid="link-products-home" className="transition-colors hover:text-[#d93731]">Inicio</Link>
+            <ChevronRight size={12} strokeWidth={1.5} />
+            <span className="text-[#171717]">Tienda</span>
+          </div>
+          <div className="mt-8 flex flex-col gap-6 md:mt-12 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-[650px]">
+              <p className="section-label text-[#d93731]">Drop 04 / Equipación diaria</p>
+              <h1 id="products-title" data-testid="text-products-title" className="editorial-title mt-3 text-[clamp(2.7rem,8vw,6.7rem)] font-bold uppercase leading-[.82]">Encuentra<br /><span className="text-[#d93731]">tu ritmo.</span></h1>
+            </div>
+            <p className="max-w-[250px] text-[11px] leading-[1.55] text-[#716b65] md:pb-1 md:text-right">Drops originales, seleccionados para entrenar fuerte y moverte mejor. Envíos a todo Bolivia.</p>
+          </div>
+        </section>
+
+        <section className="sticky top-0 z-10 border-b border-[#ddd8d2] bg-[#f6f4f0]/95 px-5 py-4 backdrop-blur-md md:px-10" aria-label="Herramientas del catálogo">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center">
+            <label className="search-field flex h-11 flex-1 items-center gap-3 border border-[#cfc9c2] bg-[#fbfaf8] px-3 transition-colors">
+              <Search size={17} strokeWidth={1.6} className="text-[#79726b]" />
+              <span className="sr-only">Buscar productos</span>
+              <input ref={searchRef} data-testid="input-product-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nombre, marca o categoría" className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#928b84]" />
+              {query && <button data-testid="button-clear-search" onClick={() => setQuery('')} aria-label="Limpiar búsqueda" className="text-[#79726b] hover:text-[#d93731]"><X size={16} strokeWidth={1.6} /></button>}
+            </label>
+            <div className="flex gap-2">
+              <button data-testid="button-toggle-filters" onClick={() => setFiltersOpen((open) => !open)} aria-expanded={filtersOpen} className={`flex h-11 flex-1 items-center justify-center gap-2 border px-4 text-[10px] font-bold uppercase tracking-[.1em] transition-colors md:flex-none ${filtersOpen ? 'border-[#171717] bg-[#171717] text-[#f6f4f0]' : 'border-[#cfc9c2] bg-[#fbfaf8] hover:border-[#171717]'}`}><SlidersHorizontal size={15} strokeWidth={1.6} /> Filtros</button>
+              <label className="flex h-11 flex-1 items-center gap-2 border border-[#cfc9c2] bg-[#fbfaf8] px-3 md:flex-none">
+                <span className="sr-only">Ordenar productos</span>
+                <select data-testid="select-product-sort" value={sort} onChange={(event) => setSort(event.target.value)} className="w-full cursor-pointer bg-transparent text-[10px] font-bold uppercase tracking-[.07em] outline-none md:w-[150px]">
+                  {sortOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                </select>
+              </label>
+            </div>
+          </div>
+          <div className="product-filter-strip -mx-5 mt-4 flex gap-2 overflow-x-auto px-5 pb-0 md:mx-0 md:px-0">
+            {categories.map((item) => <button key={item} data-testid={`button-category-${item.toLowerCase()}`} onClick={() => setCategory(item)} className={`shrink-0 border px-3 py-2 text-[9px] font-bold uppercase tracking-[.09em] transition-colors ${category === item ? 'border-[#d93731] bg-[#d93731] text-white' : 'border-[#d3cdc6] bg-transparent text-[#69635d] hover:border-[#171717] hover:text-[#171717]'}`}>{item}</button>)}
+          </div>
+          {filtersOpen && <div className="filter-drawer mt-4 border-t border-[#ddd8d2] pt-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-wrap gap-2">
+                <span className="mr-1 self-center text-[9px] font-bold uppercase tracking-[.12em] text-[#8b857e]">Marca</span>
+                {brands.map((item) => <button key={item} data-testid={`button-brand-${item.toLowerCase().replaceAll(' ', '-')}`} onClick={() => setBrand(item)} className={`border px-3 py-2 text-[9px] font-semibold transition-colors ${brand === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] text-[#69635d] hover:border-[#171717]'}`}>{item}</button>)}
+              </div>
+              {(query || category !== 'Todas' || brand !== 'Todas' || sort !== 'newest') && <button data-testid="button-clear-filters" onClick={clearFilters} className="flex items-center gap-2 self-start text-[9px] font-bold uppercase tracking-[.1em] text-[#d93731] hover:text-[#171717] md:self-center">Limpiar filtros <X size={13} /></button>}
+            </div>
+          </div>}
+        </section>
+
+        <section className="px-5 py-7 md:px-10 md:py-10" aria-live="polite">
+          <div className="mb-5 flex items-end justify-between">
+            <div>
+              <p className="section-label text-[#8b857e]">Selección ALTITUDE</p>
+              <h2 data-testid="text-results-heading" className="editorial-title mt-1 text-[22px] font-bold uppercase tracking-[-.04em]">Todos los productos</h2>
+            </div>
+            <span data-testid="text-results-count" className="font-mono text-[10px] text-[#8b857e]">{isLoading ? '—' : `${filteredProducts.length} resultados`}</span>
+          </div>
+          {catalogError ? <div className="flex min-h-[290px] flex-col items-center justify-center border border-[#d8d2cb] bg-[#fbfaf8] px-5 text-center"><p className="section-label text-[#d93731]">Catálogo no disponible</p><p className="mt-2 max-w-[300px] text-[12px] text-[#716b65]">Algo interrumpió la selección. Intenta cargarla de nuevo.</p><button data-testid="button-retry-catalog" onClick={() => { setCatalogError(false); setIsLoading(true); window.setTimeout(() => setIsLoading(false), 320); }} className="mt-5 flex items-center gap-2 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]"><RefreshCw size={14} /> Reintentar</button></div>
+            : isLoading ? <div className="grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-x-5">{Array.from({ length: 8 }, (_, index) => <div key={index} className="animate-pulse"><div className="product-skeleton aspect-[.78]" /><div className="mt-3 h-2.5 w-1/3 bg-[#e8e4de]" /><div className="mt-2 h-3.5 w-4/5 bg-[#e8e4de]" /><div className="mt-2 h-2.5 w-1/4 bg-[#e8e4de]" /></div>)}</div>
+            : filteredProducts.length === 0 ? <div data-testid="empty-product-results" className="flex min-h-[290px] flex-col items-center justify-center border border-dashed border-[#cfc9c2] bg-[#fbfaf8] px-5 text-center"><span className="flex h-12 w-12 items-center justify-center border border-[#d8d2cb] text-[#d93731]"><Search size={20} strokeWidth={1.4} /></span><h3 className="mt-5 text-[14px] font-bold uppercase tracking-[-.02em]">No encontramos ese drop</h3><p className="mt-2 max-w-[290px] text-[11px] leading-[1.5] text-[#716b65]">Prueba con otra palabra o vuelve a ver toda la selección.</p><button data-testid="button-empty-clear-filters" onClick={clearFilters} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Ver todos los productos</button></div>
+            : <div className="grid grid-cols-2 gap-x-3 gap-y-9 md:grid-cols-4 md:gap-x-5 md:gap-y-12">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} className="product-card group min-w-0">
+              <div className="product-card-image relative aspect-[.78] overflow-hidden">
+                <img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} className="h-full w-full object-cover object-center" />
+                <div className="absolute left-2 top-2 flex flex-wrap gap-1.5"><span className="bg-[#f6f4f0] px-2 py-1 text-[8px] font-bold uppercase tracking-[.08em]">{product.status}</span>{product.isBestSeller && <span className="bg-[#d93731] px-2 py-1 text-[8px] font-bold uppercase tracking-[.08em] text-white">Favorito</span>}</div>
+                <button data-testid={`button-favorite-${product.id}`} onClick={() => toggleFavorite(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${product.name}`} className={`product-favorite absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={15} strokeWidth={1.6} /></button>
+                <button data-testid={`button-add-product-${product.id}`} onClick={() => addToCart(product)} className="product-add absolute bottom-2 left-2 right-2 flex h-9 items-center justify-center gap-2 bg-[#f6f4f0]/95 text-[9px] font-bold uppercase tracking-[.1em] hover:bg-[#d93731] hover:text-white">Añadir al carrito <Plus size={14} strokeWidth={1.7} /></button>
+              </div>
+              <div className="pt-3"><p className="text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">{product.brand}</p><h3 data-testid={`text-product-name-${product.id}`} className="mt-1.5 min-h-[29px] text-[11px] font-semibold leading-[1.3]">{product.name}</h3><div className="mt-2 flex items-center justify-between"><p data-testid={`text-product-price-${product.id}`} className="text-[11px] font-bold">{product.price}</p><span className="text-[9px] text-[#8b857e]">{product.category}</span></div></div>
+            </article>)}</div>}
+        </section>
+      </main>
+      <BottomNav active="shop" onVip={() => setLocation('/vip')} onShowroom={openShowroom} />
+      <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+      {cartOpen && <div className="fixed inset-0 z-50"><button data-testid="button-close-cart-overlay" aria-label="Cerrar carrito" onClick={() => setCartOpen(false)} className="absolute inset-0 bg-[#171717]/35 backdrop-blur-[1px]" /><aside role="dialog" aria-modal="true" aria-labelledby="cart-title" className="absolute bottom-0 right-0 top-0 flex w-full max-w-[410px] flex-col bg-[#f6f4f0] px-5 py-6 shadow-2xl md:px-7"><div className="flex items-center justify-between border-b border-[#d9d3cc] pb-5"><div><p className="section-label text-[#d93731]">Tu selección</p><h2 id="cart-title" className="editorial-title mt-1 text-[25px] font-bold uppercase">Carrito <span className="font-mono text-[11px] text-[#8b857e]">({cartItems.length})</span></h2></div><button data-testid="button-close-cart" onClick={() => setCartOpen(false)} aria-label="Cerrar carrito" className="flex h-9 w-9 items-center justify-center border border-[#d9d3cc] hover:border-[#171717]"><X size={18} strokeWidth={1.5} /></button></div>{cartItems.length === 0 ? <div className="flex flex-1 flex-col items-center justify-center text-center"><ShoppingBag size={27} strokeWidth={1.3} className="text-[#d93731]" /><p className="mt-4 text-[13px] font-bold uppercase">Tu bolsa está vacía</p><p className="mt-2 max-w-[230px] text-[11px] leading-[1.5] text-[#716b65]">Guarda tu próximo drop y vuelve cuando estés listo.</p><button data-testid="button-cart-continue-shopping" onClick={() => setCartOpen(false)} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]">Ver productos</button></div> : <><div className="flex-1 overflow-y-auto py-5">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex gap-3 border-b border-[#ded8d1] py-4 first:pt-0"><img src={item.image} alt="" className="h-[78px] w-[62px] object-cover" /><div className="min-w-0 flex-1"><p className="text-[8px] font-bold uppercase tracking-[.12em] text-[#8b857e]">{item.brand}</p><p className="mt-1 text-[11px] font-semibold leading-[1.3]">{item.name}</p><p className="mt-2 text-[11px] font-bold">{item.price}</p></div><button data-testid={`button-remove-cart-${item.id}-${index}`} onClick={() => removeFromCart(item.id)} aria-label={`Quitar ${item.name}`} className="self-start text-[#8b857e] hover:text-[#d93731]"><X size={16} /></button></div>)}</div><div className="border-t border-[#171717] pt-5"><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total</span><strong data-testid="text-cart-total" className="text-[18px]">{`Bs. ${total}`}</strong></div><button data-testid="button-cart-checkout" onClick={() => notify('Escríbenos por WhatsApp para coordinar tu pedido.')} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#d93731] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#171717]">Solicitar pedido <ArrowRight size={16} /></button><p className="mt-3 text-center text-[9px] text-[#8b857e]">Compra simple · Atención personalizada</p></div></>}</aside></div>}
+      {toast && <div data-testid="status-products-toast" role="status" className="fixed bottom-[82px] left-1/2 z-[60] -translate-x-1/2 whitespace-nowrap bg-[#171717] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}
+    </div>
+  );
 }
 
 function Home() {
@@ -139,7 +313,7 @@ function Home() {
   const [, setLocation] = useLocation();
   const notify = (message: string) => { setToast(message); window.setTimeout(() => setToast(''), 2500); };
   const openVip = () => setLocation('/vip');
-   return <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]"><Header cartCount={cartCount} onMenu={() => setMenuOpen(true)} /><main className="home-main"><CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} /><ProductRail onAdd={(name) => { setCartCount((count) => count + 1); notify(`${name} añadido al carrito`); }} /><section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8"><div className="flex items-center justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">Showroom La Paz</h2><p className="mt-1 text-[11px] text-[#6b6660]">Zona Sur · Av. Montenegro 1140</p></div><button onClick={() => window.open('https://maps.google.com/?q=La+Paz+Bolivia', '_blank')} aria-label="Ver showroom en el mapa" className="flex h-10 w-10 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]"><MapPin size={19} strokeWidth={1.5} /></button></div></section></main><footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8"><div className="altitude-wordmark text-[27px]">ALTITUDE</div><p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p><div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button onClick={openVip}>ALTITUDE VIP</button></div></footer><BottomNav onVip={openVip} /><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />{toast && <div className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}</div>;
+    return <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]"><Header cartCount={cartCount} onMenu={() => setMenuOpen(true)} /><main className="home-main"><CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} /><ProductRail onAdd={(name) => { setCartCount((count) => count + 1); notify(`${name} añadido al carrito`); }} /><section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8"><div className="flex items-center justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">Showroom La Paz</h2><p className="mt-1 text-[11px] text-[#6b6660]">Zona Sur · Av. Montenegro 1140</p></div><button onClick={() => window.open('https://maps.google.com/?q=La+Paz+Bolivia', '_blank')} aria-label="Ver showroom en el mapa" className="flex h-10 w-10 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]"><MapPin size={19} strokeWidth={1.5} /></button></div></section></main><footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8"><div className="altitude-wordmark text-[27px]">ALTITUDE</div><p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p><div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button onClick={openVip}>ALTITUDE VIP</button></div></footer><BottomNav active="home" onVip={openVip} /><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />{toast && <div className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}</div>;
 }
 
 function VipPage() {
@@ -236,7 +410,7 @@ function VipPage() {
           </div>
         </section>
       </main>
-      <BottomNav onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
+       <BottomNav active="vip" onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );
