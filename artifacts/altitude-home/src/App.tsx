@@ -143,7 +143,7 @@ function Home() {
 }
 
 function VipPage() {
-  return <div className="page-shell min-h-[100dvh] bg-white" />;
+  return <div className="page-shell min-h-[100dvh] bg-white"><Header cartCount={0} onMenu={() => undefined} /><main /></div>;
 }
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) { const [location] = useLocation(); return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>; }
