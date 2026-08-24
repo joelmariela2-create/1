@@ -84,10 +84,12 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
         </div>
       </div>
       <header className="relative z-20 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
-        <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
-          <Menu size={23} strokeWidth={1.7} className="transition-transform group-hover:scale-90" />
-        </button>
-        <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="altitude-wordmark text-[25px] md:text-[32px]">ALTITUDE</button>
+        <div className="flex items-center gap-4">
+          <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
+            <Menu size={23} strokeWidth={1.7} className="transition-transform group-hover:scale-90" />
+          </button>
+          <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="header-wordmark text-[24px] md:text-[30px]">ALTITUDE</button>
+        </div>
         <div className="flex items-center gap-2">
           <button data-testid="button-search" onClick={() => window.alert('La búsqueda estará disponible muy pronto.')} aria-label="Buscar productos" className="flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
             <Search size={23} strokeWidth={1.7} />
