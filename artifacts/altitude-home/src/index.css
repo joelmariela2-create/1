@@ -30,10 +30,10 @@
 }
 
 :root {
-  --background: 33 22% 94%;
+  --background: 0 0% 100%;
   --foreground: 35 12% 13%;
   --border: 34 11% 79%;
-  --card: 35 22% 97%;
+  --card: 0 0% 100%;
   --card-foreground: 35 12% 13%;
   --primary: 4 79% 49%;
   --primary-foreground: 35 22% 97%;
@@ -144,6 +144,30 @@ button, a { -webkit-tap-highlight-color: transparent; }
   }
   .bottom-nav { display: none !important; }
   .desktop-nav { display: flex !important; }
+}
+
+/* La tienda usa blanco puro como lienzo; el rojo y el negro quedan como señales de marca. */
+.page-shell:not(.vip-page),
+.products-page,
+.detail-page {
+  background-color: #fff !important;
+}
+
+.detail-page {
+  background-image: none !important;
+}
+
+.announcement-strip,
+.campaign-tile,
+.products-page .products-content > section:first-child,
+.products-page .product-card-image,
+.products-page aside[role="dialog"],
+.detail-page aside[role="dialog"] {
+  background-color: #fff !important;
+}
+
+.products-page .products-content > section[aria-label="Herramientas del catálogo"] {
+  background-color: #fff !important;
 }
 
 #root { min-height: 100dvh; }
