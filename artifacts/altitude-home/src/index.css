@@ -80,9 +80,28 @@
   body { @apply font-sans antialiased bg-background text-foreground; }
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
 body { min-width: 320px; overflow-x: hidden; }
-button, a { -webkit-tap-highlight-color: transparent; }
+button, a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.swipe-rail {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  touch-action: pan-x;
+}
+.campaign-hero {
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
 .announcement-track { animation: announcementMarquee 9s linear infinite; }
 @keyframes announcementMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .altitude-wordmark { font-family: var(--font-serif); font-style: italic; letter-spacing: -.09em; font-weight: 700; }
