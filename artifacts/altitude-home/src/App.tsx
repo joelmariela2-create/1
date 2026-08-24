@@ -532,7 +532,7 @@ function CollectionPage() {
           {collectionCampaigns.map((campaign) => (
             <article key={campaign.id} className="campaign-tile relative isolate min-h-[292px] overflow-hidden bg-[#dedbd7] md:min-h-[390px]">
               <img className="absolute inset-0 h-full w-full object-cover" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position }} loading="eager" decoding="async" />
-              <div className={`absolute inset-0 bg-gradient-to-r ${campaign.id === 'youngla-new-drop' ? 'from-white/35 via-white/10' : 'from-white/90 via-white/35'} to-transparent`} />
+              <div className={`absolute inset-0 ${campaign.id === 'youngla-new-drop' ? 'bg-transparent' : 'bg-gradient-to-r from-white/90 via-white/35 to-transparent'}`} />
               <div className="relative z-10 flex min-h-[292px] flex-col items-start justify-center px-6 py-7 md:min-h-[390px] md:px-12">
                 <div className="-translate-y-16 md:-translate-y-20">
                    <p className={`mb-2 text-[10px] font-bold uppercase tracking-[.22em] ${campaign.id === 'youngla-new-drop' ? 'text-white' : 'text-[#5f5a55]'}`}>{campaign.label}</p>
