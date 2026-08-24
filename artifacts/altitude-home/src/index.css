@@ -132,6 +132,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .vip-page .vip-hero {
   background: #000;
 }
+.vip-photo {
+  width: min(68%, 720px);
+  overflow: hidden;
+  pointer-events: none;
+}
+.vip-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 68% center;
+}
 .vip-display,
 .vip-heading,
 .vip-editorial-title {
@@ -191,6 +203,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (min-width: 768px) {
   .vip-page .vip-hero {
     min-height: 525px;
+  }
+  .vip-photo {
+    width: min(58%, 740px);
   }
   .vip-page .vip-benefit-card {
     min-height: 145px;

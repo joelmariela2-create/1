@@ -157,6 +157,9 @@ function VipPage() {
       <Header cartCount={0} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
       <main>
         <section className="vip-hero relative isolate overflow-hidden" aria-labelledby="vip-hero-title">
+          <div className="vip-photo absolute inset-y-0 right-0 z-0" aria-hidden="true">
+            <img src="/vip-athlete.png" alt="" />
+          </div>
           <div className="relative z-10 flex min-h-[443px] flex-col justify-between px-5 pb-7 pt-8 md:min-h-[525px] md:px-12 md:pb-10 md:pt-12">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.2em] text-[#d73832]">
