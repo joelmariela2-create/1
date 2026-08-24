@@ -379,8 +379,10 @@ function CollectionPage() {
               <img className="absolute inset-0 h-full w-full object-cover" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position }} loading="eager" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/35 to-transparent" />
               <div className="relative z-10 flex min-h-[292px] flex-col items-start justify-center px-6 py-7 md:min-h-[390px] md:px-12">
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[.22em] text-[#5f5a55]">{campaign.label}</p>
-                <h2 className="campaign-tile-title max-w-[210px] text-[clamp(1.9rem,8vw,3.5rem)] font-black uppercase leading-[.88] tracking-[-.065em]">{campaign.title}</h2>
+                <div className="-translate-y-16 md:-translate-y-20">
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[.22em] text-[#5f5a55]">{campaign.label}</p>
+                  <h2 className="campaign-tile-title max-w-[210px] text-[clamp(1.9rem,8vw,3.5rem)] font-black uppercase leading-[.88] tracking-[-.065em]">{campaign.title}</h2>
+                </div>
                 <button data-testid={`button-collection-${campaign.id}`} onClick={() => { if (campaign.id === 'altitude-vip-early-access') setLocation('/vip'); else { setLocation('/products'); notify(`${campaign.label}: colección seleccionada`); } }} className="hero-cta group mt-5 flex h-[44px] min-w-[158px] items-center justify-between gap-5 bg-white px-4 text-[9px] font-bold uppercase tracking-[.12em] text-[#171717] shadow-sm transition-colors hover:bg-[#d93731] hover:text-white">Ver colección <ArrowRight size={17} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" /></button>
               </div>
               <div className="absolute bottom-4 left-6 z-10 flex items-center gap-1.5 md:left-12"><span className="h-1.5 w-1.5 rounded-full bg-[#171717]" /><span className="h-1.5 w-1.5 rounded-full border border-[#171717]" /><span className="h-1.5 w-1.5 rounded-full border border-[#171717]" /></div>
