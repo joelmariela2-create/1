@@ -202,7 +202,14 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
           </div>
         ))}
       </div>
-      <span className="absolute bottom-[90px] left-1/2 z-10 -translate-x-1/2 text-[16px] leading-none text-white" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>•</span>
+       <div className="absolute bottom-[91px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>
+         {Array.from({ length: 3 }, (_, index) => (
+           <span
+             key={index}
+             className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${activeIndex % 3 === index ? 'scale-125 bg-white' : 'bg-white/45'}`}
+           />
+         ))}
+       </div>
     </section>
   );
 }
