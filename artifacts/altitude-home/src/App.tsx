@@ -134,7 +134,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
     });
     const timer = window.setInterval(() => {
       setActiveIndex((index) => (index + 1) % campaigns.length);
-    }, 2000);
+    }, 1300);
     return () => window.clearInterval(timer);
   }, []);
 
