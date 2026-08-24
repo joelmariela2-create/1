@@ -127,7 +127,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
           <span className="px-4" aria-hidden="true">Envíos a todo el país <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
         </div>
       </div>
-      <header className="relative z-20 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
+      <header className="sticky top-0 z-30 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
         <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
         <Link href="/" data-testid="link-home-logo" aria-label="ALTITUDE, inicio" className="header-wordmark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[62%] text-[24px] text-[#151515] md:text-[29px]">ALTITUDE</Link>
         <div className="relative -right-3 -top-2 flex items-center gap-2">
@@ -135,7 +135,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
           <button data-testid="button-open-cart" onClick={onCart ?? (() => window.alert('Tu carrito está listo para despegar.'))} aria-label="Abrir carrito" className="relative flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><ShoppingCart size={21} strokeWidth={1.7} />{cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}</button>
         </div>
       </header>
-      <nav className="desktop-nav hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525]">
+      <nav className="desktop-nav sticky top-[62px] z-20 hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525] md:top-[76px]">
         <button onClick={() => onShop ? onShop() : scrollToSection('new-releases')}>Tienda</button>
         <button onClick={() => onShowroom ? onShowroom() : scrollToSection('showroom')}>Showroom</button>
         <button onClick={() => setLocation('/vip')} className="text-[#ec413b]">Acceso VIP</button>
@@ -207,9 +207,7 @@ function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; 
 function ProductsPage() {
   const [, setLocation] = useLocation();
   const { cartItems, favorites, toast, addToCart, removeFromCart, toggleFavorite, notify } = useShop();
-  const searchRef = useRef<HTMLInputElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [query, setQuery] = useState('');
   const [category, setCategory] = useState('Todas');
   const [brand, setBrand] = useState('Todas');
   const [sort, setSort] = useState('newest');
@@ -231,12 +229,10 @@ function ProductsPage() {
   }, []);
 
   const filteredProducts = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
     const result = products.filter((product) => {
-      const matchesQuery = !normalizedQuery || `${product.name} ${product.brand} ${product.category}`.toLowerCase().includes(normalizedQuery);
       const matchesCategory = category === 'Todas' || product.category === category;
       const matchesBrand = brand === 'Todas' || product.brand === brand;
-      return matchesQuery && matchesCategory && matchesBrand;
+      return matchesCategory && matchesBrand;
     });
     return result.sort((a, b) => {
       if (sort === 'best') return Number(Boolean(b.isBestSeller)) - Number(Boolean(a.isBestSeller));
@@ -244,10 +240,9 @@ function ProductsPage() {
       if (sort === 'price') return a.priceValue - b.priceValue;
       return products.indexOf(a) - products.indexOf(b);
     });
-  }, [brand, category, query, sort]);
+  }, [brand, category, sort]);
 
   const clearFilters = () => {
-    setQuery('');
     setCategory('Todas');
     setBrand('Todas');
     setSort('newest');
@@ -266,33 +261,12 @@ function ProductsPage() {
         onShop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onShowroom={openShowroom}
         onBenefits={() => { setLocation('/'); window.setTimeout(() => scrollToSection('benefits'), 80); }}
-        onSearch={() => searchRef.current?.focus()}
+        onSearch={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onCart={() => setCartOpen(true)}
       />
       <main className="products-content">
-        <section className="border-b border-[#ddd8d2] px-5 pb-8 pt-8 md:px-10 md:pb-12 md:pt-12" aria-labelledby="products-title">
-          <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[.16em] text-[#8b857e]">
-            <Link href="/" data-testid="link-products-home" className="transition-colors hover:text-[#d93731]">Inicio</Link>
-            <ChevronRight size={12} strokeWidth={1.5} />
-            <span className="text-[#171717]">Tienda</span>
-          </div>
-          <div className="mt-8 flex flex-col gap-6 md:mt-12 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-[650px]">
-              <p className="section-label text-[#d93731]">Drop 04 / Equipación diaria</p>
-              <h1 id="products-title" data-testid="text-products-title" className="editorial-title mt-3 text-[clamp(2.7rem,8vw,6.7rem)] font-bold uppercase leading-[.82]">Encuentra<br /><span className="text-[#d93731]">tu ritmo.</span></h1>
-            </div>
-            <p className="max-w-[250px] text-[11px] leading-[1.55] text-[#716b65] md:pb-1 md:text-right">Drops originales, seleccionados para entrenar fuerte y moverte mejor. Envíos a todo Bolivia.</p>
-          </div>
-        </section>
-
-        <section className="sticky top-0 z-10 border-b border-[#ddd8d2] bg-[#f6f4f0]/95 px-5 py-4 backdrop-blur-md md:px-10" aria-label="Herramientas del catálogo">
+        <section className="border-b border-[#ddd8d2] bg-[#f6f4f0] px-5 py-4 md:px-10" aria-label="Herramientas del catálogo">
           <div className="flex flex-col gap-3 md:flex-row md:items-center">
-            <label className="search-field flex h-11 flex-1 items-center gap-3 border border-[#cfc9c2] bg-[#fbfaf8] px-3 transition-colors">
-              <Search size={17} strokeWidth={1.6} className="text-[#79726b]" />
-              <span className="sr-only">Buscar productos</span>
-              <input ref={searchRef} data-testid="input-product-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nombre, marca o categoría" className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#928b84]" />
-              {query && <button data-testid="button-clear-search" onClick={() => setQuery('')} aria-label="Limpiar búsqueda" className="text-[#79726b] hover:text-[#d93731]"><X size={16} strokeWidth={1.6} /></button>}
-            </label>
             <div className="flex gap-2">
               <button data-testid="button-toggle-filters" onClick={() => setFiltersOpen((open) => !open)} aria-expanded={filtersOpen} className={`flex h-11 flex-1 items-center justify-center gap-2 border px-4 text-[10px] font-bold uppercase tracking-[.1em] transition-colors md:flex-none ${filtersOpen ? 'border-[#171717] bg-[#171717] text-[#f6f4f0]' : 'border-[#cfc9c2] bg-[#fbfaf8] hover:border-[#171717]'}`}><SlidersHorizontal size={15} strokeWidth={1.6} /> Filtros</button>
               <label className="flex h-11 flex-1 items-center gap-2 border border-[#cfc9c2] bg-[#fbfaf8] px-3 md:flex-none">
@@ -312,7 +286,7 @@ function ProductsPage() {
                 <span className="mr-1 self-center text-[9px] font-bold uppercase tracking-[.12em] text-[#8b857e]">Marca</span>
                 {brands.map((item) => <button key={item} data-testid={`button-brand-${item.toLowerCase().replaceAll(' ', '-')}`} onClick={() => setBrand(item)} className={`border px-3 py-2 text-[9px] font-semibold transition-colors ${brand === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] text-[#69635d] hover:border-[#171717]'}`}>{item}</button>)}
               </div>
-              {(query || category !== 'Todas' || brand !== 'Todas' || sort !== 'newest') && <button data-testid="button-clear-filters" onClick={clearFilters} className="flex items-center gap-2 self-start text-[9px] font-bold uppercase tracking-[.1em] text-[#d93731] hover:text-[#171717] md:self-center">Limpiar filtros <X size={13} /></button>}
+              {(category !== 'Todas' || brand !== 'Todas' || sort !== 'newest') && <button data-testid="button-clear-filters" onClick={clearFilters} className="flex items-center gap-2 self-start text-[9px] font-bold uppercase tracking-[.1em] text-[#d93731] hover:text-[#171717] md:self-center">Limpiar filtros <X size={13} /></button>}
             </div>
           </div>}
         </section>
