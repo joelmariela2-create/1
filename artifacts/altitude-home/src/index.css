@@ -114,3 +114,41 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .bottom-nav { display: none !important; }
   .desktop-nav { display: flex !important; }
 }
+
+#root { min-height: 100dvh; }
+.vip-hero-page {
+  min-height: 100dvh;
+  background: #000;
+  display: flex;
+  justify-content: center;
+}
+.vip-hero {
+  position: relative;
+  width: min(100vw, 720px);
+  line-height: 0;
+}
+.vip-hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 720px;
+}
+.vip-hero-cta {
+  position: absolute;
+  top: 61.35%;
+  left: 5%;
+  width: 32.5%;
+  height: 3.9%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4.5%;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+}
+.vip-hero-cta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
