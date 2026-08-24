@@ -80,6 +80,14 @@ function getProductDetails(product: Product) {
 type CartItem = Product & { selectedSize?: string };
 const boliviaDepartments = ['La Paz', 'Cochabamba', 'Santa Cruz', 'Oruro', 'Potosí', 'Chuquisaca', 'Tarija', 'Beni', 'Pando'];
 type CustomerData = { name: string; phone: string; department: string };
+function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total: number) {
+  const summary = cartItems.map((item) => `${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join(', ');
+  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: Bs. ${total}\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 DEPARTAMENTO: ${customer.department}»`;
+}
+function openOrderWhatsApp(customer: CustomerData, cartItems: CartItem[], total: number) {
+  const whatsappUrl = `${vipWhatsAppUrl}?text=${encodeURIComponent(createOrderMessage(customer, cartItems, total))}`;
+  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+}
 type ShopContextValue = {
   cartItems: CartItem[];
   favorites: string[];
@@ -124,13 +132,10 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
 }
 
 function OrderConfirmed({ customer, cartItems, total, onClose }: { customer: CustomerData; cartItems: CartItem[]; total: number; onClose: () => void }) {
-  const summary = cartItems.map((item) => `${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join('\n');
-  const message = `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: Bs. ${total}\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 DEPARTAMENTO: ${customer.department}»`;
-  const sendOrder = () => window.open(`${vipWhatsAppUrl}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
   return <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#171717]/55 px-5 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="order-confirmed-title">
     <div className="w-full max-w-[390px] overflow-hidden bg-[#f6f4f0] text-center shadow-2xl">
       <img src="/pedido-confirmado.svg" alt="Pedido confirmado" className="h-[190px] w-full object-cover" />
-      <div className="px-6 py-6"><p className="section-label text-[#d93731]">ALTITUDE / gracias</p><h2 id="order-confirmed-title" className="editorial-title mt-2 text-[27px] font-bold uppercase">Pedido confirmado</h2><p className="mt-3 text-[12px] leading-[1.5] text-[#716b65]">Recibimos tu solicitud, {customer.name.split(' ')[0]}. Te contactaremos para coordinar la entrega.</p><button data-testid="button-send-confirmed-order" onClick={sendOrder} className="mt-5 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.1em] text-white"><MessageCircle size={16} /> Enviar pedido por WhatsApp</button><button data-testid="button-close-confirmation" onClick={onClose} className="mt-3 w-full py-2 text-[10px] font-bold uppercase tracking-[.1em] text-[#716b65]">Volver a la tienda</button></div>
+      <div className="px-6 py-6"><p className="section-label text-[#d93731]">ALTITUDE / gracias</p><h2 id="order-confirmed-title" className="editorial-title mt-2 text-[27px] font-bold uppercase">Pedido confirmado</h2><p className="mt-3 text-[12px] leading-[1.5] text-[#716b65]">Recibimos tu solicitud, {customer.name.split(' ')[0]}. Tu pedido fue enviado a WhatsApp.</p><button data-testid="button-close-confirmation" onClick={onClose} className="mt-5 w-full border border-[#171717] py-3 text-[10px] font-bold uppercase tracking-[.1em]">Volver a la tienda</button></div>
     </div>
   </div>;
 }
@@ -140,10 +145,14 @@ function CheckoutPage() {
   const { cartItems } = useShop();
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
+  const handleOrderConfirm = (customer: CustomerData) => {
+    openOrderWhatsApp(customer, cartItems, total);
+    setConfirmedCustomer(customer);
+  };
   if (cartItems.length === 0) return <div className="page-shell flex min-h-[100dvh] flex-col items-center justify-center bg-[#f6f4f0] px-5 text-center"><ShoppingBag size={30} className="text-[#d93731]" /><p className="section-label mt-4 text-[#d93731]">Tu bolsa está vacía</p><h1 className="editorial-title mt-2 text-[28px] font-bold uppercase">Añade un producto para continuar</h1><button onClick={() => setLocation('/products')} className="mt-6 bg-[#171717] px-5 py-4 text-[10px] font-bold uppercase tracking-[.1em] text-white">Ver productos</button></div>;
   return <div className="checkout-page page-shell min-h-[100dvh] bg-[#f6f4f0] px-5 py-6 text-[#171717] md:px-10 md:py-10">
     <header className="flex items-center justify-between border-b border-[#d9d3cc] pb-5"><button onClick={() => setLocation('/products')} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.1em]"><ArrowLeft size={16} /> Volver a la tienda</button><span className="altitude-wordmark text-[25px]">ALTITUDE</span></header>
-    <main className="mx-auto max-w-[560px] py-8 md:py-14"><p className="section-label text-[#d93731]">ALTITUDE / checkout</p><h1 className="editorial-title mt-2 text-[clamp(2.2rem,6vw,4rem)] font-bold uppercase leading-[.9]">Confirma tu pedido</h1><p className="mt-3 max-w-[420px] text-[12px] leading-[1.5] text-[#716b65]">Revisa tu selección y completa tus datos para coordinar la entrega en Bolivia.</p><OrderForm cartItems={cartItems} total={total} onConfirm={setConfirmedCustomer} /></main>
+     <main className="mx-auto max-w-[560px] py-8 md:py-14"><p className="section-label text-[#d93731]">ALTITUDE / checkout</p><h1 className="editorial-title mt-2 text-[clamp(2.2rem,6vw,4rem)] font-bold uppercase leading-[.9]">Confirma tu pedido</h1><p className="mt-3 max-w-[420px] text-[12px] leading-[1.5] text-[#716b65]">Revisa tu selección y completa tus datos para coordinar la entrega en Bolivia.</p><OrderForm cartItems={cartItems} total={total} onConfirm={handleOrderConfirm} /></main>
     {confirmedCustomer && <OrderConfirmed customer={confirmedCustomer} cartItems={cartItems} total={total} onClose={() => setLocation('/products')} />}
   </div>;
 }
@@ -406,6 +415,7 @@ function ProductsPage() {
   const handleOrderConfirm = (customer: CustomerData) => {
     setOrderFormOpen(false);
     setCartOpen(false);
+    openOrderWhatsApp(customer, cartItems, total);
     setConfirmedCustomer(customer);
   };
   const openShowroom = () => {
@@ -591,6 +601,7 @@ function ProductDetailPage() {
   const handleDetailOrderConfirm = (customer: CustomerData) => {
     setOrderFormOpen(false);
     setCartOpen(false);
+    openOrderWhatsApp(customer, cartItems, total);
     setConfirmedCustomer(customer);
   };
 
