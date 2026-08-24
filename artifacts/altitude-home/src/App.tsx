@@ -41,16 +41,16 @@ type Campaign = {
 
 const campaigns: Campaign[] = [
   {
-    label: 'YoungLA',
-    title: 'Nuevo drop',
+    label: 'Nuevo drop',
+    title: 'Naruto',
     image: '/naruto-collection.png',
     position: 'center 35%',
     tone: 'light',
     id: 'youngla',
   },
   {
-    label: 'Gymshark',
-    title: 'Nuevos ingresos',
+    label: 'Naruto',
+    title: 'Colección',
     image: '/gymshark-logo.png',
     position: 'center 35%',
     tone: 'light',
@@ -220,8 +220,8 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const links = [
     ['Productos', 'products'],
     ['Nuevos lanzamientos', 'new-releases'],
-    ['YoungLA Nuevo drop', 'youngla'],
-    ['Gymshark Nuevos ingresos', 'gymshark'],
+    ['Nuevo drop Naruto', 'youngla'],
+    ['Naruto', 'gymshark'],
     ['ALTITUDE VIP', 'vip-access'],
     ['Showroom La Paz', 'showroom'],
   ];
