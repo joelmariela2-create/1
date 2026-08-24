@@ -212,10 +212,24 @@ function ProductsPage() {
   const [brand, setBrand] = useState('Todas');
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [cartOpen, setCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState(false);
   const categories = ['Todas', 'Compresión', 'Hoodies', 'Joggers', 'Shorts', 'Poleras'];
+  const searchCategories = [
+    { label: 'Todos los productos', value: 'Todas' },
+    { label: 'Camisetas y tops', value: 'Poleras' },
+    { label: 'Shorts', value: 'Shorts' },
+    { label: 'Sudaderas con capucha y sudaderas', value: 'Hoodies' },
+    { label: 'Joggers y pantalones deportivos', value: 'Joggers' },
+    { label: 'Pantalones', value: 'Joggers' },
+    { label: 'Camisetas sin mangas', value: 'Compresión' },
+    { label: 'Conjuntos deportivos', value: 'Compresión' },
+    { label: 'Camisetas de manga larga', value: 'Compresión' },
+    { label: 'Chándales', value: 'Joggers' },
+  ];
   const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'ALTITUDE'];
   const sortOptions = [
     { value: 'newest', label: 'Novedades' },
@@ -232,7 +246,9 @@ function ProductsPage() {
     const result = products.filter((product) => {
       const matchesCategory = category === 'Todas' || product.category === category;
       const matchesBrand = brand === 'Todas' || product.brand === brand;
-      return matchesCategory && matchesBrand;
+      const normalizedQuery = searchQuery.trim().toLowerCase();
+      const matchesSearch = !normalizedQuery || [product.name, product.brand, product.category].join(' ').toLowerCase().includes(normalizedQuery);
+      return matchesCategory && matchesBrand && matchesSearch;
     });
     return result.sort((a, b) => {
       if (sort === 'best') return Number(Boolean(b.isBestSeller)) - Number(Boolean(a.isBestSeller));
@@ -240,7 +256,7 @@ function ProductsPage() {
       if (sort === 'price') return a.priceValue - b.priceValue;
       return products.indexOf(a) - products.indexOf(b);
     });
-  }, [brand, category, sort]);
+  }, [brand, category, searchQuery, sort]);
 
   const clearFilters = () => {
     setCategory('Todas');
@@ -261,10 +277,21 @@ function ProductsPage() {
         onShop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onShowroom={openShowroom}
         onBenefits={() => { setLocation('/'); window.setTimeout(() => scrollToSection('benefits'), 80); }}
-        onSearch={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onSearch={() => { setSearchOpen((open) => !open); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
         onCart={() => setCartOpen(true)}
       />
       <main className="products-content">
+        {searchOpen && <section className="border-b border-[#ddd8d2] bg-[#fbfaf8] px-5 pb-3 pt-4 md:px-10" aria-label="Buscar y explorar categorías">
+          <label className="search-field flex h-12 items-center gap-3 border border-[#cfc9c2] bg-white px-3">
+            <Search size={18} strokeWidth={1.6} className="text-[#7c7772]" />
+            <span className="sr-only">Buscar productos</span>
+            <input autoFocus value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Buscar productos" className="w-full bg-transparent text-[12px] outline-none placeholder:text-[#8b857e]" />
+            {searchQuery && <button type="button" onClick={() => setSearchQuery('')} aria-label="Limpiar búsqueda" className="text-[10px] font-bold uppercase tracking-[.08em] text-[#ca2f2b]">Limpiar</button>}
+          </label>
+          <div className="mt-2 divide-y divide-[#e6e2de]">
+            {searchCategories.map((item) => <button key={item.label} type="button" onClick={() => { setCategory(item.value); setSearchOpen(false); }} className="flex w-full items-center justify-between py-4 text-left text-[13px] font-medium text-[#252525] transition-colors hover:text-[#d93731]"><span>{item.label}</span><ChevronRight size={17} strokeWidth={1.5} /></button>)}
+          </div>
+        </section>}
         <section className="border-b border-[#ddd8d2] bg-[#f6f4f0] px-5 py-4 md:px-10" aria-label="Herramientas del catálogo">
           <div className="flex flex-col gap-3 md:flex-row md:items-center">
             <div className="flex gap-2">
