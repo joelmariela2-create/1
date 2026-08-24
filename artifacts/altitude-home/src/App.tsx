@@ -114,7 +114,7 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
         <button data-testid="button-nav-shop" onClick={() => scrollToSection('new-releases')}>Tienda</button>
         <button data-testid="button-nav-showroom" onClick={() => scrollToSection('showroom')}>Showroom</button>
         <button data-testid="button-nav-vip" onClick={() => scrollToSection('vip-access')} className="text-[#ec413b]">Acceso VIP</button>
-        <button data-testid="button-nav-benefits" onClick={() => scrollToSection('vip-access')}>Beneficios</button>
+        <button data-testid="button-nav-benefits" onClick={() => scrollToSection('benefits')}>Beneficios</button>
       </nav>
     </>
   );
@@ -193,7 +193,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
           </div>
         </div>
       </div>
-      <div id="vip-access" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
+      <div id="benefits" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
         {benefits.map(({ label, detail, icon: Icon }, index) => (
           <div data-testid={`benefit-${index}`} key={label} className={`hero-benefit flex min-h-[93px] flex-col items-center justify-center px-1 text-center ${index < benefits.length - 1 ? 'border-r border-[#dedad6]' : ''}`}>
             <Icon size={22} strokeWidth={1.45} className="mb-2 text-[#252525]" />
@@ -361,6 +361,20 @@ function Home() {
       <main>
         <CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} />
         <ProductRail onAdd={addToCart} />
+        <section id="vip-access" className="mx-5 mb-5 overflow-hidden bg-[#111111] px-6 py-9 text-white md:mx-8 md:px-10 md:py-12">
+          <div className="max-w-[620px]">
+            <p className="section-label mb-3 text-[#e04a43]">Early access</p>
+            <h2 className="editorial-title text-[29px] font-bold uppercase leading-[.95] tracking-[-.06em] md:text-[42px]">ALTITUDE VIP</h2>
+            <p className="mt-4 max-w-[470px] text-[15px] leading-[1.45] text-white/75 md:text-[17px]">Accede antes que nadie a nuevos drops, unidades limitadas y lanzamientos exclusivos.</p>
+            <button
+              data-testid="button-enter-vip"
+              onClick={() => window.open('https://wa.me/59170000000', '_blank', 'noopener,noreferrer')}
+              className="group mt-7 inline-flex h-11 items-center gap-3 border border-white px-5 text-[10px] font-bold uppercase tracking-[.12em] transition-colors hover:bg-white hover:text-[#111111]"
+            >
+              Entrar al VIP <ArrowRight size={17} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
+        </section>
         <section id="showroom" ref={showroomRef} className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8">
           <div className="flex items-center justify-between">
             <div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">Showroom La Paz</h2><p className="mt-1 text-[11px] text-[#6b6660]">Zona Sur · Av. Montenegro 1140</p></div>
