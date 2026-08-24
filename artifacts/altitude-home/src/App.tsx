@@ -96,8 +96,8 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
       </div>
       <header className="relative z-20 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
         <div className="flex items-center gap-4">
-          <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
-            <Menu size={23} strokeWidth={1.7} className="transition-transform group-hover:scale-90" />
+          <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-1 -top-1 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]">
+            <Menu size={19} strokeWidth={1.7} className="transition-transform group-hover:scale-90" />
           </button>
           <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="header-wordmark text-[24px] md:text-[30px]">ALTITUDE</button>
         </div>
