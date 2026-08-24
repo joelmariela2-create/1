@@ -1,12 +1,12 @@
-import { type ReactNode, type TouchEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, type ReactNode, type TouchEvent, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { Link, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
+import { Link, Route, Switch, useLocation, Router as WouterRouter, useParams } from 'wouter';
 import {
-  ArrowLeft, ArrowRight, Box, ChevronRight, Crown, CreditCard, Flame, Heart, House,
+  ArrowLeft, ArrowRight, Box, Check, ChevronRight, Crown, CreditCard, Flame, Heart, House,
   LockKeyhole, MapPin, Menu, MessageCircle, Plus, RefreshCw, Search, ShieldCheck,
   ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, X, Zap,
 } from 'lucide-react';
@@ -40,6 +40,11 @@ type Product = {
   category: 'Compresión' | 'Hoodies' | 'Joggers' | 'Shorts' | 'Poleras';
   status: 'Nuevo' | 'Disponible' | 'Últimas unidades';
   isBestSeller?: boolean;
+  material?: string;
+  fabricWeight?: string;
+  fit?: string;
+  features?: string[];
+  sizes?: string[];
 };
 
 const products: Product[] = [
@@ -54,6 +59,59 @@ const products: Product[] = [
   { id: 'breathe-ritual-hoodie', name: 'Hoodie Ritual Fleece', brand: 'Breathe Divinity', price: 'Bs. 449', priceValue: 449, category: 'Hoodies', status: 'Últimas unidades', image: 'https://images.pexels.com/photos/5698851/pexels-photo-5698851.jpeg?auto=compress&cs=tinysrgb&w=800' },
   { id: 'youngla-combat-jogger', name: 'Jogger Combat Core', brand: 'YoungLA', price: 'Bs. 419', priceValue: 419, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311606/pexels-photo-6311606.jpeg?auto=compress&cs=tinysrgb&w=800' },
 ];
+
+const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' | 'fit' | 'features' | 'sizes'>> = {
+  'altitude-core-tee': { material: 'Algodón peinado', fabricWeight: '220 GSM', fit: 'Regular fit', sizes: ['XS', 'S', 'M', 'L', 'XL'], features: ['Costuras reforzadas en hombros', 'Cuello acanalado de recuperación', 'Etiqueta tejida ALTITUDE'] },
+  'youngla-everyday-heavy': { material: 'Jersey de algodón', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Hombro caído', 'Dobladillo pesado', 'Lavado suave de alto contraste'] },
+  'gymshark-pace-short': { material: 'Nylon técnico', fabricWeight: '140 GSM · ligero', fit: 'Athletic fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Secado rápido', 'Bolsillo lateral con cierre', 'Cordón interno ajustable'] },
+  'altitude-studio-hoodie': { material: 'French terry de algodón', fabricWeight: '380 GSM', fit: 'Relaxed fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Cierre metálico YKK', 'Capucha de doble capa', 'Bolsillos de costura limpia'] },
+  'breathe-sculpt-longline': { material: 'Nylon reciclado y elastano', fabricWeight: '260 GSM · compresivo', fit: 'Second-skin fit', sizes: ['XS', 'S', 'M'], features: ['Soporte medio', 'Paneles de contorno', 'Protección UV 50+'] },
+  'youngla-boxy-jogger': { material: 'Algodón french terry', fabricWeight: '360 GSM', fit: 'Boxy relaxed fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Cintura elástica ancha', 'Bolsillos profundos', 'Puño acanalado'] },
+  'gymshark-arrival-tee': { material: 'Poliéster reciclado', fabricWeight: '160 GSM · ultraligero', fit: 'Slim fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Construcción seamless', 'Paneles de ventilación', 'Costuras antirozaduras'] },
+  'altitude-training-short': { material: 'Nylon ripstop', fabricWeight: '155 GSM · ligero', fit: 'Regular fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Bolsillo cargo discreto', 'Tejido repelente al agua', 'Logo bordado'] },
+  'breathe-ritual-hoodie': { material: 'Algodón cepillado', fabricWeight: '400 GSM · cálido', fit: 'Relaxed fit', sizes: ['S', 'M', 'L'], features: ['Interior fleece', 'Capucha envolvente', 'Acabado lavado'] },
+  'youngla-combat-jogger': { material: 'Algodón y poliéster', fabricWeight: '320 GSM', fit: 'Tapered fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Rodilla articulada', 'Cordón plano', 'Bolsillo trasero seguro'] },
+};
+
+function getProductDetails(product: Product) {
+  return { ...product, ...productDetails[product.id] };
+}
+
+type CartItem = Product & { selectedSize?: string };
+type ShopContextValue = {
+  cartItems: CartItem[];
+  favorites: string[];
+  toast: string;
+  addToCart: (product: Product, selectedSize?: string) => void;
+  removeFromCart: (id: string) => void;
+  toggleFavorite: (id: string) => void;
+  notify: (message: string) => void;
+};
+const ShopContext = createContext<ShopContextValue | null>(null);
+function useShop() {
+  const value = useContext(ShopContext);
+  if (!value) throw new Error('useShop debe utilizarse dentro de ShopProvider');
+  return value;
+}
+function ShopProvider({ children }: { children: ReactNode }) {
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [toast, setToast] = useState('');
+  const notify = (message: string) => {
+    setToast(message);
+    window.setTimeout(() => setToast(''), 2500);
+  };
+  const addToCart = (product: Product, selectedSize?: string) => {
+    setCartItems((items) => [...items, { ...product, selectedSize }]);
+    notify(`${product.name}${selectedSize ? ` · talla ${selectedSize}` : ''} añadido al carrito`);
+  };
+  const removeFromCart = (id: string) => setCartItems((items) => {
+    const index = items.findIndex((item) => item.id === id);
+    return index < 0 ? items : [...items.slice(0, index), ...items.slice(index + 1)];
+  });
+  const toggleFavorite = (id: string) => setFavorites((items) => items.includes(id) ? items.filter((item) => item !== id) : [...items, id]);
+  return <ShopContext.Provider value={{ cartItems, favorites, toast, addToCart, removeFromCart, toggleFavorite, notify }}>{children}</ShopContext.Provider>;
+}
 
 function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -128,8 +186,9 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   );
 }
 
-function ProductRail({ onAdd }: { onAdd: (name: string) => void }) {
-  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">Nuevos lanzamientos</h2></div><button onClick={() => window.alert('Muy pronto: toda la tienda ALTITUDE.')} className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></button></div><div className="scrollbar-hide -mx-5 flex snap-x gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><img src={product.image} alt={product.name} className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" /><button onClick={() => window.alert(`${product.name} guardado en favoritos.`)} aria-label={`Añadir ${product.name} a favoritos`} className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><Heart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product.name)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold">{product.name}</h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
+function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
+  const { favorites, toggleFavorite } = useShop();
+  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">Nuevos lanzamientos</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div className="scrollbar-hide -mx-5 flex snap-x gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><Link href={`/products/${product.id}`} data-testid={`link-rail-image-${product.id}`} aria-label={`Ver ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" /></Link><button onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${product.name}`} className={`absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -147,11 +206,9 @@ function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; 
 
 function ProductsPage() {
   const [, setLocation] = useLocation();
+  const { cartItems, favorites, toast, addToCart, removeFromCart, toggleFavorite, notify } = useShop();
   const searchRef = useRef<HTMLInputElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<Product[]>([]);
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [toast, setToast] = useState('');
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('Todas');
   const [brand, setBrand] = useState('Todas');
@@ -168,11 +225,6 @@ function ProductsPage() {
     { value: 'available', label: 'Disponibles' },
     { value: 'price', label: 'Precio' },
   ];
-  const notify = (message: string) => {
-    setToast(message);
-    window.setTimeout(() => setToast(''), 2500);
-  };
-
   useEffect(() => {
     const timer = window.setTimeout(() => setIsLoading(false), 320);
     return () => window.clearTimeout(timer);
@@ -194,17 +246,6 @@ function ProductsPage() {
     });
   }, [brand, category, query, sort]);
 
-  const addToCart = (product: Product) => {
-    setCartItems((items) => [...items, product]);
-    notify(`${product.name} añadido al carrito`);
-  };
-  const removeFromCart = (id: string) => setCartItems((items) => {
-    const index = items.findIndex((item) => item.id === id);
-    return index < 0 ? items : [...items.slice(0, index), ...items.slice(index + 1)];
-  });
-  const toggleFavorite = (id: string) => {
-    setFavorites((items) => items.includes(id) ? items.filter((item) => item !== id) : [...items, id]);
-  };
   const clearFilters = () => {
     setQuery('');
     setCategory('Todas');
@@ -289,18 +330,18 @@ function ProductsPage() {
             : filteredProducts.length === 0 ? <div data-testid="empty-product-results" className="flex min-h-[290px] flex-col items-center justify-center border border-dashed border-[#cfc9c2] bg-[#fbfaf8] px-5 text-center"><span className="flex h-12 w-12 items-center justify-center border border-[#d8d2cb] text-[#d93731]"><Search size={20} strokeWidth={1.4} /></span><h3 className="mt-5 text-[14px] font-bold uppercase tracking-[-.02em]">No encontramos ese drop</h3><p className="mt-2 max-w-[290px] text-[11px] leading-[1.5] text-[#716b65]">Prueba con otra palabra o vuelve a ver toda la selección.</p><button data-testid="button-empty-clear-filters" onClick={clearFilters} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Ver todos los productos</button></div>
             : <div className="grid grid-cols-2 gap-x-3 gap-y-9 md:grid-cols-4 md:gap-x-5 md:gap-y-12">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} className="product-card group min-w-0">
               <div className="product-card-image relative aspect-[.78] overflow-hidden">
-                <img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} className="h-full w-full object-cover object-center" />
+                 <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} className="h-full w-full object-cover object-center" /></Link>
                 <div className="absolute left-2 top-2 flex flex-wrap gap-1.5"><span className="bg-[#f6f4f0] px-2 py-1 text-[8px] font-bold uppercase tracking-[.08em]">{product.status}</span>{product.isBestSeller && <span className="bg-[#d93731] px-2 py-1 text-[8px] font-bold uppercase tracking-[.08em] text-white">Favorito</span>}</div>
                 <button data-testid={`button-favorite-${product.id}`} onClick={() => toggleFavorite(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${product.name}`} className={`product-favorite absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={15} strokeWidth={1.6} /></button>
-                <button data-testid={`button-add-product-${product.id}`} onClick={() => addToCart(product)} className="product-add absolute bottom-2 left-2 right-2 flex h-9 items-center justify-center gap-2 bg-[#f6f4f0]/95 text-[9px] font-bold uppercase tracking-[.1em] hover:bg-[#d93731] hover:text-white">Añadir al carrito <Plus size={14} strokeWidth={1.7} /></button>
+                 <button data-testid={`button-add-product-${product.id}`} onClick={() => addToCart(product)} className="product-add absolute bottom-2 left-2 right-2 flex h-9 items-center justify-center gap-2 bg-[#f6f4f0]/95 text-[9px] font-bold uppercase tracking-[.1em] hover:bg-[#d93731] hover:text-white">Añadir al carrito <Plus size={14} strokeWidth={1.7} /></button>
               </div>
-              <div className="pt-3"><p className="text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">{product.brand}</p><h3 data-testid={`text-product-name-${product.id}`} className="mt-1.5 min-h-[29px] text-[11px] font-semibold leading-[1.3]">{product.name}</h3><div className="mt-2 flex items-center justify-between"><p data-testid={`text-product-price-${product.id}`} className="text-[11px] font-bold">{product.price}</p><span className="text-[9px] text-[#8b857e]">{product.category}</span></div></div>
+               <div className="pt-3"><p className="text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">{product.brand}</p><h3 data-testid={`text-product-name-${product.id}`} className="mt-1.5 min-h-[29px] text-[11px] font-semibold leading-[1.3]"><Link href={`/products/${product.id}`} data-testid={`link-product-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><div className="mt-2 flex items-center justify-between"><p data-testid={`text-product-price-${product.id}`} className="text-[11px] font-bold">{product.price}</p><span className="text-[9px] text-[#8b857e]">{product.category}</span></div></div>
             </article>)}</div>}
         </section>
       </main>
       <BottomNav active="shop" onVip={() => setLocation('/vip')} onShowroom={openShowroom} />
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />
-      {cartOpen && <div className="fixed inset-0 z-50"><button data-testid="button-close-cart-overlay" aria-label="Cerrar carrito" onClick={() => setCartOpen(false)} className="absolute inset-0 bg-[#171717]/35 backdrop-blur-[1px]" /><aside role="dialog" aria-modal="true" aria-labelledby="cart-title" className="absolute bottom-0 right-0 top-0 flex w-full max-w-[410px] flex-col bg-[#f6f4f0] px-5 py-6 shadow-2xl md:px-7"><div className="flex items-center justify-between border-b border-[#d9d3cc] pb-5"><div><p className="section-label text-[#d93731]">Tu selección</p><h2 id="cart-title" className="editorial-title mt-1 text-[25px] font-bold uppercase">Carrito <span className="font-mono text-[11px] text-[#8b857e]">({cartItems.length})</span></h2></div><button data-testid="button-close-cart" onClick={() => setCartOpen(false)} aria-label="Cerrar carrito" className="flex h-9 w-9 items-center justify-center border border-[#d9d3cc] hover:border-[#171717]"><X size={18} strokeWidth={1.5} /></button></div>{cartItems.length === 0 ? <div className="flex flex-1 flex-col items-center justify-center text-center"><ShoppingBag size={27} strokeWidth={1.3} className="text-[#d93731]" /><p className="mt-4 text-[13px] font-bold uppercase">Tu bolsa está vacía</p><p className="mt-2 max-w-[230px] text-[11px] leading-[1.5] text-[#716b65]">Guarda tu próximo drop y vuelve cuando estés listo.</p><button data-testid="button-cart-continue-shopping" onClick={() => setCartOpen(false)} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]">Ver productos</button></div> : <><div className="flex-1 overflow-y-auto py-5">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex gap-3 border-b border-[#ded8d1] py-4 first:pt-0"><img src={item.image} alt="" className="h-[78px] w-[62px] object-cover" /><div className="min-w-0 flex-1"><p className="text-[8px] font-bold uppercase tracking-[.12em] text-[#8b857e]">{item.brand}</p><p className="mt-1 text-[11px] font-semibold leading-[1.3]">{item.name}</p><p className="mt-2 text-[11px] font-bold">{item.price}</p></div><button data-testid={`button-remove-cart-${item.id}-${index}`} onClick={() => removeFromCart(item.id)} aria-label={`Quitar ${item.name}`} className="self-start text-[#8b857e] hover:text-[#d93731]"><X size={16} /></button></div>)}</div><div className="border-t border-[#171717] pt-5"><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total</span><strong data-testid="text-cart-total" className="text-[18px]">{`Bs. ${total}`}</strong></div><button data-testid="button-cart-checkout" onClick={() => notify('Escríbenos por WhatsApp para coordinar tu pedido.')} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#d93731] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#171717]">Solicitar pedido <ArrowRight size={16} /></button><p className="mt-3 text-center text-[9px] text-[#8b857e]">Compra simple · Atención personalizada</p></div></>}</aside></div>}
+       {cartOpen && <div className="fixed inset-0 z-50"><button data-testid="button-close-cart-overlay" aria-label="Cerrar carrito" onClick={() => setCartOpen(false)} className="absolute inset-0 bg-[#171717]/35 backdrop-blur-[1px]" /><aside role="dialog" aria-modal="true" aria-labelledby="cart-title" className="absolute bottom-0 right-0 top-0 flex w-full max-w-[410px] flex-col bg-[#f6f4f0] px-5 py-6 shadow-2xl md:px-7"><div className="flex items-center justify-between border-b border-[#d9d3cc] pb-5"><div><p className="section-label text-[#d93731]">Tu selección</p><h2 id="cart-title" className="editorial-title mt-1 text-[25px] font-bold uppercase">Carrito <span className="font-mono text-[11px] text-[#8b857e]">({cartItems.length})</span></h2></div><button data-testid="button-close-cart" onClick={() => setCartOpen(false)} aria-label="Cerrar carrito" className="flex h-9 w-9 items-center justify-center border border-[#d9d3cc] hover:border-[#171717]"><X size={18} strokeWidth={1.5} /></button></div>{cartItems.length === 0 ? <div className="flex flex-1 flex-col items-center justify-center text-center"><ShoppingBag size={27} strokeWidth={1.3} className="text-[#d93731]" /><p className="mt-4 text-[13px] font-bold uppercase">Tu bolsa está vacía</p><p className="mt-2 max-w-[230px] text-[11px] leading-[1.5] text-[#716b65]">Guarda tu próximo drop y vuelve cuando estés listo.</p><button data-testid="button-cart-continue-shopping" onClick={() => setCartOpen(false)} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]">Ver productos</button></div> : <><div className="flex-1 overflow-y-auto py-5">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex gap-3 border-b border-[#ded8d1] py-4 first:pt-0"><img src={item.image} alt="" className="h-[78px] w-[62px] object-cover" /><div className="min-w-0 flex-1"><p className="text-[8px] font-bold uppercase tracking-[.12em] text-[#8b857e]">{item.brand}</p><p className="mt-1 text-[11px] font-semibold leading-[1.3]">{item.name}</p>{item.selectedSize && <p className="mt-1 text-[9px] uppercase tracking-[.08em] text-[#8b857e]">Talla {item.selectedSize}</p>}<p className="mt-2 text-[11px] font-bold">{item.price}</p></div><button data-testid={`button-remove-cart-${item.id}-${index}`} onClick={() => removeFromCart(item.id)} aria-label={`Quitar ${item.name}`} className="self-start text-[#8b857e] hover:text-[#d93731]"><X size={16} /></button></div>)}</div><div className="border-t border-[#171717] pt-5"><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total</span><strong data-testid="text-cart-total" className="text-[18px]">{`Bs. ${total}`}</strong></div><button data-testid="button-cart-checkout" onClick={() => notify('Escríbenos por WhatsApp para coordinar tu pedido.')} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#d93731] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#171717]">Solicitar pedido <ArrowRight size={16} /></button><p className="mt-3 text-center text-[9px] text-[#8b857e]">Compra simple · Atención personalizada</p></div></>}</aside></div>}
       {toast && <div data-testid="status-products-toast" role="status" className="fixed bottom-[82px] left-1/2 z-[60] -translate-x-1/2 whitespace-nowrap bg-[#171717] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}
     </div>
   );
@@ -308,17 +349,97 @@ function ProductsPage() {
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
-  const [toast, setToast] = useState('');
+  const { cartItems, toast, addToCart, notify } = useShop();
   const [, setLocation] = useLocation();
-  const notify = (message: string) => { setToast(message); window.setTimeout(() => setToast(''), 2500); };
   const openVip = () => setLocation('/vip');
-    return <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]"><Header cartCount={cartCount} onMenu={() => setMenuOpen(true)} /><main className="home-main"><CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} /><ProductRail onAdd={(name) => { setCartCount((count) => count + 1); notify(`${name} añadido al carrito`); }} /><section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8"><div className="flex items-center justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">Showroom La Paz</h2><p className="mt-1 text-[11px] text-[#6b6660]">Zona Sur · Av. Montenegro 1140</p></div><button onClick={() => window.open('https://maps.google.com/?q=La+Paz+Bolivia', '_blank')} aria-label="Ver showroom en el mapa" className="flex h-10 w-10 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]"><MapPin size={19} strokeWidth={1.5} /></button></div></section></main><footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8"><div className="altitude-wordmark text-[27px]">ALTITUDE</div><p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p><div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button onClick={openVip}>ALTITUDE VIP</button></div></footer><BottomNav active="home" onVip={openVip} /><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />{toast && <div className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}</div>;
+    return <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]"><Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} /><main className="home-main"><CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} /><ProductRail onAdd={(product) => addToCart(product)} /><section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8"><div className="flex items-center justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">Showroom La Paz</h2><p className="mt-1 text-[11px] text-[#6b6660]">Zona Sur · Av. Montenegro 1140</p></div><button onClick={() => window.open('https://maps.google.com/?q=La+Paz+Bolivia', '_blank')} aria-label="Ver showroom en el mapa" className="flex h-10 w-10 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]"><MapPin size={19} strokeWidth={1.5} /></button></div></section></main><footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8"><div className="altitude-wordmark text-[27px]">ALTITUDE</div><p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p><div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button onClick={openVip}>ALTITUDE VIP</button></div></footer><BottomNav active="home" onVip={openVip} /><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />{toast && <div className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}</div>;
+}
+
+function ProductDetailPage() {
+  const params = useParams();
+  const [, setLocation] = useLocation();
+  const { cartItems, favorites, toast, addToCart, removeFromCart, toggleFavorite, notify } = useShop();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [sizeError, setSizeError] = useState('');
+  const [added, setAdded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const product = products.find((item) => item.id === params.id);
+  const detail = product ? getProductDetails(product) : undefined;
+  const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsLoading(false), 220);
+    return () => window.clearTimeout(timer);
+  }, [params.id]);
+
+  const handleAdd = () => {
+    if (!product || !detail) return;
+    if (!selectedSize) {
+      setSizeError('Selecciona una talla para continuar');
+      document.getElementById('product-size')?.focus();
+      return;
+    }
+    setSizeError('');
+    addToCart(product, selectedSize);
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 3200);
+  };
+
+  return (
+    <div className="detail-page page-shell min-h-[100dvh] bg-[#f6f4f0] pb-[78px] text-[#171717]">
+      <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} onCart={() => setCartOpen(true)} />
+      <main aria-live="polite">
+        {isLoading ? <div className="detail-loading grid gap-5 px-5 py-7 md:grid-cols-2 md:px-10 md:py-12"><div className="product-skeleton aspect-[.86]" /><div className="space-y-5 pt-3"><div className="h-3 w-1/4 bg-[#e8e4de]" /><div className="h-14 w-4/5 bg-[#e8e4de]" /><div className="h-8 w-1/3 bg-[#e8e4de]" /><div className="h-24 w-full bg-[#e8e4de]" /></div></div>
+          : !product || !detail ? <section className="flex min-h-[590px] flex-col items-center justify-center px-5 text-center"><p className="section-label text-[#d93731]">404 / selección no encontrada</p><h1 data-testid="text-product-not-found" className="editorial-title mt-4 text-[clamp(2.8rem,9vw,6rem)] font-bold uppercase leading-[.84]">Este drop<br /><span className="text-[#d93731]">ya voló.</span></h1><p className="mt-5 max-w-[310px] text-[12px] leading-[1.5] text-[#716b65]">No encontramos ese producto en el catálogo actual. Explora la selección completa para encontrar tu próximo ritmo.</p><Link href="/products" data-testid="link-not-found-products" className="mt-7 flex h-12 items-center gap-3 bg-[#171717] px-5 text-[10px] font-bold uppercase tracking-[.12em] text-[#f6f4f0] transition-colors hover:bg-[#d93731]"><ArrowLeft size={16} /> Volver a la tienda</Link></section>
+          : <section className="detail-content px-5 py-6 md:px-10 md:py-10">
+            <div className="mb-7 flex items-center justify-between gap-4 text-[9px] font-semibold uppercase tracking-[.14em] text-[#8b857e] md:mb-10">
+              <Link href="/products" data-testid="link-detail-back" className="inline-flex items-center gap-2 transition-colors hover:text-[#d93731]"><ArrowLeft size={14} /> Volver a la tienda</Link>
+              <span>{product.category} / {product.brand}</span>
+            </div>
+            <div className="grid gap-8 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
+              <div className="detail-photo-wrap relative overflow-hidden bg-[#e7e3dd]">
+                <img data-testid={`img-product-detail-${product.id}`} src={product.image} alt={`${product.name}, ${product.brand}`} className="detail-photo h-full w-full object-cover" />
+                <div className="absolute left-3 top-3 flex gap-2"><span className="bg-[#f6f4f0] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em]">{product.status}</span>{product.isBestSeller && <span className="bg-[#d93731] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em] text-white">Favorito</span>}</div>
+                <button data-testid="button-detail-favorite" onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar' : 'Añadir'} ${product.name} de favoritos`} className={`absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-white ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={18} strokeWidth={1.5} /></button>
+              </div>
+              <div className="detail-info md:sticky md:top-5">
+                <p data-testid="text-detail-brand" className="section-label text-[#d93731]">{product.brand}</p>
+                <h1 data-testid="text-detail-name" className="editorial-title mt-3 max-w-[560px] text-[clamp(2.3rem,6vw,5rem)] font-bold uppercase leading-[.86] tracking-[-.065em]">{product.name}</h1>
+                <div className="mt-6 flex items-end justify-between border-b border-[#d9d3cc] pb-5"><p data-testid="text-detail-price" className="text-[22px] font-bold tracking-[-.04em]">{product.price}</p><p data-testid="status-detail-availability" className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-[#4e6a50]"><span className="h-2 w-2 rounded-full bg-[#4e6a50]" /> {product.status === 'Últimas unidades' ? 'Quedan pocas' : 'Disponible'}</p></div>
+                <div className="mt-6" role="group" aria-labelledby="product-size-label">
+                  <div className="flex items-center justify-between"><span id="product-size-label" className="text-[10px] font-bold uppercase tracking-[.12em]">Selecciona tu talla <span className="text-[#d93731]">*</span></span><button data-testid="button-size-guide" onClick={() => notify('Guía de tallas: elige tu talla habitual.')} className="text-[9px] font-semibold uppercase tracking-[.08em] text-[#8b857e] underline underline-offset-4 hover:text-[#171717]">Guía de tallas</button></div>
+                  <div id="product-size" tabIndex={-1} aria-describedby={sizeError ? 'size-error' : undefined} className="mt-3 grid grid-cols-5 gap-2" role="radiogroup" aria-label="Tallas disponibles">
+                    {(detail.sizes ?? []).map((size) => <button key={size} type="button" data-testid={`button-size-${size.toLowerCase()}`} role="radio" aria-checked={selectedSize === size} onClick={() => { setSelectedSize(size); setSizeError(''); }} className={`flex h-11 items-center justify-center border text-[11px] font-bold transition-colors ${selectedSize === size ? 'border-[#d93731] bg-[#d93731] text-white' : 'border-[#cfc9c2] bg-[#fbfaf8] hover:border-[#171717]'}`}>{size}</button>)}
+                  </div>
+                  {sizeError && <p id="size-error" data-testid="status-size-error" role="alert" className="mt-3 text-[10px] font-semibold text-[#d93731]">{sizeError}</p>}
+                </div>
+                <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-6 flex h-14 w-full items-center justify-between bg-[#d93731] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717]"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
+                {added && <p data-testid="status-detail-added" role="status" className="mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.08em] text-[#4e6a50]"><Check size={14} /> Producto guardado · puedes seguir comprando</p>}
+                <div className="detail-spec-grid mt-8 border-y border-[#d9d3cc]">
+                  <div><span>Material</span><strong data-testid="text-detail-material">{detail.material}</strong></div>
+                  <div><span>GSM / peso</span><strong data-testid="text-detail-weight">{detail.fabricWeight}</strong></div>
+                  <div><span>Ajuste</span><strong data-testid="text-detail-fit">{detail.fit}</strong></div>
+                  <div><span>Envíos</span><strong>Todo Bolivia</strong></div>
+                </div>
+                <div className="mt-7"><p className="section-label text-[#8b857e]">Diseñado para moverte</p><ul className="detail-features mt-3">{(detail.features ?? []).map((feature) => <li key={feature}><Check size={14} strokeWidth={1.8} /> <span>{feature}</span></li>)}</ul></div>
+              </div>
+            </div>
+          </section>}
+      </main>
+      <BottomNav active="shop" onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
+      <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+      {cartOpen && <div className="fixed inset-0 z-50"><button data-testid="button-close-detail-cart-overlay" aria-label="Cerrar carrito" onClick={() => setCartOpen(false)} className="absolute inset-0 bg-[#171717]/35 backdrop-blur-[1px]" /><aside role="dialog" aria-modal="true" aria-labelledby="detail-cart-title" className="absolute bottom-0 right-0 top-0 flex w-full max-w-[410px] flex-col bg-[#f6f4f0] px-5 py-6 shadow-2xl md:px-7"><div className="flex items-center justify-between border-b border-[#d9d3cc] pb-5"><div><p className="section-label text-[#d93731]">Tu selección</p><h2 id="detail-cart-title" className="editorial-title mt-1 text-[25px] font-bold uppercase">Carrito <span className="font-mono text-[11px] text-[#8b857e]">({cartItems.length})</span></h2></div><button data-testid="button-close-detail-cart" onClick={() => setCartOpen(false)} aria-label="Cerrar carrito" className="flex h-9 w-9 items-center justify-center border border-[#d9d3cc]"><X size={18} strokeWidth={1.5} /></button></div>{cartItems.length === 0 ? <div className="flex flex-1 flex-col items-center justify-center text-center"><ShoppingBag size={27} strokeWidth={1.3} className="text-[#d93731]" /><p className="mt-4 text-[13px] font-bold uppercase">Tu bolsa está vacía</p><Link href="/products" data-testid="link-detail-empty-cart-products" onClick={() => setCartOpen(false)} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]">Ver productos</Link></div> : <><div className="flex-1 overflow-y-auto py-5">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex gap-3 border-b border-[#ded8d1] py-4 first:pt-0"><img src={item.image} alt="" className="h-[78px] w-[62px] object-cover" /><div className="min-w-0 flex-1"><p className="text-[8px] font-bold uppercase tracking-[.12em] text-[#8b857e]">{item.brand}</p><p className="mt-1 text-[11px] font-semibold leading-[1.3]">{item.name}</p>{item.selectedSize && <p className="mt-1 text-[9px] uppercase tracking-[.08em] text-[#8b857e]">Talla {item.selectedSize}</p>}<p className="mt-2 text-[11px] font-bold">{item.price}</p></div><button data-testid={`button-remove-detail-cart-${item.id}-${index}`} onClick={() => removeFromCart(item.id)} aria-label={`Quitar ${item.name}`} className="self-start text-[#8b857e] hover:text-[#d93731]"><X size={16} /></button></div>)}</div><div className="border-t border-[#171717] pt-5"><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total</span><strong data-testid="text-detail-cart-total" className="text-[18px]">{`Bs. ${total}`}</strong></div><button data-testid="button-detail-cart-checkout" onClick={() => notify('Escríbenos por WhatsApp para coordinar tu pedido.')} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#d93731] text-[10px] font-bold uppercase tracking-[.12em] text-white">Solicitar pedido <ArrowRight size={16} /></button><Link href="/products" data-testid="link-detail-continue-shopping" onClick={() => setCartOpen(false)} className="mt-4 block text-center text-[9px] font-bold uppercase tracking-[.08em] text-[#8b857e] underline underline-offset-4">Seguir comprando</Link></div></>}</aside></div>}
+      {toast && <div data-testid="status-detail-toast" role="status" className="fixed bottom-[82px] left-1/2 z-[60] -translate-x-1/2 whitespace-nowrap bg-[#171717] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}
+    </div>
+  );
 }
 
 function VipPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setLocation] = useLocation();
+  const { cartItems } = useShop();
   const enterVip = () => window.open(vipWhatsAppUrl, '_blank', 'noopener,noreferrer');
   const benefits = [
     { label: 'Early access', detail: 'Accede antes del lanzamiento público.', icon: Zap },
@@ -328,7 +449,7 @@ function VipPage() {
   ];
   return (
     <div className="vip-page page-shell min-h-[100dvh] bg-[#0b0b0b] pb-[76px] text-[#f5f3ef]">
-      <Header cartCount={0} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
+      <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
       <main>
         <section className="vip-hero relative isolate overflow-hidden" aria-labelledby="vip-hero-title">
           <div className="vip-photo absolute inset-y-0 right-0 z-0" aria-hidden="true">
@@ -417,7 +538,7 @@ function VipPage() {
 }
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) { const [location] = useLocation(); return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>; }
-function Router() { return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/vip" component={VipPage} /><Route path="/products" component={ProductsPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>; }
-function App() { return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><Router /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>; }
+function Router() { return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/vip" component={VipPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>; }
+function App() { return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>; }
 
 export default App;
