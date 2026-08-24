@@ -193,7 +193,7 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
   const { favorites, toggleFavorite } = useShop();
   const railRef = useRef<HTMLDivElement | null>(null);
   const inertiaFrame = useRef<number | null>(null);
-  const touchState = useRef({ lastX: 0, lastTime: 0, velocity: 0, horizontal: false });
+  const touchState = useRef({ startX: 0, lastX: 0, lastTime: 0, velocity: 0, horizontal: false });
   const [inertiaActive, setInertiaActive] = useState(false);
 
   const stopInertia = () => {
@@ -208,7 +208,7 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
     stopInertia();
     const x = event.touches[0]?.clientX;
     if (x === undefined) return;
-    touchState.current = { lastX: x, lastTime: performance.now(), velocity: 0, horizontal: false };
+    touchState.current = { startX: x, lastX: x, lastTime: performance.now(), velocity: 0, horizontal: false };
   };
 
   const handleRailTouchMove = (event: TouchEvent<HTMLDivElement>) => {
@@ -216,7 +216,9 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
     if (x === undefined || !railRef.current) return;
     const now = performance.now();
     const delta = x - touchState.current.lastX;
-    if (!touchState.current.horizontal && Math.abs(delta) > 4) touchState.current.horizontal = true;
+    // Use the total distance from the initial touch so slow, continuous
+    // drags do not remain stuck below the per-event threshold.
+    if (!touchState.current.horizontal && Math.abs(x - touchState.current.startX) > 4) touchState.current.horizontal = true;
     if (!touchState.current.horizontal) return;
     event.preventDefault();
     const elapsed = Math.max(8, now - touchState.current.lastTime);
