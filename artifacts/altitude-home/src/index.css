@@ -121,7 +121,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 /* ALTITUDE VIP — a compact, high-contrast access sequence */
 .vip-page {
   --vip-red: #df3933;
-  --vip-black: #0b0b0b;
+  --vip-black: #000;
   --vip-ink: #f5f3ef;
   background: var(--vip-black);
 }
@@ -130,36 +130,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   color: #151515;
 }
 .vip-page .vip-hero {
-  background:
-    radial-gradient(circle at 84% 28%, rgba(223,57,51,.2), transparent 22rem),
-    linear-gradient(125deg, #090909 0%, #141414 54%, #090909 100%);
-}
-.vip-grid {
-  opacity: .5;
-  background-image:
-    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(90deg, black 0%, transparent 86%);
-}
-.vip-orbit {
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: rotate(-23deg);
-}
-.vip-orbit-one {
-  width: min(74vw, 620px);
-  height: min(74vw, 620px);
-  right: -24%;
-  top: 7%;
-}
-.vip-orbit-two {
-  width: min(54vw, 460px);
-  height: min(54vw, 460px);
-  right: -8%;
-  top: 19%;
-  border-color: rgba(223,57,51,.55);
+  background: #000;
 }
 .vip-display,
 .vip-heading,

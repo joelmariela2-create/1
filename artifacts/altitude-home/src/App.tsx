@@ -147,58 +147,53 @@ function VipPage() {
   const [, setLocation] = useLocation();
   const enterVip = () => window.open(vipWhatsAppUrl, '_blank', 'noopener,noreferrer');
   const benefits = [
-    { label: 'Early access', detail: 'Entra antes que nadie', icon: Timer },
-    { label: 'Nuevos drops', detail: 'La señal llega primero', icon: Sparkles },
-    { label: 'Preventas', detail: 'Reserva tu talla', icon: PackageCheck },
-    { label: 'Stock limitado', detail: 'Lo exclusivo no espera', icon: LockKeyhole },
+    { label: 'Early access', detail: 'Antes del lanzamiento público.', icon: Timer },
+    { label: 'Nuevos drops', detail: 'Entérate primero de cada lanzamiento.', icon: Sparkles },
+    { label: 'Preventas', detail: 'Reserva antes de que se agote el stock.', icon: PackageCheck },
+    { label: 'Stock limitado', detail: 'Mayor posibilidad de conseguir tu talla.', icon: LockKeyhole },
   ];
   return (
     <div className="vip-page page-shell min-h-[100dvh] bg-[#0b0b0b] pb-[76px] text-[#f5f3ef]">
       <Header cartCount={0} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
       <main>
         <section className="vip-hero relative isolate overflow-hidden" aria-labelledby="vip-hero-title">
-          <div className="vip-grid absolute inset-0" aria-hidden="true" />
-          <div className="vip-orbit vip-orbit-one absolute" aria-hidden="true" />
-          <div className="vip-orbit vip-orbit-two absolute" aria-hidden="true" />
           <div className="relative z-10 flex min-h-[443px] flex-col justify-between px-5 pb-7 pt-8 md:min-h-[525px] md:px-12 md:pb-10 md:pt-12">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.2em] text-[#d73832]">
                 <span className="vip-live-dot h-1.5 w-1.5 rounded-full bg-[#e33a34]" />
                 Acceso privado
               </div>
-              <span className="font-mono text-[9px] tracking-[.12em] text-white/45">AT / 001</span>
             </div>
             <div className="max-w-[700px]">
-              <p className="vip-kicker mb-3 text-[10px] font-bold uppercase tracking-[.23em] text-white/60">ALTITUDE VIP</p>
-              <h1 id="vip-hero-title" data-testid="text-vip-hero-title" className="vip-display max-w-[760px] text-[clamp(3.8rem,17vw,9.2rem)] font-black uppercase leading-[.78] tracking-[-.075em]">
-                Early<br /><span className="text-[#e13832]">access.</span>
+              <p className="vip-kicker mb-3 text-[clamp(1.65rem,7vw,3rem)] font-black uppercase leading-none tracking-[-.055em] text-white">ALTITUDE VIP</p>
+              <h1 id="vip-hero-title" data-testid="text-vip-hero-title" className="vip-display text-[clamp(.75rem,2vw,1rem)] font-bold uppercase leading-none tracking-[.4em] text-[#e13832]">
+                Early access
               </h1>
-              <p className="mt-7 max-w-[370px] text-[12px] leading-[1.55] text-white/66 md:text-[14px]">
-                El acceso privado para quienes quieren ver el próximo drop antes de que se abra la puerta.
+              <p className="mt-7 max-w-[370px] text-[12px] leading-[1.55] text-white/80 md:text-[14px]">
+                Accede antes que nadie a nuevos drops, unidades limitadas y lanzamientos exclusivos.
               </p>
             </div>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
-              <button data-testid="button-vip-enter-hero" onClick={enterVip} className="vip-button group flex h-[47px] w-full max-w-[285px] items-center justify-between bg-[#df3933] px-4 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#f04a43]">
+              <button data-testid="button-vip-enter-hero" onClick={enterVip} className="vip-button group flex h-[47px] w-full max-w-[285px] items-center justify-between bg-white px-4 text-[10px] font-bold uppercase tracking-[.13em] text-[#111] transition-colors hover:bg-[#df3933] hover:text-white">
                 Entrar al VIP
                 <ArrowRight size={18} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
               </button>
-              <span className="font-mono text-[9px] uppercase tracking-[.08em] text-white/40">Sin ruido. Solo lo que importa.</span>
+              <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.08em] text-white/75"><LockKeyhole size={12} strokeWidth={1.5} /> Acceso privado</span>
             </div>
           </div>
-          <div className="vip-hero-index absolute bottom-6 right-5 z-10 hidden font-mono text-[9px] text-white/40 md:block">01 / 04</div>
         </section>
 
-        <section id="benefits" className="vip-benefits border-y border-white/12 bg-[#121212] px-5 py-6 md:px-12 md:py-8">
+        <section id="benefits" className="vip-benefits border-y border-white/20 bg-black px-5 py-6 md:px-12 md:py-8">
           <div className="mb-5 flex items-end justify-between">
             <div>
               <p className="section-label text-[#d73832]">Qué desbloqueas</p>
-              <h2 data-testid="text-vip-benefits-title" className="vip-heading mt-1 text-[25px] font-bold uppercase leading-none tracking-[-.055em]">Beneficios VIP</h2>
+               <h2 data-testid="text-vip-benefits-title" className="vip-heading mt-1 text-[25px] font-bold uppercase leading-none tracking-[-.055em] text-white">Beneficios VIP</h2>
             </div>
             <span className="font-mono text-[9px] text-white/35">04 ventajas</span>
           </div>
           <div className="grid grid-cols-2 gap-px overflow-hidden border border-white/12 bg-white/12 md:grid-cols-4">
             {benefits.map(({ label, detail, icon: Icon }, index) => (
-              <article key={label} data-testid={`card-vip-benefit-${index}`} className="vip-benefit-card group min-h-[122px] bg-[#121212] p-4 transition-colors hover:bg-[#df3933]">
+               <article key={label} data-testid={`card-vip-benefit-${index}`} className="vip-benefit-card group min-h-[122px] bg-black p-4 transition-colors hover:bg-[#df3933]">
                 <div className="flex items-start justify-between">
                   <Icon size={21} strokeWidth={1.35} className="text-[#e33a34] transition-colors group-hover:text-white" />
                   <span className="font-mono text-[9px] text-white/30 transition-colors group-hover:text-white/65">0{index + 1}</span>
@@ -210,16 +205,16 @@ function VipPage() {
           </div>
         </section>
 
-        <section className="vip-editorial relative overflow-hidden bg-[#e9e6e1] px-5 py-10 text-[#111] md:px-12 md:py-14">
-          <span className="absolute -right-2 -top-6 select-none text-[8rem] font-black leading-none tracking-[-.12em] text-black/[.045]" aria-hidden="true">VIP</span>
+        <section className="vip-editorial relative overflow-hidden bg-black px-5 py-10 text-white md:px-12 md:py-14">
+          <span className="absolute -right-2 -top-6 select-none text-[8rem] font-black leading-none tracking-[-.12em] text-white/[.045]" aria-hidden="true">VIP</span>
           <div className="relative max-w-[720px]">
-            <p className="section-label mb-6 text-[#d73832]">La señal antes de la señal</p>
+            <p className="section-label mb-6 text-[#d73832]">Beneficios VIP</p>
             <h2 data-testid="text-vip-editorial-title" className="vip-editorial-title max-w-[620px] text-[clamp(2.5rem,9vw,5.9rem)] font-black uppercase leading-[.82] tracking-[-.075em]">
               Primero el VIP.<br /><span className="text-[#d73832]">Después el resto.</span>
             </h2>
             <div className="mt-8 flex max-w-[430px] items-start gap-3 border-l-2 border-[#d73832] pl-4">
-              <p className="text-[12px] leading-[1.55] text-[#4b4844] md:text-[13px]">
-                Una línea directa con lo que viene: lanzamientos, reposiciones y piezas que no llegan a todos.
+              <p className="text-[12px] leading-[1.55] text-white/75 md:text-[13px]">
+                Los drops más buscados <span className="text-[#d73832]">no esperan.</span>
               </p>
             </div>
           </div>
@@ -228,9 +223,9 @@ function VipPage() {
         <section className="vip-final-cta relative overflow-hidden bg-[#0b0b0b] px-5 py-10 md:px-12 md:py-12">
           <div className="vip-red-line absolute bottom-0 left-5 top-0 w-px bg-[#d73832] md:left-12" aria-hidden="true" />
           <div className="pl-5 md:pl-8">
-            <p className="section-label text-white/45">La próxima puerta abre pronto</p>
+            <p className="section-label text-white/45">Acceso privado</p>
             <h2 data-testid="text-vip-final-title" className="vip-heading mt-3 text-[clamp(2rem,8vw,4.7rem)] font-black uppercase leading-[.86] tracking-[-.07em]">¿Quieres llegar antes?</h2>
-            <p className="mt-4 max-w-[390px] text-[11px] leading-[1.5] text-white/48">Escríbenos por WhatsApp y recibe el acceso cuando se active el próximo lanzamiento.</p>
+            <p className="mt-4 max-w-[390px] text-[11px] leading-[1.5] text-white/70">Acceso mediante grupo privado de WhatsApp.</p>
             <button data-testid="button-vip-enter-final" onClick={enterVip} className="mt-7 flex h-[45px] w-full max-w-[285px] items-center justify-between bg-[#df3933] px-4 text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#f04a43]">
               <span className="flex items-center gap-2"><MessageCircle size={16} strokeWidth={1.7} /> Entrar al VIP</span>
               <ArrowRight size={18} strokeWidth={1.7} />
