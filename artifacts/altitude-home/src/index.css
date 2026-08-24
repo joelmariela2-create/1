@@ -473,6 +473,73 @@ button, a {
   }
 }
 @media (max-width: 767px) {
+  .checkout-page {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .checkout-page header {
+    padding-bottom: 12px;
+  }
+  .checkout-page main {
+    padding-top: 20px;
+    padding-bottom: 0;
+  }
+  .checkout-page main > h1 {
+    font-size: 2.2rem;
+    line-height: .88;
+  }
+  .checkout-page main > p {
+    margin-top: 8px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .checkout-page form {
+    margin-top: 14px;
+    padding-top: 14px;
+  }
+  .checkout-page form > div:first-child {
+    margin-bottom: 10px;
+  }
+  .checkout-page form > div:first-child h3 {
+    margin-top: 3px;
+    font-size: 16px;
+  }
+  .checkout-page form > div:nth-child(2) {
+    margin-bottom: 12px;
+    padding: 9px 10px;
+  }
+  .checkout-page form > div:nth-child(2) > p {
+    margin-bottom: 5px;
+  }
+  .checkout-page form > div:nth-child(2) > div {
+    gap: 2px;
+  }
+  .checkout-page form > div:nth-child(3) {
+    gap: 7px;
+  }
+  .checkout-page form label > span {
+    margin-bottom: 2px;
+    font-size: 8px;
+  }
+  .checkout-page form label input,
+  .checkout-page form label select {
+    height: 39px;
+  }
+  .checkout-page form > div:nth-child(4) {
+    margin-top: 12px;
+    padding-top: 10px;
+  }
+  .checkout-page form > div:nth-child(4) strong {
+    font-size: 17px;
+  }
+  .checkout-page form > button {
+    margin-top: 10px;
+    height: 46px;
+  }
+  .checkout-page form > p:last-child {
+    margin-top: 6px;
+    line-height: 1.25;
+  }
   .vip-page .vip-hero {
     min-height: 515px;
   }
