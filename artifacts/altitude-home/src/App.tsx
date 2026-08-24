@@ -101,12 +101,12 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
           </button>
           <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="header-wordmark text-[24px] md:text-[30px]">ALTITUDE</button>
         </div>
-        <div className="flex items-center gap-2">
-          <button data-testid="button-search" onClick={() => window.alert('La búsqueda estará disponible muy pronto.')} aria-label="Buscar productos" className="flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
-            <Search size={23} strokeWidth={1.7} />
+        <div className="relative -right-3 -top-2 flex items-center gap-2">
+          <button data-testid="button-search" onClick={() => window.alert('La búsqueda estará disponible muy pronto.')} aria-label="Buscar productos" className="flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]">
+            <Search size={20} strokeWidth={1.7} />
           </button>
-          <button data-testid="button-open-cart" onClick={() => window.alert('Tu carrito está listo para despegar.')} aria-label="Abrir carrito" className="relative flex h-9 w-9 items-center justify-center transition-colors hover:text-[#ec413b]">
-            <ShoppingCart size={24} strokeWidth={1.7} />
+          <button data-testid="button-open-cart" onClick={() => window.alert('Tu carrito está listo para despegar.')} aria-label="Abrir carrito" className="relative flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]">
+            <ShoppingCart size={21} strokeWidth={1.7} />
             {cartCount > 0 && <span data-testid="text-cart-count" className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}
           </button>
         </div>
