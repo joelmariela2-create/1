@@ -165,7 +165,11 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
          alt={`${campaign.label} ${campaign.title}`}
           style={{
             objectPosition: campaign.position,
-            transform: campaign.id === 'youngla' ? 'translateY(-38px) scale(1.08)' : undefined,
+            transform: campaign.id === 'youngla-featured'
+              ? 'translateY(-24px) scale(1.08)'
+              : campaign.id === 'youngla'
+                ? 'translateY(-38px) scale(1.08)'
+                : undefined,
           }}
          loading="eager"
          decoding="async"
