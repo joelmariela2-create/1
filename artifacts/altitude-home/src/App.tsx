@@ -125,7 +125,7 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
 
 function OrderConfirmed({ customer, cartItems, total, onClose }: { customer: CustomerData; cartItems: CartItem[]; total: number; onClose: () => void }) {
   const summary = cartItems.map((item) => `${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join('\n');
-  const message = `🌐VENGODELATIENDAVIRTUAL🛒\n\n> 🛑MI PEDIDO SELECCIONADO📦 :\n[ PEDIDO : ${summary} ]\nCANTIDAD DEL PEDIDO : ${cartItems.length}\nTOTAL : Bs. ${total}\n📊DATOS:\n📝NOMBRE COMPLETO: ${customer.name}\n📲TELEFONO: ${customer.phone}\n🇧🇴DEPARTAMENTO: ${customer.department}`;
+  const message = `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: Bs. ${total}\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 DEPARTAMENTO: ${customer.department}»`;
   const sendOrder = () => window.open(`${vipWhatsAppUrl}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
   return <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#171717]/55 px-5 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="order-confirmed-title">
     <div className="w-full max-w-[390px] overflow-hidden bg-[#f6f4f0] text-center shadow-2xl">
