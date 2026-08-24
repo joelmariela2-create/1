@@ -134,10 +134,34 @@ function OrderConfirmed({ customer, cartItems, total, onClose }: { customer: Cus
     </div>
   </div>;
 }
+
+function CheckoutPage() {
+  const [, setLocation] = useLocation();
+  const { cartItems } = useShop();
+  const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
+  const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
+  if (cartItems.length === 0) return <div className="page-shell flex min-h-[100dvh] flex-col items-center justify-center bg-[#f6f4f0] px-5 text-center"><ShoppingBag size={30} className="text-[#d93731]" /><p className="section-label mt-4 text-[#d93731]">Tu bolsa está vacía</p><h1 className="editorial-title mt-2 text-[28px] font-bold uppercase">Añade un producto para continuar</h1><button onClick={() => setLocation('/products')} className="mt-6 bg-[#171717] px-5 py-4 text-[10px] font-bold uppercase tracking-[.1em] text-white">Ver productos</button></div>;
+  return <div className="page-shell min-h-[100dvh] bg-[#f6f4f0] px-5 py-6 text-[#171717] md:px-10 md:py-10">
+    <header className="flex items-center justify-between border-b border-[#d9d3cc] pb-5"><button onClick={() => setLocation('/products')} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.1em]"><ArrowLeft size={16} /> Volver a la tienda</button><span className="altitude-wordmark text-[25px]">ALTITUDE</span></header>
+    <main className="mx-auto max-w-[560px] py-8 md:py-14"><p className="section-label text-[#d93731]">ALTITUDE / checkout</p><h1 className="editorial-title mt-2 text-[clamp(2.2rem,6vw,4rem)] font-bold uppercase leading-[.9]">Confirma tu pedido</h1><p className="mt-3 max-w-[420px] text-[12px] leading-[1.5] text-[#716b65]">Revisa tu selección y completa tus datos para coordinar la entrega en Bolivia.</p><OrderForm cartItems={cartItems} total={total} onConfirm={setConfirmedCustomer} /></main>
+    {confirmedCustomer && <OrderConfirmed customer={confirmedCustomer} cartItems={cartItems} total={total} onClose={() => setLocation('/products')} />}
+  </div>;
+}
+
 function ShopProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    try {
+      const saved = window.localStorage.getItem('altitude-cart');
+      return saved ? JSON.parse(saved) as CartItem[] : [];
+    } catch {
+      return [];
+    }
+  });
   const [favorites, setFavorites] = useState<string[]>([]);
   const [toast, setToast] = useState('');
+  useEffect(() => {
+    window.localStorage.setItem('altitude-cart', JSON.stringify(cartItems));
+  }, [cartItems]);
   const notify = (message: string) => {
     setToast(message);
     window.setTimeout(() => setToast(''), 2500);
@@ -377,7 +401,7 @@ function ProductsPage() {
   };
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
   const handleCartCheckout = () => {
-    setOrderFormOpen(true);
+    setLocation('/checkout');
   };
   const handleOrderConfirm = (customer: CustomerData) => {
     setOrderFormOpen(false);
@@ -453,7 +477,7 @@ function ProductsPage() {
              : <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} className="product-card group flex min-w-0 flex-col">
                <div className="product-card-image relative aspect-[.66] overflow-hidden">
                  <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} className="h-full w-full object-cover object-center" /></Link>
-                  <button data-testid={`button-cart-product-${product.id}`} onClick={() => { addToCart(product); setCartOpen(true); setOrderFormOpen(true); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-cart absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-[#171717] hover:text-white"><ShoppingCart size={15} strokeWidth={1.6} /></button>
+                  <button data-testid={`button-cart-product-${product.id}`} onClick={() => { addToCart(product); setLocation('/checkout'); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-cart absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-[#171717] hover:text-white"><ShoppingCart size={15} strokeWidth={1.6} /></button>
               </div>
                  <div className="flex flex-1 flex-col pt-2"><h3 data-testid={`text-product-name-${product.id}`} className="text-[14px] font-medium leading-[1.3] text-[#171717]"><Link href={`/products/${product.id}`} data-testid={`link-product-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><div className="mt-1 space-y-0.5 text-[11px] leading-[1.4] text-[#77716c]"><p>{productDetails[product.id]?.fit ?? product.category}</p><p>{productDetails[product.id]?.material ?? product.brand}</p></div><p data-testid={`text-product-price-${product.id}`} className="mt-1 text-[15px] font-bold leading-none text-[#171717]">{product.price}</p></div>
             </article>)}</div>}
@@ -559,11 +583,10 @@ function ProductDetailPage() {
       return;
     }
     addToCart(product, selectedSize);
-    setCartOpen(true);
-    setOrderFormOpen(true);
+    setLocation('/checkout');
   };
   const handleDetailCartCheckout = () => {
-    setOrderFormOpen(true);
+    setLocation('/checkout');
   };
   const handleDetailOrderConfirm = (customer: CustomerData) => {
     setOrderFormOpen(false);
@@ -729,7 +752,7 @@ function Router() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [location]);
-  return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/vip" component={VipPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
+  return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/vip" component={VipPage} /><Route path="/checkout" component={CheckoutPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
 }
 function App() { return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>; }
 
