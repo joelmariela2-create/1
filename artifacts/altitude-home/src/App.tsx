@@ -6,9 +6,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import {
-  ArrowLeft, ArrowRight, ChevronRight, Crown, CreditCard, Heart, House, ListFilter,
-  MapPin, Menu, MessageCircle, Plus, RefreshCw, Search, ShieldCheck, ShoppingBag,
-  ShoppingCart, Truck, UserRound, X,
+  ArrowLeft, ArrowRight, ChevronRight, Crown, CreditCard, Heart, House,
+  LockKeyhole, MapPin, Menu, MessageCircle, PackageCheck, Plus, RefreshCw, Search,
+  ShieldCheck, ShoppingBag, ShoppingCart, Sparkles, Timer, Truck, X,
 } from 'lucide-react';
 
 const queryClient = new QueryClient();
@@ -41,7 +41,7 @@ function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }) {
+function Header({ cartCount, onMenu, onShop, onShowroom }: { cartCount: number; onMenu: () => void; onShop?: () => void; onShowroom?: () => void }) {
   const [, setLocation] = useLocation();
   return (
     <>
@@ -59,8 +59,8 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
         </div>
       </header>
       <nav className="desktop-nav hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525]">
-        <button onClick={() => scrollToSection('new-releases')}>Tienda</button>
-        <button onClick={() => scrollToSection('showroom')}>Showroom</button>
+        <button onClick={() => onShop ? onShop() : scrollToSection('new-releases')}>Tienda</button>
+        <button onClick={() => onShowroom ? onShowroom() : scrollToSection('showroom')}>Showroom</button>
         <button onClick={() => setLocation('/vip')} className="text-[#ec413b]">Acceso VIP</button>
         <button onClick={() => scrollToSection('benefits')}>Beneficios</button>
       </nav>
@@ -114,15 +114,15 @@ function ProductRail({ onAdd }: { onAdd: (name: string) => void }) {
 }
 
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   if (!open) return null;
   const links = [['Productos', 'products'], ['Nuevos lanzamientos', 'new-releases'], ['Nuevo drop Naruto', 'youngla'], ['Naruto', 'gymshark'], ['ALTITUDE VIP', 'vip-access'], ['Showroom La Paz', 'showroom']];
-  return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); id === 'products' ? setLocation('/products') : id === 'vip-access' ? setLocation('/vip') : scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
+  return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); if (id === 'products') setLocation('/products'); else if (id === 'vip-access') setLocation('/vip'); else if (location === '/vip') { setLocation('/'); window.setTimeout(() => scrollToSection(id), 80); } else scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
 }
 
-function BottomNav({ onVip }: { onVip: () => void }) {
+function BottomNav({ onVip, onShowroom }: { onVip: () => void; onShowroom?: () => void }) {
   const [, setLocation] = useLocation();
-  const items = [{ label: 'Inicio', icon: House, action: () => setLocation('/'), id: 'home' }, { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' }, { label: 'Showroom', icon: MapPin, action: () => scrollToSection('showroom'), id: 'showroom' }, { label: 'VIP', icon: Crown, action: onVip, id: 'vip' }, { label: 'WhatsApp', icon: MessageCircle, action: () => window.open(vipWhatsAppUrl, '_blank'), id: 'whatsapp' }];
+  const items = [{ label: 'Inicio', icon: House, action: () => setLocation('/'), id: 'home' }, { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' }, { label: 'Showroom', icon: MapPin, action: onShowroom ?? (() => scrollToSection('showroom')), id: 'showroom' }, { label: 'VIP', icon: Crown, action: onVip, id: 'vip' }, { label: 'WhatsApp', icon: MessageCircle, action: () => window.open(vipWhatsAppUrl, '_blank'), id: 'whatsapp' }];
   return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">{items.map(({ label, icon: Icon, action, id }) => <button key={id} onClick={action} className="flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em]"><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
 }
 
@@ -143,8 +143,105 @@ function Home() {
 }
 
 function VipPage() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [, setLocation] = useLocation();
-  return <div className="page-shell min-h-[100dvh] bg-white"><Header cartCount={0} onMenu={() => undefined} /><main /><BottomNav onVip={() => setLocation('/vip')} /></div>;
+  const enterVip = () => window.open(vipWhatsAppUrl, '_blank', 'noopener,noreferrer');
+  const benefits = [
+    { label: 'Early access', detail: 'Entra antes que nadie', icon: Timer },
+    { label: 'Nuevos drops', detail: 'La señal llega primero', icon: Sparkles },
+    { label: 'Preventas', detail: 'Reserva tu talla', icon: PackageCheck },
+    { label: 'Stock limitado', detail: 'Lo exclusivo no espera', icon: LockKeyhole },
+  ];
+  return (
+    <div className="vip-page page-shell min-h-[100dvh] bg-[#0b0b0b] pb-[76px] text-[#f5f3ef]">
+      <Header cartCount={0} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
+      <main>
+        <section className="vip-hero relative isolate overflow-hidden" aria-labelledby="vip-hero-title">
+          <div className="vip-grid absolute inset-0" aria-hidden="true" />
+          <div className="vip-orbit vip-orbit-one absolute" aria-hidden="true" />
+          <div className="vip-orbit vip-orbit-two absolute" aria-hidden="true" />
+          <div className="relative z-10 flex min-h-[443px] flex-col justify-between px-5 pb-7 pt-8 md:min-h-[525px] md:px-12 md:pb-10 md:pt-12">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.2em] text-[#d73832]">
+                <span className="vip-live-dot h-1.5 w-1.5 rounded-full bg-[#e33a34]" />
+                Acceso privado
+              </div>
+              <span className="font-mono text-[9px] tracking-[.12em] text-white/45">AT / 001</span>
+            </div>
+            <div className="max-w-[700px]">
+              <p className="vip-kicker mb-3 text-[10px] font-bold uppercase tracking-[.23em] text-white/60">ALTITUDE VIP</p>
+              <h1 id="vip-hero-title" data-testid="text-vip-hero-title" className="vip-display max-w-[760px] text-[clamp(3.8rem,17vw,9.2rem)] font-black uppercase leading-[.78] tracking-[-.075em]">
+                Early<br /><span className="text-[#e13832]">access.</span>
+              </h1>
+              <p className="mt-7 max-w-[370px] text-[12px] leading-[1.55] text-white/66 md:text-[14px]">
+                El acceso privado para quienes quieren ver el próximo drop antes de que se abra la puerta.
+              </p>
+            </div>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
+              <button data-testid="button-vip-enter-hero" onClick={enterVip} className="vip-button group flex h-[47px] w-full max-w-[285px] items-center justify-between bg-[#df3933] px-4 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#f04a43]">
+                Entrar al VIP
+                <ArrowRight size={18} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
+              </button>
+              <span className="font-mono text-[9px] uppercase tracking-[.08em] text-white/40">Sin ruido. Solo lo que importa.</span>
+            </div>
+          </div>
+          <div className="vip-hero-index absolute bottom-6 right-5 z-10 hidden font-mono text-[9px] text-white/40 md:block">01 / 04</div>
+        </section>
+
+        <section id="benefits" className="vip-benefits border-y border-white/12 bg-[#121212] px-5 py-6 md:px-12 md:py-8">
+          <div className="mb-5 flex items-end justify-between">
+            <div>
+              <p className="section-label text-[#d73832]">Qué desbloqueas</p>
+              <h2 data-testid="text-vip-benefits-title" className="vip-heading mt-1 text-[25px] font-bold uppercase leading-none tracking-[-.055em]">Beneficios VIP</h2>
+            </div>
+            <span className="font-mono text-[9px] text-white/35">04 ventajas</span>
+          </div>
+          <div className="grid grid-cols-2 gap-px overflow-hidden border border-white/12 bg-white/12 md:grid-cols-4">
+            {benefits.map(({ label, detail, icon: Icon }, index) => (
+              <article key={label} data-testid={`card-vip-benefit-${index}`} className="vip-benefit-card group min-h-[122px] bg-[#121212] p-4 transition-colors hover:bg-[#df3933]">
+                <div className="flex items-start justify-between">
+                  <Icon size={21} strokeWidth={1.35} className="text-[#e33a34] transition-colors group-hover:text-white" />
+                  <span className="font-mono text-[9px] text-white/30 transition-colors group-hover:text-white/65">0{index + 1}</span>
+                </div>
+                <h3 className="mt-7 text-[11px] font-bold uppercase tracking-[.04em]">{label}</h3>
+                <p className="mt-1 text-[10px] text-white/44 transition-colors group-hover:text-white/75">{detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="vip-editorial relative overflow-hidden bg-[#e9e6e1] px-5 py-10 text-[#111] md:px-12 md:py-14">
+          <span className="absolute -right-2 -top-6 select-none text-[8rem] font-black leading-none tracking-[-.12em] text-black/[.045]" aria-hidden="true">VIP</span>
+          <div className="relative max-w-[720px]">
+            <p className="section-label mb-6 text-[#d73832]">La señal antes de la señal</p>
+            <h2 data-testid="text-vip-editorial-title" className="vip-editorial-title max-w-[620px] text-[clamp(2.5rem,9vw,5.9rem)] font-black uppercase leading-[.82] tracking-[-.075em]">
+              Primero el VIP.<br /><span className="text-[#d73832]">Después el resto.</span>
+            </h2>
+            <div className="mt-8 flex max-w-[430px] items-start gap-3 border-l-2 border-[#d73832] pl-4">
+              <p className="text-[12px] leading-[1.55] text-[#4b4844] md:text-[13px]">
+                Una línea directa con lo que viene: lanzamientos, reposiciones y piezas que no llegan a todos.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="vip-final-cta relative overflow-hidden bg-[#0b0b0b] px-5 py-10 md:px-12 md:py-12">
+          <div className="vip-red-line absolute bottom-0 left-5 top-0 w-px bg-[#d73832] md:left-12" aria-hidden="true" />
+          <div className="pl-5 md:pl-8">
+            <p className="section-label text-white/45">La próxima puerta abre pronto</p>
+            <h2 data-testid="text-vip-final-title" className="vip-heading mt-3 text-[clamp(2rem,8vw,4.7rem)] font-black uppercase leading-[.86] tracking-[-.07em]">¿Quieres llegar antes?</h2>
+            <p className="mt-4 max-w-[390px] text-[11px] leading-[1.5] text-white/48">Escríbenos por WhatsApp y recibe el acceso cuando se active el próximo lanzamiento.</p>
+            <button data-testid="button-vip-enter-final" onClick={enterVip} className="mt-7 flex h-[45px] w-full max-w-[285px] items-center justify-between bg-[#df3933] px-4 text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#f04a43]">
+              <span className="flex items-center gap-2"><MessageCircle size={16} strokeWidth={1.7} /> Entrar al VIP</span>
+              <ArrowRight size={18} strokeWidth={1.7} />
+            </button>
+          </div>
+        </section>
+      </main>
+      <BottomNav onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
+      <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </div>
+  );
 }
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) { const [location] = useLocation(); return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>; }
