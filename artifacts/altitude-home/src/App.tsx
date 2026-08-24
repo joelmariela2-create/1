@@ -202,8 +202,13 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
         </div>
       </div>
       <header className="sticky top-0 z-30 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
-        <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
-        <Link href="/" data-testid="link-home-logo" aria-label="ALTITUDE, inicio" className="header-wordmark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[62%] text-[24px] text-[#151515] md:text-[29px]">ALTITUDE</Link>
+        <div className="flex items-center gap-1">
+          <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
+          <Link href="/" data-testid="link-home-logo" aria-label="ALTITUDE, inicio" className="relative -top-1 flex items-center gap-2 text-[#151515]">
+            <img src="/altitude-logo-circle.png" alt="Logo ALTITUDE" className="h-8 w-8 rounded-full object-cover ring-1 ring-[#171717] md:h-10 md:w-10" />
+            <span className="header-wordmark text-[24px] md:text-[29px]">ALTITUDE</span>
+          </Link>
+        </div>
          <div className="relative right-0 -top-2 flex items-center gap-2">
           <button data-testid="button-search" onClick={onSearch ?? (() => window.alert('La búsqueda estará disponible muy pronto.'))} aria-label="Buscar productos" className="flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Search size={20} strokeWidth={1.7} /></button>
           <button data-testid="button-open-cart" onClick={onCart ?? (() => window.alert('Tu carrito está listo para despegar.'))} aria-label="Abrir carrito" className="relative flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><ShoppingCart size={21} strokeWidth={1.7} />{cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}</button>
