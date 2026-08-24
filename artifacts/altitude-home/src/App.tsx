@@ -156,7 +156,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
          className="campaign-image absolute inset-0 h-full w-full object-contain"
          src={campaign.image}
          alt={`${campaign.label} ${campaign.title}`}
-         style={{ objectPosition: campaign.position, transform: campaign.id === 'youngla' ? 'translateY(-55px)' : undefined }}
+         style={{ objectPosition: campaign.position, transform: campaign.id === 'youngla' ? 'translateY(-70px) scale(1.08)' : undefined }}
          loading="eager"
          decoding="async"
        />
