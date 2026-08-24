@@ -99,7 +99,7 @@ function Header({ cartCount, onMenu }: { cartCount: number; onMenu: () => void }
           <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]">
             <Menu size={19} strokeWidth={1.7} className="transition-transform group-hover:scale-90" />
           </button>
-          <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="header-wordmark text-[24px] md:text-[30px]">ALTITUDE</button>
+           <button data-testid="button-home-logo" onClick={() => scrollToSection('top')} className="header-wordmark text-[20px] md:text-[25px]">ALTITUDE</button>
         </div>
         <div className="relative -right-3 -top-2 flex items-center gap-2">
           <button data-testid="button-search" onClick={() => window.alert('La búsqueda estará disponible muy pronto.')} aria-label="Buscar productos" className="flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]">
