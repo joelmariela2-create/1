@@ -213,7 +213,6 @@ function ProductsPage() {
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [cartOpen, setCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState(false);
@@ -246,9 +245,7 @@ function ProductsPage() {
     const result = products.filter((product) => {
       const matchesCategory = category === 'Todas' || product.category === category;
       const matchesBrand = brand === 'Todas' || product.brand === brand;
-      const normalizedQuery = searchQuery.trim().toLowerCase();
-      const matchesSearch = !normalizedQuery || [product.name, product.brand, product.category].join(' ').toLowerCase().includes(normalizedQuery);
-      return matchesCategory && matchesBrand && matchesSearch;
+      return matchesCategory && matchesBrand;
     });
     return result.sort((a, b) => {
       if (sort === 'best') return Number(Boolean(b.isBestSeller)) - Number(Boolean(a.isBestSeller));
@@ -256,7 +253,7 @@ function ProductsPage() {
       if (sort === 'price') return a.priceValue - b.priceValue;
       return products.indexOf(a) - products.indexOf(b);
     });
-  }, [brand, category, searchQuery, sort]);
+  }, [brand, category, sort]);
 
   const clearFilters = () => {
     setCategory('Todas');
@@ -281,17 +278,18 @@ function ProductsPage() {
         onCart={() => setCartOpen(true)}
       />
       <main className="products-content">
-        {searchOpen && <section className="border-b border-[#ddd8d2] bg-[#fbfaf8] px-5 pb-3 pt-4 md:px-10" aria-label="Buscar y explorar categorías">
-          <label className="search-field flex h-12 items-center gap-3 border border-[#cfc9c2] bg-white px-3">
-            <Search size={18} strokeWidth={1.6} className="text-[#7c7772]" />
-            <span className="sr-only">Buscar productos</span>
-            <input autoFocus value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Buscar productos" className="w-full bg-transparent text-[12px] outline-none placeholder:text-[#8b857e]" />
-            {searchQuery && <button type="button" onClick={() => setSearchQuery('')} aria-label="Limpiar búsqueda" className="text-[10px] font-bold uppercase tracking-[.08em] text-[#ca2f2b]">Limpiar</button>}
-          </label>
-          <div className="mt-2 divide-y divide-[#e6e2de]">
-            {searchCategories.map((item) => <button key={item.label} type="button" onClick={() => { setCategory(item.value); setSearchOpen(false); }} className="flex w-full items-center justify-between py-4 text-left text-[13px] font-medium text-[#252525] transition-colors hover:text-[#d93731]"><span>{item.label}</span><ChevronRight size={17} strokeWidth={1.5} /></button>)}
-          </div>
-        </section>}
+        {searchOpen && <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Categorías de la tienda">
+          <button type="button" aria-label="Cerrar categorías" onClick={() => setSearchOpen(false)} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" />
+          <aside className="absolute bottom-0 right-0 top-0 w-[86%] max-w-[390px] overflow-y-auto bg-[#fbfaf8] px-5 py-6 shadow-2xl md:px-8">
+            <div className="flex items-center justify-between border-b border-[#e1ddd8] pb-5">
+              <div><p className="section-label text-[#ca2f2b]">Explorar</p><h2 className="editorial-title mt-1 text-[23px] font-bold uppercase">Categorías</h2></div>
+              <button type="button" onClick={() => setSearchOpen(false)} aria-label="Cerrar categorías" className="flex h-9 w-9 items-center justify-center border border-[#d8d3ce]"><X size={18} strokeWidth={1.5} /></button>
+            </div>
+            <nav className="mt-2 divide-y divide-[#e6e2de]">
+              {searchCategories.map((item) => <button key={item.label} type="button" onClick={() => { setCategory(item.value); setSearchOpen(false); }} className="flex w-full items-center justify-between py-5 text-left text-[13px] font-medium text-[#252525] transition-colors hover:text-[#d93731]"><span>{item.label}</span><ChevronRight size={17} strokeWidth={1.5} /></button>)}
+            </nav>
+          </aside>
+        </div>}
         <section className="border-b border-[#ddd8d2] bg-[#f6f4f0] px-5 py-4 md:px-10" aria-label="Herramientas del catálogo">
           <div className="flex flex-col gap-3 md:flex-row md:items-center">
             <div className="flex gap-2">
