@@ -116,3 +116,4 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 #root { min-height: 100dvh; }
+.home-main { margin-top: -24px; }
