@@ -376,7 +376,7 @@ function CollectionPage() {
         <div className="campaign-stack-list">
           {collectionCampaigns.map((campaign) => (
             <article key={campaign.id} className="campaign-tile relative isolate min-h-[292px] overflow-hidden bg-[#dedbd7] md:min-h-[390px]">
-              <img className="absolute inset-0 h-full w-full object-cover" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, filter: campaign.id === 'gymshark-new-arrivals' ? 'brightness(.7) contrast(1.08)' : undefined }} loading="eager" decoding="async" />
+              <img className="absolute inset-0 h-full w-full object-cover" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position }} loading="eager" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/35 to-transparent" />
               <div className="relative z-10 flex min-h-[292px] flex-col items-start justify-center px-6 py-7 md:min-h-[390px] md:px-12">
                 <div className="-translate-y-16 md:-translate-y-20">
