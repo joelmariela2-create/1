@@ -123,10 +123,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .hero-benefit { transition: background-color .25s ease, color .25s ease, transform .25s ease; }
 .hero-benefit:hover { background-color: hsl(4 79% 49% / .93); color: hsl(35 22% 97%); transform: translateY(-2px); }
 .hero-benefit:hover svg { color: hsl(35 22% 97%); }
-.bottom-nav { background: hsl(0 0% 100% / .97); color: hsl(0 0% 48%); border-color: hsl(0 0% 88%); }
+.bottom-nav { background: hsl(0 0% 100% / .97); color: hsl(210 20% 12%); border-color: hsl(35 14% 87%); }
 .bottom-nav button { transition: color .2s ease, transform .2s ease; }
 .bottom-nav button:active { transform: scale(.92); }
-.bottom-nav button.active-nav { color: #111; }
+.bottom-nav button.active-nav { color: hsl(4 79% 58%); }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 .campaign-hero { height: calc(100vw * 1.098 + 93px); }
