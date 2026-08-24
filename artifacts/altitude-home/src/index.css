@@ -473,6 +473,10 @@ button, a {
   }
 }
 @media (max-width: 767px) {
+  .detail-info {
+    border-top: 1px solid #d9d3cc;
+    padding-top: 16px;
+  }
   .checkout-page {
     padding-top: 16px;
     padding-bottom: 16px;
