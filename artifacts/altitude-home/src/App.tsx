@@ -41,7 +41,7 @@ const campaigns: Campaign[] = [
     label: 'YoungLA',
     title: 'Nuevo drop',
     image: '/naruto-collection.png',
-    position: 'center',
+    position: 'center 35%',
     tone: 'light',
     id: 'youngla',
   },
@@ -49,7 +49,7 @@ const campaigns: Campaign[] = [
     label: 'Gymshark',
     title: 'Nuevos ingresos',
     image: '/gymshark-logo.png',
-    position: 'center',
+    position: 'center 35%',
     tone: 'light',
     id: 'gymshark',
   },
@@ -121,7 +121,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
     });
     const timer = window.setInterval(() => {
       setActiveIndex((index) => (index + 1) % campaigns.length);
-    }, 1000);
+    }, 2000);
     return () => window.clearInterval(timer);
   }, []);
 
@@ -151,6 +151,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
          className="campaign-image absolute inset-0 h-full w-full object-contain"
          src={campaign.image}
          alt={`${campaign.label} ${campaign.title}`}
+         style={{ objectPosition: campaign.position }}
          loading="eager"
          decoding="async"
        />
