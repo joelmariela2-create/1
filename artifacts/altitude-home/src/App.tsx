@@ -139,7 +139,7 @@ function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [toast, setToast] = useState('');
-  return <div id="top" className="page-shell min-h-[100dvh] bg-[#000]"><Header cartCount={cartCount} onMenu={() => setMenuOpen(true)} /><main><VipSection /></main><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} /></div>;
+  return <div id="top" className="page-shell bg-[#000]"><Header cartCount={cartCount} onMenu={() => setMenuOpen(true)} /><main><VipSection /></main><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} /></div>;
 }
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) { const [location] = useLocation(); return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>; }

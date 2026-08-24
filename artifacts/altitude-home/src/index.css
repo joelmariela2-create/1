@@ -117,7 +117,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 #root { min-height: 100dvh; }
 .vip-hero-page {
-  min-height: calc(100dvh - 89px);
   background: #000;
   display: flex;
   justify-content: center;
@@ -126,7 +125,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .vip-hero {
   position: relative;
   width: min(100vw, 720px);
-  height: calc(100dvh - 89px);
+  height: min(72vw, 290px);
   overflow: hidden;
   line-height: 0;
 }
