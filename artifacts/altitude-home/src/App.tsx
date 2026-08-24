@@ -23,14 +23,9 @@ import {
   ShieldCheck,
   ShoppingBag,
   ShoppingCart,
-  Box,
-  Flame,
-  LockKeyhole,
-  Tag,
   Truck,
   UserRound,
   X,
-  Zap,
 } from 'lucide-react';
 
 const queryClient = new QueryClient();
@@ -341,73 +336,6 @@ function ProductsPage() {
   );
 }
 
-function VipAccessSection() {
-  const whatsappGroupUrl = 'https://wa.me/59170000000';
-  const vipBenefits = [
-    { label: 'Early access', detail: 'Accede antes que nadie al lanzamiento público.', icon: Zap },
-    { label: 'Nuevos drops', detail: 'Entérate primero de cada lanzamiento.', icon: Flame },
-    { label: 'Preventas', detail: 'Reserva antes de que se agote el stock.', icon: Tag },
-    { label: 'Stock limitado', detail: 'Mayor posibilidad de conseguir tu talla.', icon: Box },
-  ];
-
-  return (
-    <section id="vip-access" aria-labelledby="vip-access-title" className="vip-access-section overflow-hidden bg-black text-white">
-      <div className="relative isolate mx-auto h-[315px] max-w-[1280px] overflow-hidden md:h-[560px]">
-        <img
-          src="/vip-hero.png"
-          alt="Atleta de ALTITUDE con camiseta negra para la campaña VIP Early Access"
-          className="absolute inset-0 -z-10 h-auto min-h-full w-full max-w-none object-cover object-top"
-          loading="lazy"
-          decoding="async"
-        />
-        <div className="absolute inset-0 -z-[5] bg-gradient-to-r from-black/10 via-transparent to-black/20" />
-        <h2 id="vip-access-title" className="sr-only">ALTITUDE VIP Early Access</h2>
-        <div className="absolute bottom-12 left-6 md:bottom-16 md:left-10">
-          <a
-            href={whatsappGroupUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Entrar al VIP por WhatsApp"
-            data-testid="button-enter-vip-hero"
-            className="inline-flex h-11 items-center gap-4 bg-white px-5 text-[10px] font-bold uppercase tracking-[.1em] text-[#111] transition-colors hover:bg-[#e51f25] hover:text-white md:h-14 md:px-8 md:text-[12px]"
-          >
-            Entrar al VIP <ArrowRight size={19} strokeWidth={1.8} />
-          </a>
-          <span className="mt-3 flex items-center gap-2 text-[9px] uppercase tracking-[.12em] text-white/75">
-            <LockKeyhole size={13} strokeWidth={1.5} /> Acceso privado
-          </span>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-[1280px] px-5 pb-10 pt-8 md:px-10 md:pb-14 md:pt-10">
-        <div className="text-center">
-          <p className="section-label text-white/80">Beneficios VIP</p>
-          <span className="mx-auto mt-3 block h-[2px] w-8 bg-[#e51f25]" />
-        </div>
-        <div className="mt-7 grid grid-cols-2 border-y border-white/15 md:grid-cols-4">
-          {vipBenefits.map(({ label, detail, icon: Icon }, index) => (
-            <article
-              data-testid={`vip-benefit-${index}`}
-              key={label}
-              className={`min-h-[158px] px-4 py-6 text-center md:min-h-[190px] md:px-6 md:py-8 ${index % 2 === 0 ? 'border-r border-white/15' : ''} ${index < 2 ? 'border-b border-white/15' : ''} md:border-b-0 md:border-r md:last:border-r-0`}
-            >
-              <Icon className="mx-auto h-8 w-8 text-white" strokeWidth={1.4} />
-              <h3 className="mt-5 text-[9px] font-bold uppercase tracking-[.06em] text-[#e51f25] md:text-[10px]">{label}</h3>
-              <p className="mx-auto mt-2 max-w-[150px] text-[10px] leading-[1.45] text-white/70 md:text-[11px]">{detail}</p>
-            </article>
-          ))}
-        </div>
-
-        <div className="mx-auto max-w-[620px] pt-12 text-center md:pt-16">
-          <p className="editorial-title text-[27px] font-bold uppercase leading-[1.12] tracking-[.14em] md:text-[39px]">Primero el VIP.<br />Después el resto.</p>
-          <p className="mt-5 text-[11px] text-white/70 md:text-[13px]">Los drops más buscados <strong className="text-[#e51f25]">no esperan.</strong></p>
-          <p className="mt-9 text-[10px] font-semibold uppercase tracking-[.18em] text-white/85 md:mt-11">Acceso mediante grupo privado de WhatsApp.</p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
@@ -433,7 +361,20 @@ function Home() {
       <main>
         <CampaignHero onShop={(item) => { scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} />
         <ProductRail onAdd={addToCart} />
-        <VipAccessSection />
+        <section id="vip-access" className="mx-5 mb-5 overflow-hidden bg-[#111111] px-6 py-9 text-white md:mx-8 md:px-10 md:py-12">
+          <div className="max-w-[620px]">
+            <p className="section-label mb-3 text-[#e04a43]">Early access</p>
+            <h2 className="editorial-title text-[29px] font-bold uppercase leading-[.95] tracking-[-.06em] md:text-[42px]">ALTITUDE VIP</h2>
+            <p className="mt-4 max-w-[470px] text-[15px] leading-[1.45] text-white/75 md:text-[17px]">Accede antes que nadie a nuevos drops, unidades limitadas y lanzamientos exclusivos.</p>
+            <button
+              data-testid="button-enter-vip"
+              onClick={() => window.open('https://wa.me/59170000000', '_blank', 'noopener,noreferrer')}
+              className="group mt-7 inline-flex h-11 items-center gap-3 border border-white px-5 text-[10px] font-bold uppercase tracking-[.12em] transition-colors hover:bg-white hover:text-[#111111]"
+            >
+              Entrar al VIP <ArrowRight size={17} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
+        </section>
         <section id="showroom" ref={showroomRef} className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8">
           <div className="flex items-center justify-between">
             <div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">Showroom La Paz</h2><p className="mt-1 text-[11px] text-[#6b6660]">Zona Sur · Av. Montenegro 1140</p></div>
