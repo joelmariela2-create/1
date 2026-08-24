@@ -6,9 +6,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import {
-  ArrowLeft, ArrowRight, ChevronRight, Crown, CreditCard, Heart, House,
-  LockKeyhole, MapPin, Menu, MessageCircle, PackageCheck, Plus, RefreshCw, Search,
-  ShieldCheck, ShoppingBag, ShoppingCart, Sparkles, Timer, Truck, X,
+  ArrowLeft, ArrowRight, Box, ChevronRight, Crown, CreditCard, Flame, Heart, House,
+  LockKeyhole, MapPin, Menu, MessageCircle, Plus, RefreshCw, Search, ShieldCheck,
+  ShoppingBag, ShoppingCart, Tag, Truck, X, Zap,
 } from 'lucide-react';
 
 const queryClient = new QueryClient();
@@ -147,10 +147,10 @@ function VipPage() {
   const [, setLocation] = useLocation();
   const enterVip = () => window.open(vipWhatsAppUrl, '_blank', 'noopener,noreferrer');
   const benefits = [
-    { label: 'Early access', detail: 'Antes del lanzamiento público.', icon: Timer },
-    { label: 'Nuevos drops', detail: 'Entérate primero de cada lanzamiento.', icon: Sparkles },
-    { label: 'Preventas', detail: 'Reserva antes de que se agote el stock.', icon: PackageCheck },
-    { label: 'Stock limitado', detail: 'Mayor posibilidad de conseguir tu talla.', icon: LockKeyhole },
+    { label: 'Early access', detail: 'Antes del lanzamiento público.', icon: Zap },
+    { label: 'Nuevos drops', detail: 'Entérate primero de cada lanzamiento.', icon: Flame },
+    { label: 'Preventas', detail: 'Reserva antes de que se agote el stock.', icon: Tag },
+    { label: 'Stock limitado', detail: 'Mayor posibilidad de conseguir tu talla.', icon: Box },
   ];
   return (
     <div className="vip-page page-shell min-h-[100dvh] bg-[#0b0b0b] pb-[76px] text-[#f5f3ef]">
@@ -194,7 +194,7 @@ function VipPage() {
             </div>
             <span className="font-mono text-[9px] text-white/35">04 ventajas</span>
           </div>
-          <div className="grid grid-cols-2 gap-px overflow-hidden border border-white/12 bg-white/12 md:grid-cols-4">
+           <div className="grid grid-cols-4 gap-px overflow-hidden border border-white/12 bg-white/12">
             {benefits.map(({ label, detail, icon: Icon }, index) => (
                <article key={label} data-testid={`card-vip-benefit-${index}`} className="vip-benefit-card group min-h-[122px] bg-black p-4 transition-colors hover:bg-[#df3933]">
                 <div className="flex items-start justify-between">
