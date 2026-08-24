@@ -73,6 +73,20 @@ const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' |
   'youngla-combat-jogger': { material: 'Algodón y poliéster', fabricWeight: '320 GSM', fit: 'Tapered fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Rodilla articulada', 'Cordón plano', 'Bolsillo trasero seguro'] },
 };
 
+const universalProductDescription = {
+  material: '72% Polyamide, 21% Polyester, 7% Elastane.',
+  fabricWeight: '300 GSM.',
+  fit: 'Fitted.',
+  design: 'This compression tee hugs close with a structured, armored-style pattern. It’s lightweight, supportive, and moves with you. Whether you’re hitting chest day or just trying to look mysterious at the gym. The crisp Batman emblem seals the deal being sleek and tough.',
+  model: 'The model in the first photo is wearing a size XL.',
+  modelStats: 'Weight: 215lb · Height: 6\'1.',
+  copyright: 'THE DARK KNIGHT TRILOGY and all related characters and elements © & TM DC and Warner Bros. Entertainment Inc. WB SHIELD: © & TM WBEI. (s26)',
+  sizeChart: [
+    ['Length', '24.5', '25', '25.5', '25.9', '26.4'],
+    ['Chest', '14.2', '15.4', '16.3', '17.3', '18.3'],
+  ],
+};
+
 function getProductDetails(product: Product) {
   return { ...product, ...productDetails[product.id] };
 }
@@ -375,7 +389,7 @@ function ProductsPage() {
             </div>
           </div>
           <div className="product-filter-strip -mx-5 mt-4 flex gap-2 overflow-x-auto px-5 pb-0 md:mx-0 md:px-0">
-            {categories.map((item) => <button key={item} data-testid={`button-category-${item.toLowerCase()}`} onClick={() => setCategory(item)} className={`shrink-0 border px-3 py-2 text-[9px] font-bold uppercase tracking-[.09em] transition-colors ${category === item ? 'border-[#d93731] bg-[#d93731] text-white' : 'border-[#d3cdc6] bg-transparent text-[#69635d] hover:border-[#171717] hover:text-[#171717]'}`}>{item}</button>)}
+             {categories.map((item) => <button key={item} data-testid={`button-category-${item.toLowerCase()}`} onClick={() => setCategory(item)} className={`shrink-0 border px-3 py-2 text-[9px] font-bold uppercase tracking-[.09em] transition-colors ${category === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] bg-transparent text-[#69635d] hover:border-[#171717] hover:text-[#171717]'}`}>{item}</button>)}
           </div>
           {filtersOpen && <div className="filter-drawer mt-4 border-t border-[#ddd8d2] pt-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -524,19 +538,31 @@ function ProductDetailPage() {
                 <div className="mt-6" role="group" aria-labelledby="product-size-label">
                   <div className="flex items-center justify-between"><span id="product-size-label" className="text-[10px] font-bold uppercase tracking-[.12em]">Selecciona tu talla <span className="text-[#d93731]">*</span></span><button data-testid="button-size-guide" onClick={() => notify('Guía de tallas: elige tu talla habitual.')} className="text-[9px] font-semibold uppercase tracking-[.08em] text-[#8b857e] underline underline-offset-4 hover:text-[#171717]">Guía de tallas</button></div>
                   <div id="product-size" tabIndex={-1} aria-describedby={sizeError ? 'size-error' : undefined} className="mt-3 grid grid-cols-5 gap-2" role="radiogroup" aria-label="Tallas disponibles">
-                    {(detail.sizes ?? []).map((size) => <button key={size} type="button" data-testid={`button-size-${size.toLowerCase()}`} role="radio" aria-checked={selectedSize === size} onClick={() => { setSelectedSize(size); setSizeError(''); }} className={`flex h-11 items-center justify-center border text-[11px] font-bold transition-colors ${selectedSize === size ? 'border-[#d93731] bg-[#d93731] text-white' : 'border-[#cfc9c2] bg-[#fbfaf8] hover:border-[#171717]'}`}>{size}</button>)}
+                     {(detail.sizes ?? []).map((size) => <button key={size} type="button" data-testid={`button-size-${size.toLowerCase()}`} role="radio" aria-checked={selectedSize === size} onClick={() => { setSelectedSize(size); setSizeError(''); }} className={`flex h-11 items-center justify-center border text-[11px] font-bold transition-colors ${selectedSize === size ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#cfc9c2] bg-[#fbfaf8] hover:border-[#171717]'}`}>{size}</button>)}
                   </div>
                   {sizeError && <p id="size-error" data-testid="status-size-error" role="alert" className="mt-3 text-[10px] font-semibold text-[#d93731]">{sizeError}</p>}
                 </div>
-                <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-6 flex h-14 w-full items-center justify-between bg-[#d93731] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717]"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
-                {added && <p data-testid="status-detail-added" role="status" className="mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.08em] text-[#4e6a50]"><Check size={14} /> Producto guardado · puedes seguir comprando</p>}
-                <div className="detail-spec-grid mt-8 border-y border-[#d9d3cc]">
-                  <div><span>Material</span><strong data-testid="text-detail-material">{detail.material}</strong></div>
-                  <div><span>GSM / peso</span><strong data-testid="text-detail-weight">{detail.fabricWeight}</strong></div>
-                  <div><span>Ajuste</span><strong data-testid="text-detail-fit">{detail.fit}</strong></div>
-                  <div><span>Envíos</span><strong>Todo Bolivia</strong></div>
-                </div>
-                <div className="mt-7"><p className="section-label text-[#8b857e]">Diseñado para moverte</p><ul className="detail-features mt-3">{(detail.features ?? []).map((feature) => <li key={feature}><Check size={14} strokeWidth={1.8} /> <span>{feature}</span></li>)}</ul></div>
+                 <section className="product-description mt-8 border-y border-[#d9d3cc] py-6" aria-label="Descripción y guía de tallas">
+                   <div className="space-y-5 text-[11px] leading-[1.55] text-[#514c47]">
+                     <p><strong className="product-description-label">MATERIAL:</strong> {universalProductDescription.material}</p>
+                     <p><strong className="product-description-label">FABRIC WEIGHT:</strong> {universalProductDescription.fabricWeight}</p>
+                     <p><strong className="product-description-label">FIT:</strong> {universalProductDescription.fit}</p>
+                     <p><strong className="product-description-label">DESIGN:</strong> {universalProductDescription.design}</p>
+                     <div><p><strong className="product-description-label">MODEL:</strong> {universalProductDescription.model}</p><p>{universalProductDescription.modelStats}</p></div>
+                     <p className="text-[9px] leading-[1.45] text-[#77716c]">{universalProductDescription.copyright}</p>
+                   </div>
+                   <div className="mt-7">
+                     <p className="section-label text-[#8b857e]">4259 Size Chart (inches)</p>
+                     <div className="mt-3 overflow-x-auto">
+                       <table className="size-chart w-full min-w-[360px] border-collapse text-[10px]">
+                         <thead><tr><th scope="col"></th>{['S', 'M', 'L', 'XL', 'XXL'].map((size) => <th key={size} scope="col">{size}</th>)}</tr></thead>
+                         <tbody>{universalProductDescription.sizeChart.map(([label, ...values]) => <tr key={label}><th scope="row">{label}</th>{values.map((value, index) => <td key={`${label}-${index}`}>{value}</td>)}</tr>)}</tbody>
+                       </table>
+                     </div>
+                   </div>
+                 </section>
+                 <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-6 flex h-14 w-full items-center justify-between bg-[#d93731] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717]"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
+                 {added && <p data-testid="status-detail-added" role="status" className="mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.08em] text-[#4e6a50]"><Check size={14} /> Producto guardado · puedes seguir comprando</p>}
               </div>
             </div>
           </section>}
