@@ -377,11 +377,11 @@ function CollectionPage() {
           {collectionCampaigns.map((campaign) => (
             <article key={campaign.id} className="campaign-tile relative isolate min-h-[292px] overflow-hidden bg-[#dedbd7] md:min-h-[390px]">
               <img className="absolute inset-0 h-full w-full object-cover" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position }} loading="eager" decoding="async" />
-              {campaign.id !== 'youngla-new-drop' && <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/35 to-transparent" />}
+              <div className={`absolute inset-0 bg-gradient-to-r ${campaign.id === 'youngla-new-drop' ? 'from-white/20 via-white/5' : 'from-white/90 via-white/35'} to-transparent`} />
               <div className="relative z-10 flex min-h-[292px] flex-col items-start justify-center px-6 py-7 md:min-h-[390px] md:px-12">
                 <div className="-translate-y-16 md:-translate-y-20">
                    <p className={`mb-2 text-[10px] font-bold uppercase tracking-[.22em] ${campaign.id === 'youngla-new-drop' ? 'text-white' : 'text-[#5f5a55]'}`}>{campaign.label}</p>
-                   <h2 className={`campaign-tile-title max-w-[210px] text-[clamp(1.9rem,8vw,3.5rem)] ${campaign.id === 'youngla-new-drop' || campaign.id === 'gymshark-new-arrivals' ? 'font-bold' : 'font-black'} uppercase leading-[.88] tracking-[-.065em] ${campaign.id === 'youngla-new-drop' ? 'text-white' : ''}`}>{campaign.title}</h2>
+                   <h2 className={`campaign-tile-title max-w-[210px] text-[clamp(1.9rem,8vw,3.5rem)] ${campaign.id === 'youngla-new-drop' || campaign.id === 'gymshark-new-arrivals' ? 'font-extrabold' : 'font-black'} uppercase leading-[.88] tracking-[-.065em] ${campaign.id === 'youngla-new-drop' ? 'text-white' : ''}`}>{campaign.title}</h2>
                 </div>
                 <button data-testid={`button-collection-${campaign.id}`} onClick={() => { if (campaign.id === 'altitude-vip-early-access') setLocation('/vip'); else { setLocation('/products'); notify(`${campaign.label}: colección seleccionada`); } }} className={`hero-cta group mt-5 flex h-[44px] min-w-[158px] items-center justify-between gap-5 border border-[#171717] bg-transparent px-4 text-[9px] font-bold uppercase tracking-[.12em] ${campaign.id === 'youngla-new-drop' ? 'text-white -translate-x-2 translate-y-4' : 'text-[#171717]'} shadow-sm transition-colors hover:bg-[#d93731] hover:text-white ${campaign.id === 'gymshark-new-arrivals' ? 'translate-y-10' : ''}`}>Ver colección <ArrowRight size={17} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" /></button>
               </div>
