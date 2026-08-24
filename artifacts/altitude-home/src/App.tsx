@@ -127,7 +127,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
           <span className="px-4" aria-hidden="true">Envíos a todo el país <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
         </div>
       </div>
-      <header className="sticky top-0 z-30 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
+      <header className="sticky top-0 z-30 flex h-[58px] items-center justify-between border-b border-[#e6e2de] bg-white px-4 text-[#151515] md:h-[72px] md:px-7">
         <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
         <Link href="/" data-testid="link-home-logo" aria-label="ALTITUDE, inicio" className="header-wordmark absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[62%] text-[24px] text-[#151515] md:text-[29px]">ALTITUDE</Link>
         <div className="relative -right-3 -top-2 flex items-center gap-2">
@@ -135,7 +135,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
           <button data-testid="button-open-cart" onClick={onCart ?? (() => window.alert('Tu carrito está listo para despegar.'))} aria-label="Abrir carrito" className="relative flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><ShoppingCart size={21} strokeWidth={1.7} />{cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}</button>
         </div>
       </header>
-       <nav className="desktop-nav sticky top-[62px] z-20 hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525] md:top-[76px]">
+        <nav className="desktop-nav sticky top-[58px] z-20 hidden h-10 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525] md:top-[72px]">
         <button onClick={() => onShop ? onShop() : scrollToSection('new-releases')}>Tienda</button>
          <button onClick={() => setLocation('/collection')}>Colección</button>
         <button onClick={() => onShowroom ? onShowroom() : scrollToSection('showroom')}>Showroom</button>
@@ -182,7 +182,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <div id="benefits" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
         {benefits.map(({ label, detail, icon: Icon }, index) => <div key={label} className={`hero-benefit flex min-h-[93px] flex-col items-center justify-center px-1 text-center ${index < benefits.length - 1 ? 'border-r border-[#dedad6]' : ''}`}><Icon size={22} strokeWidth={1.45} className="mb-2 text-[#252525]" /><strong className="max-w-[78px] text-[8px] font-bold uppercase leading-[1.18] tracking-[.03em] md:max-w-none md:text-[10px]">{label}</strong><span className="mt-1 hidden text-[8px] text-[#77716c] md:block">{detail}</span></div>)}
       </div>
-      <div className="absolute bottom-[98px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>{Array.from({ length: 3 }, (_, index) => <span key={index} className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${activeIndex % 3 === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}</div>
+      <div className="absolute bottom-[98px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>{Array.from({ length: 3 }, (_, index) => <span key={index} className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${activeIndex % 3 === index ? 'scale-125 bg-black' : 'bg-black/35'}`} />)}</div>
     </section>
   );
 }
@@ -202,7 +202,7 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; onShowroom?: () => void; active?: string }) {
   const [, setLocation] = useLocation();
   const items = [{ label: 'Inicio', icon: House, action: () => setLocation('/'), id: 'home' }, { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' }, { label: 'Colección', icon: Box, action: () => setLocation('/collection'), id: 'collection' }, { label: 'Showroom', icon: MapPin, action: onShowroom ?? (() => scrollToSection('showroom')), id: 'showroom' }, { label: 'VIP', icon: Crown, action: onVip, id: 'vip' }, { label: 'WhatsApp', icon: MessageCircle, action: () => window.open(vipWhatsAppUrl, '_blank'), id: 'whatsapp' }];
-  return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md" aria-label="Navegación principal móvil">{items.map(({ label, icon: Icon, action, id }) => <button key={id} data-testid={`nav-${id}`} onClick={action} className={`flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em] ${active === id ? 'active-nav' : ''}`}><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
+  return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[62px] items-center justify-around border-t px-0.5 pb-[env(safe-area-inset-bottom)] backdrop-blur-md" aria-label="Navegación principal móvil">{items.map(({ label, icon: Icon, action, id }) => <button key={id} data-testid={`nav-${id}`} onClick={action} className={`flex min-w-[48px] flex-col items-center gap-0.5 text-[7px] font-semibold uppercase tracking-[-.01em] ${active === id ? 'active-nav' : ''}`}><Icon size={20} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
 }
 
 function ProductsPage() {
@@ -377,7 +377,6 @@ function CollectionPage() {
           {collectionCampaigns.map((campaign) => (
             <article key={campaign.id} className="campaign-tile relative isolate min-h-[292px] overflow-hidden bg-[#dedbd7] md:min-h-[390px]">
               <img className="absolute inset-0 h-full w-full object-cover" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position }} loading="eager" decoding="async" />
-              <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/35 to-transparent" />
               <div className="relative z-10 flex min-h-[292px] flex-col items-start justify-center px-6 py-7 md:min-h-[390px] md:px-12">
                 <div className="-translate-y-16 md:-translate-y-20">
                   <p className="mb-2 text-[10px] font-bold uppercase tracking-[.22em] text-[#5f5a55]">{campaign.label}</p>
