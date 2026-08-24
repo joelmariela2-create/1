@@ -23,9 +23,14 @@ import {
   ShieldCheck,
   ShoppingBag,
   ShoppingCart,
+  Box,
+  Flame,
+  LockKeyhole,
+  Tag,
   Truck,
   UserRound,
   X,
+  Zap,
 } from 'lucide-react';
 
 const queryClient = new QueryClient();
@@ -338,38 +343,77 @@ function ProductsPage() {
 
 function VipAccessSection() {
   const whatsappGroupUrl = 'https://wa.me/59170000000';
+  const vipBenefits = [
+    { label: 'Early access', detail: 'Accede antes que nadie al lanzamiento público.', icon: Zap },
+    { label: 'Nuevos drops', detail: 'Entérate primero de cada lanzamiento.', icon: Flame },
+    { label: 'Preventas', detail: 'Reserva antes de que se agote el stock.', icon: Tag },
+    { label: 'Stock limitado', detail: 'Mayor posibilidad de conseguir tu talla.', icon: Box },
+  ];
 
   return (
-    <section id="vip-access" aria-labelledby="vip-access-title" className="vip-access-section bg-black">
-      <div className="relative mx-auto w-full max-w-[469px]">
+    <section id="vip-access" aria-labelledby="vip-access-title" className="vip-access-section overflow-hidden bg-black text-white">
+      <div className="relative isolate mx-auto min-h-[430px] max-w-[1280px] overflow-hidden md:min-h-[560px]">
         <img
-          src="/vip-early-access.jpg"
-          alt="ALTITUDE VIP Early Access: beneficios exclusivos, nuevos drops, preventas y stock limitado"
-          className="block h-auto w-full"
+          src="/vip-hero.png"
+          alt="Atleta de ALTITUDE con camiseta negra para la campaña VIP Early Access"
+          className="absolute inset-0 -z-10 h-full w-full object-cover object-top"
           loading="lazy"
           decoding="async"
         />
+        <div className="absolute inset-0 -z-[5] bg-gradient-to-r from-black/10 via-transparent to-black/20" />
         <h2 id="vip-access-title" className="sr-only">ALTITUDE VIP Early Access</h2>
-        <a
-          href={whatsappGroupUrl}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Entrar al VIP por WhatsApp"
-          data-testid="button-enter-vip-hero"
-          className="absolute left-[6.3%] top-[38.7%] h-[4.5%] w-[34%] rounded-[3px]"
-        >
-          <span className="sr-only">Entrar al VIP</span>
-        </a>
-        <a
-          href={whatsappGroupUrl}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Entrar al grupo privado de WhatsApp"
-          data-testid="button-enter-vip-final"
-          className="absolute left-[21.8%] top-[81.8%] h-[4.5%] w-[55%] rounded-[3px]"
-        >
-          <span className="sr-only">Entrar al VIP por WhatsApp</span>
-        </a>
+        <div className="absolute bottom-12 left-6 md:bottom-16 md:left-10">
+          <a
+            href={whatsappGroupUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Entrar al VIP por WhatsApp"
+            data-testid="button-enter-vip-hero"
+            className="inline-flex h-11 items-center gap-4 bg-white px-5 text-[10px] font-bold uppercase tracking-[.1em] text-[#111] transition-colors hover:bg-[#e51f25] hover:text-white md:h-14 md:px-8 md:text-[12px]"
+          >
+            Entrar al VIP <ArrowRight size={19} strokeWidth={1.8} />
+          </a>
+          <span className="mt-3 flex items-center gap-2 text-[9px] uppercase tracking-[.12em] text-white/75">
+            <LockKeyhole size={13} strokeWidth={1.5} /> Acceso privado
+          </span>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1280px] px-5 pb-10 pt-8 md:px-10 md:pb-14 md:pt-10">
+        <div className="text-center">
+          <p className="section-label text-white/80">Beneficios VIP</p>
+          <span className="mx-auto mt-3 block h-[2px] w-8 bg-[#e51f25]" />
+        </div>
+        <div className="mt-7 grid grid-cols-2 border-y border-white/15 md:grid-cols-4">
+          {vipBenefits.map(({ label, detail, icon: Icon }, index) => (
+            <article
+              data-testid={`vip-benefit-${index}`}
+              key={label}
+              className={`min-h-[158px] px-4 py-6 text-center md:min-h-[190px] md:px-6 md:py-8 ${index % 2 === 0 ? 'border-r border-white/15' : ''} ${index < 2 ? 'border-b border-white/15' : ''} md:border-b-0 md:border-r md:last:border-r-0`}
+            >
+              <Icon className="mx-auto h-8 w-8 text-white" strokeWidth={1.4} />
+              <h3 className="mt-5 text-[9px] font-bold uppercase tracking-[.06em] text-[#e51f25] md:text-[10px]">{label}</h3>
+              <p className="mx-auto mt-2 max-w-[150px] text-[10px] leading-[1.45] text-white/70 md:text-[11px]">{detail}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mx-auto max-w-[620px] pt-12 text-center md:pt-16">
+          <p className="editorial-title text-[27px] font-bold uppercase leading-[1.12] tracking-[.14em] md:text-[39px]">Primero el VIP.<br />Después el resto.</p>
+          <p className="mt-5 text-[11px] text-white/70 md:text-[13px]">Los drops más buscados <strong className="text-[#e51f25]">no esperan.</strong></p>
+          <p className="mt-9 text-[10px] font-semibold uppercase tracking-[.18em] text-white/85 md:mt-11">¿Quieres llegar antes?</p>
+          <a
+            href={whatsappGroupUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Entrar al grupo privado de WhatsApp"
+            data-testid="button-enter-vip-final"
+            className="mx-auto mt-5 flex h-12 max-w-[280px] items-center justify-center gap-3 bg-[#e51f25] px-5 text-[11px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#111]"
+          >
+            <MessageCircle size={20} strokeWidth={1.8} /> Entrar al VIP <ArrowRight size={18} strokeWidth={1.8} />
+          </a>
+          <p className="mt-3 text-[9px] text-white/55">Acceso mediante grupo privado de WhatsApp.</p>
+        </div>
       </div>
     </section>
   );
