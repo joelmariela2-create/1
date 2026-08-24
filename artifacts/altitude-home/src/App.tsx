@@ -160,7 +160,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
     <section id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
        <img
          key={campaign.id}
-         className="campaign-image absolute inset-0 h-full w-full object-contain opacity-[.84]"
+         className="campaign-image absolute inset-0 h-full w-full object-contain"
          src={campaign.image}
          alt={`${campaign.label} ${campaign.title}`}
           style={{
@@ -173,9 +173,9 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
        {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
-         <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[30px] left-5 right-5 max-w-[520px]">
+        <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[18px] left-5 right-5 max-w-[520px]">
           <div className="flex flex-col items-start gap-2">
-             <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[40px] w-[220px] items-center justify-between border border-white bg-white px-4 text-[9px] font-bold uppercase tracking-[.1em] text-[#151515] transition-colors hover:bg-transparent hover:text-white">
+            <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[44px] w-[240px] items-center justify-between border border-white bg-transparent px-4 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#151515]">
               Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
             </button>
           </div>
