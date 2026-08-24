@@ -218,7 +218,7 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
     const delta = x - touchState.current.lastX;
     // Use the total distance from the initial touch so slow, continuous
     // drags do not remain stuck below the per-event threshold.
-    if (!touchState.current.horizontal && Math.abs(x - touchState.current.startX) > 4) touchState.current.horizontal = true;
+    if (!touchState.current.horizontal && Math.abs(x - touchState.current.startX) > 0.5) touchState.current.horizontal = true;
     if (!touchState.current.horizontal) return;
     event.preventDefault();
     const elapsed = Math.max(8, now - touchState.current.lastTime);
@@ -233,7 +233,7 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
     // If the finger has already stopped before leaving the screen, discard
     // the old velocity so the rail stops with the finger instead of jumping.
     const initialVelocity = timeSinceLastMove > 120 ? 0 : touchState.current.velocity;
-    if (!touchState.current.horizontal || Math.abs(initialVelocity) < 0.02 || !railRef.current) return;
+    if (!touchState.current.horizontal || Math.abs(initialVelocity) < 0.005 || !railRef.current) return;
     setInertiaActive(true);
     const startedAt = performance.now();
     let previousTime = startedAt;
