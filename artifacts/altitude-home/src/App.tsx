@@ -48,8 +48,8 @@ const campaigns: Campaign[] = [
   {
     label: 'Gymshark',
     title: 'Nuevos ingresos',
-    image: 'https://images.pexels.com/photos/416809/pexels-photo-416809.jpeg?auto=compress&cs=tinysrgb&w=1400',
-    position: 'center 42%',
+    image: '/gymshark-logo.png',
+    position: 'center',
     tone: 'light',
     id: 'gymshark',
   },
@@ -114,9 +114,14 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   const campaign = campaigns[activeIndex];
 
   useEffect(() => {
+    campaigns.forEach(({ image }) => {
+      const preload = new Image();
+      preload.decoding = 'async';
+      preload.src = image;
+    });
     const timer = window.setInterval(() => {
       setActiveIndex((index) => (index + 1) % campaigns.length);
-    }, 5000);
+    }, 1000);
     return () => window.clearInterval(timer);
   }, []);
 
@@ -142,9 +147,12 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   return (
     <section id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
        <img
+         key={campaign.id}
          className="campaign-image absolute inset-0 h-full w-full object-contain"
          src={campaign.image}
          alt={`${campaign.label} ${campaign.title}`}
+         loading="eager"
+         decoding="async"
        />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
