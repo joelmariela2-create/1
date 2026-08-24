@@ -57,12 +57,12 @@ const campaigns: Campaign[] = [
     id: 'gymshark',
   },
   {
-    label: 'Altitude VIP',
-    title: 'Acceso anticipado',
-    image: 'https://images.pexels.com/photos/2294361/pexels-photo-2294361.jpeg?auto=compress&cs=tinysrgb&w=1400',
-    position: 'center 38%',
+    label: 'Gymshark',
+    title: 'Nuevos ingresos',
+    image: '/naruto-live-now.jpg',
+    position: 'center 35%',
     tone: 'light',
-    id: 'vip',
+    id: 'gymshark-featured',
   },
 ];
 
