@@ -117,14 +117,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 #root { min-height: 100dvh; }
 .vip-hero-page {
-  min-height: 100dvh;
+  min-height: calc(100dvh - 89px);
   background: #000;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 .vip-hero {
   position: relative;
   width: min(100vw, 720px);
+  height: calc(100dvh - 89px);
+  overflow: hidden;
   line-height: 0;
 }
 .vip-hero-image {
@@ -132,6 +135,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 100%;
   height: auto;
   max-width: 720px;
+  transform: translateY(-34%);
 }
 .vip-hero-cta {
   position: absolute;
@@ -147,6 +151,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   background: transparent;
   color: transparent;
   cursor: pointer;
+  transform: translateY(-34%);
 }
 .vip-hero-cta:focus-visible {
   outline: 2px solid #fff;
