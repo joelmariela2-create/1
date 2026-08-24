@@ -43,7 +43,7 @@ const campaigns: Campaign[] = [
   {
     label: 'YoungLA',
     title: 'Nuevo drop',
-    image: '/naruto-collection.jpg',
+    image: '/naruto-collection.png',
     position: 'center 35%',
     tone: 'light',
     id: 'youngla',
