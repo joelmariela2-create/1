@@ -229,7 +229,10 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
   };
 
   const handleRailTouchEnd = () => {
-    const initialVelocity = touchState.current.velocity;
+    const timeSinceLastMove = performance.now() - touchState.current.lastTime;
+    // If the finger has already stopped before leaving the screen, discard
+    // the old velocity so the rail stops with the finger instead of jumping.
+    const initialVelocity = timeSinceLastMove > 120 ? 0 : touchState.current.velocity;
     if (!touchState.current.horizontal || Math.abs(initialVelocity) < 0.02 || !railRef.current) return;
     setInertiaActive(true);
     const startedAt = performance.now();
