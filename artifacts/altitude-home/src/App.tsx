@@ -460,25 +460,19 @@ function VipPage() {
                 <span className="vip-live-dot h-1.5 w-1.5 rounded-full bg-[#e33a34]" />
                 Acceso privado
               </div>
-               <span className="vip-edition rounded-full border border-white/20 px-3 py-1 font-mono text-[8px] uppercase tracking-[.14em] text-white/70">Drop 01 / 26</span>
             </div>
             <div className="max-w-[700px]">
-               <p className="vip-kicker mb-3 text-[clamp(1.65rem,7vw,3rem)] font-black uppercase leading-none tracking-[-.055em] text-white">ALTITUDE <span className="text-[#e13832]">VIP</span></p>
+               <p className="vip-kicker mb-3 text-[clamp(1.65rem,7vw,3rem)] font-black uppercase leading-none tracking-[-.055em] text-white">ALTITUDE VIP</p>
               <h1 id="vip-hero-title" data-testid="text-vip-hero-title" className="vip-display text-[clamp(.75rem,2vw,1rem)] font-bold uppercase leading-none tracking-[.4em] text-[#e13832]">
-                 Llega antes
+                 Early access
               </h1>
               <p className="mt-7 max-w-[370px] text-[12px] leading-[1.55] text-white/80 md:text-[14px]">
-                 Los drops que todos quieren empiezan aquí. Entra al círculo privado y asegura tu talla antes de que el resto los vea.
+                 Accede antes que nadie a nuevos drops, unidades limitadas y lanzamientos exclusivos.
               </p>
-               <div className="mt-6 flex items-center gap-5 border-l-2 border-[#d73832] pl-4">
-                 <div><strong className="block text-[20px] font-black leading-none text-white">01</strong><span className="mt-1 block text-[8px] uppercase tracking-[.1em] text-white/55">Paso para entrar</span></div>
-                 <div className="h-8 w-px bg-white/20" />
-                 <p className="max-w-[190px] text-[10px] uppercase leading-[1.35] tracking-[.08em] text-white/70">Únete hoy.<br /><span className="text-white">Mañana puede agotarse.</span></p>
-               </div>
             </div>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
                <button data-testid="button-vip-enter-hero" onClick={enterVip} className="vip-button group flex h-[52px] w-full max-w-[285px] items-center justify-between bg-white px-4 text-[10px] font-bold uppercase tracking-[.13em] text-[#111] transition-colors hover:bg-[#df3933] hover:text-white">
-                 <span><span className="block text-[8px] font-medium tracking-[.16em] text-[#777] group-hover:text-white/70">WHATSAPP PRIVADO</span><span className="mt-0.5 block">Entrar al VIP</span></span>
+                 Entrar al VIP
                 <ArrowRight size={18} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
               </button>
               <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[.08em] text-white/75"><LockKeyhole size={12} strokeWidth={1.5} /> Acceso privado</span>
@@ -489,8 +483,8 @@ function VipPage() {
         <section id="benefits" className="vip-benefits border-y border-[#e7e7e7] bg-white px-5 py-6 text-[#111] md:px-12 md:py-8">
           <div className="mb-5 flex items-end justify-between">
             <div>
-               <p className="section-label text-[#d73832]">Tu ventaja empieza aquí</p>
-                <h2 data-testid="text-vip-benefits-title" className="vip-heading mt-1 text-[25px] font-bold uppercase leading-none tracking-[-.055em] text-[#111]">Acceso que se nota</h2>
+               <p className="section-label text-[#d73832]">Qué desbloqueas</p>
+                <h2 data-testid="text-vip-benefits-title" className="vip-heading mt-1 text-[25px] font-bold uppercase leading-none tracking-[-.055em] text-[#111]">Beneficios VIP</h2>
             </div>
              <span className="font-mono text-[9px] text-[#999]">04 ventajas</span>
           </div>
@@ -511,13 +505,13 @@ function VipPage() {
         <section className="vip-editorial relative overflow-hidden bg-black px-5 py-10 text-white md:px-12 md:py-14">
           <span className="absolute -right-2 -top-6 select-none text-[8rem] font-black leading-none tracking-[-.12em] text-white/[.045]" aria-hidden="true">VIP</span>
           <div className="relative max-w-[720px]">
-             <p className="section-label mb-6 text-[#d73832]">No es solo entrar</p>
+             <p className="section-label mb-6 text-[#d73832]">Beneficios VIP</p>
             <h2 data-testid="text-vip-editorial-title" className="vip-editorial-title max-w-[620px] text-[clamp(2.5rem,9vw,5.9rem)] font-black uppercase leading-[.82] tracking-[-.075em]">
-               Muévete<br /><span className="text-[#d73832]">primero.</span>
+               Primero el VIP.<br /><span className="text-[#d73832]">Después el resto.</span>
             </h2>
             <div className="mt-8 flex max-w-[430px] items-start gap-3 border-l-2 border-[#d73832] pl-4">
               <p className="text-[12px] leading-[1.55] text-white/75 md:text-[13px]">
-                 Los drops más buscados <span className="text-[#d73832]">no esperan.</span> Tú tampoco deberías.
+                 Los drops más buscados <span className="text-[#d73832]">no esperan.</span>
               </p>
             </div>
           </div>
