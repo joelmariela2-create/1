@@ -352,11 +352,11 @@ function VipAccessSection() {
 
   return (
     <section id="vip-access" aria-labelledby="vip-access-title" className="vip-access-section overflow-hidden bg-black text-white">
-      <div className="relative isolate mx-auto min-h-[430px] max-w-[1280px] overflow-hidden md:min-h-[560px]">
+      <div className="relative isolate mx-auto h-[315px] max-w-[1280px] overflow-hidden md:h-[560px]">
         <img
           src="/vip-hero.png"
           alt="Atleta de ALTITUDE con camiseta negra para la campaña VIP Early Access"
-          className="absolute inset-0 -z-10 h-full w-full object-cover object-top"
+          className="absolute inset-0 -z-10 h-auto min-h-full w-full max-w-none object-cover object-top"
           loading="lazy"
           decoding="async"
         />
@@ -401,18 +401,7 @@ function VipAccessSection() {
         <div className="mx-auto max-w-[620px] pt-12 text-center md:pt-16">
           <p className="editorial-title text-[27px] font-bold uppercase leading-[1.12] tracking-[.14em] md:text-[39px]">Primero el VIP.<br />Después el resto.</p>
           <p className="mt-5 text-[11px] text-white/70 md:text-[13px]">Los drops más buscados <strong className="text-[#e51f25]">no esperan.</strong></p>
-          <p className="mt-9 text-[10px] font-semibold uppercase tracking-[.18em] text-white/85 md:mt-11">¿Quieres llegar antes?</p>
-          <a
-            href={whatsappGroupUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Entrar al grupo privado de WhatsApp"
-            data-testid="button-enter-vip-final"
-            className="mx-auto mt-5 flex h-12 max-w-[280px] items-center justify-center gap-3 bg-[#e51f25] px-5 text-[11px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#111]"
-          >
-            <MessageCircle size={20} strokeWidth={1.8} /> Entrar al VIP <ArrowRight size={18} strokeWidth={1.8} />
-          </a>
-          <p className="mt-3 text-[9px] text-white/55">Acceso mediante grupo privado de WhatsApp.</p>
+          <p className="mt-9 text-[10px] font-semibold uppercase tracking-[.18em] text-white/85 md:mt-11">Acceso mediante grupo privado de WhatsApp.</p>
         </div>
       </div>
     </section>
