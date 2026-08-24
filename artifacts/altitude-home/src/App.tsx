@@ -185,7 +185,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
          }}
        />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
-        <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[18px] left-5 right-5 max-w-[520px]">
+         <div className="campaign-content absolute bottom-[18px] left-5 right-5 max-w-[520px]">
           <div className="flex flex-col items-start gap-2">
             <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[44px] w-[240px] items-center justify-between border border-white bg-transparent px-4 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#151515]">
               Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
