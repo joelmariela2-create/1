@@ -147,7 +147,7 @@ function VipPage() {
   const [, setLocation] = useLocation();
   const enterVip = () => window.open(vipWhatsAppUrl, '_blank', 'noopener,noreferrer');
   const benefits = [
-    { label: 'Early access', detail: 'Antes del lanzamiento público.', icon: Zap },
+    { label: 'Early access', detail: 'Accede antes del lanzamiento público.', icon: Zap },
     { label: 'Nuevos drops', detail: 'Entérate primero de cada lanzamiento.', icon: Flame },
     { label: 'Preventas', detail: 'Reserva antes de que se agote el stock.', icon: Tag },
     { label: 'Stock limitado', detail: 'Mayor posibilidad de conseguir tu talla.', icon: Box },
@@ -186,23 +186,23 @@ function VipPage() {
           </div>
         </section>
 
-        <section id="benefits" className="vip-benefits border-y border-white/20 bg-black px-5 py-6 md:px-12 md:py-8">
+        <section id="benefits" className="vip-benefits border-y border-[#e7e7e7] bg-white px-5 py-6 text-[#111] md:px-12 md:py-8">
           <div className="mb-5 flex items-end justify-between">
             <div>
               <p className="section-label text-[#d73832]">Qué desbloqueas</p>
-               <h2 data-testid="text-vip-benefits-title" className="vip-heading mt-1 text-[25px] font-bold uppercase leading-none tracking-[-.055em] text-white">Beneficios VIP</h2>
+               <h2 data-testid="text-vip-benefits-title" className="vip-heading mt-1 text-[25px] font-bold uppercase leading-none tracking-[-.055em] text-[#111]">Beneficios VIP</h2>
             </div>
             <span className="font-mono text-[9px] text-white/35">04 ventajas</span>
           </div>
            <div className="grid grid-cols-4 gap-px overflow-hidden border border-white/12 bg-white/12">
             {benefits.map(({ label, detail, icon: Icon }, index) => (
-               <article key={label} data-testid={`card-vip-benefit-${index}`} className="vip-benefit-card group min-h-[122px] bg-black p-4 transition-colors hover:bg-[#df3933]">
+               <article key={label} data-testid={`card-vip-benefit-${index}`} className="vip-benefit-card group min-h-[122px] bg-white p-4 transition-colors hover:bg-[#df3933]">
                 <div className="flex items-start justify-between">
-                  <Icon size={21} strokeWidth={1.35} className="text-[#e33a34] transition-colors group-hover:text-white" />
-                  <span className="font-mono text-[9px] text-white/30 transition-colors group-hover:text-white/65">0{index + 1}</span>
+                   <Icon size={29} strokeWidth={1.8} className="text-[#111] transition-colors group-hover:text-white" />
+                   <span className="font-mono text-[9px] text-[#999] transition-colors group-hover:text-white/65">0{index + 1}</span>
                 </div>
-                <h3 className="mt-7 text-[11px] font-bold uppercase tracking-[.04em]">{label}</h3>
-                <p className="mt-1 text-[10px] text-white/44 transition-colors group-hover:text-white/75">{detail}</p>
+                <h3 className="mt-7 text-[11px] font-bold uppercase tracking-[.04em] text-[#d52f2f]">{label}</h3>
+                <p className="mt-1 text-[10px] text-[#111] transition-colors group-hover:text-white/75">{detail}</p>
               </article>
             ))}
           </div>

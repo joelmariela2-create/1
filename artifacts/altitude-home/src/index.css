@@ -177,6 +177,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .vip-benefit-card:hover .font-mono {
   color: #fff;
 }
+.vip-benefit-card:hover p {
+  color: rgba(255,255,255,.88);
+}
 .vip-editorial {
   min-height: 244px;
 }
