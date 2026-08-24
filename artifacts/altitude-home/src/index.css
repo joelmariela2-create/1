@@ -96,6 +96,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @keyframes campaignFade { from { opacity: .2; } to { opacity: 1; } }
 @keyframes campaignContentFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .hero-video { filter: saturate(.78) contrast(1.08); }
+.hero-cta-gymshark { position: relative; }
+.hero-cta-gymshark::before { content: ''; position: absolute; top: -12px; left: -1px; width: calc(100% + 2px); height: 12px; background: #050505; }
 .hero-glass { background: hsl(0 0% 100% / .86); border: 1px solid hsl(35 14% 82% / .9); backdrop-filter: blur(3px); }
 .hero-benefit { transition: background-color .25s ease, color .25s ease, transform .25s ease; }
 .hero-benefit:hover { background-color: hsl(4 79% 49% / .93); color: hsl(35 22% 97%); transform: translateY(-2px); }
