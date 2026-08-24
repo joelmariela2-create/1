@@ -167,11 +167,11 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
           style={{
             objectPosition: campaign.position,
             transform: campaign.id === 'youngla' ? 'translateY(-38px) scale(1.08)' : undefined,
-            borderBottom: campaign.id === 'gymshark-featured' ? '12px solid #050505' : undefined,
           }}
          loading="eager"
          decoding="async"
        />
+       {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08)_0%,rgba(0,0,0,0)_42%,rgba(0,0,0,.2)_100%)]" />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
         <div key={`${campaign.id}-content`} className="campaign-content absolute bottom-[18px] left-5 right-5 max-w-[520px]">
