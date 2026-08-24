@@ -93,6 +93,31 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .campaign-hero .campaign-image { animation: campaignFade .8s ease both; }
 @keyframes campaignFade { from { opacity: .2; } to { opacity: 1; } }
+.campaign-stack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.campaign-tile {
+  animation: campaignTileReveal .7s cubic-bezier(.22,.61,.36,1) both;
+}
+.campaign-tile:nth-child(2) { animation-delay: .08s; }
+.campaign-tile:nth-child(3) { animation-delay: .16s; }
+.campaign-tile img {
+  filter: saturate(.82) contrast(1.02);
+  transition: transform .7s cubic-bezier(.22,.61,.36,1), filter .35s ease;
+}
+.campaign-tile:hover img {
+  transform: scale(1.035);
+  filter: saturate(1) contrast(1.04);
+}
+.campaign-tile-title {
+  font-family: var(--font-serif);
+}
+@keyframes campaignTileReveal {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 .hero-video { filter: saturate(.78) contrast(1.08); }
 .hero-glass { background: hsl(0 0% 100% / .86); border: 1px solid hsl(35 14% 82% / .9); backdrop-filter: blur(3px); }
 .hero-benefit { transition: background-color .25s ease, color .25s ease, transform .25s ease; }
@@ -111,6 +136,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .mobile-header { display: none !important; }
   .campaign-hero { min-height: 680px; }
   .campaign-hero { height: auto; }
+  .campaign-stack-list {
+    gap: 5px;
+  }
+  .campaign-tile {
+    min-height: 420px;
+  }
   .bottom-nav { display: none !important; }
   .desktop-nav { display: flex !important; }
 }
