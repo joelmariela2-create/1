@@ -191,7 +191,65 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
 
 function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
   const { favorites, toggleFavorite } = useShop();
-  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">Nuevos lanzamientos</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div className="swipe-rail scrollbar-hide -mx-5 flex snap-x gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><Link href={`/products/${product.id}`} data-testid={`link-rail-image-${product.id}`} aria-label={`Ver ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" /></Link><button onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${product.name}`} className={`absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
+  const railRef = useRef<HTMLDivElement | null>(null);
+  const inertiaFrame = useRef<number | null>(null);
+  const touchState = useRef({ lastX: 0, lastTime: 0, velocity: 0, horizontal: false });
+  const [inertiaActive, setInertiaActive] = useState(false);
+
+  const stopInertia = () => {
+    if (inertiaFrame.current !== null) {
+      window.cancelAnimationFrame(inertiaFrame.current);
+      inertiaFrame.current = null;
+    }
+    setInertiaActive(false);
+  };
+
+  const handleRailTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    stopInertia();
+    const x = event.touches[0]?.clientX;
+    if (x === undefined) return;
+    touchState.current = { lastX: x, lastTime: performance.now(), velocity: 0, horizontal: false };
+  };
+
+  const handleRailTouchMove = (event: TouchEvent<HTMLDivElement>) => {
+    const x = event.touches[0]?.clientX;
+    if (x === undefined || !railRef.current) return;
+    const now = performance.now();
+    const delta = x - touchState.current.lastX;
+    if (!touchState.current.horizontal && Math.abs(delta) > 4) touchState.current.horizontal = true;
+    if (!touchState.current.horizontal) return;
+    event.preventDefault();
+    const elapsed = Math.max(8, now - touchState.current.lastTime);
+    railRef.current.scrollLeft -= delta;
+    touchState.current.velocity = delta / elapsed;
+    touchState.current.lastX = x;
+    touchState.current.lastTime = now;
+  };
+
+  const handleRailTouchEnd = () => {
+    const initialVelocity = touchState.current.velocity;
+    if (!touchState.current.horizontal || Math.abs(initialVelocity) < 0.02 || !railRef.current) return;
+    setInertiaActive(true);
+    const startedAt = performance.now();
+    let previousTime = startedAt;
+    const duration = 2000;
+    const animate = (now: number) => {
+      const elapsed = now - startedAt;
+      const progress = Math.min(1, elapsed / duration);
+      const frameTime = now - previousTime;
+      const remainingSpeed = (1 - progress) ** 2;
+      railRef.current?.scrollBy({ left: -initialVelocity * frameTime * remainingSpeed, behavior: 'auto' });
+      previousTime = now;
+      if (progress < 1) inertiaFrame.current = window.requestAnimationFrame(animate);
+      else {
+        inertiaFrame.current = null;
+        setInertiaActive(false);
+      }
+    };
+    inertiaFrame.current = window.requestAnimationFrame(animate);
+  };
+
+  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">Nuevos lanzamientos</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div ref={railRef} className={`swipe-rail scrollbar-hide -mx-5 flex snap-x gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 ${inertiaActive ? 'inertial-active' : ''}`} onTouchStart={handleRailTouchStart} onTouchMove={handleRailTouchMove} onTouchEnd={handleRailTouchEnd} onTouchCancel={handleRailTouchEnd}>{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><Link href={`/products/${product.id}`} data-testid={`link-rail-image-${product.id}`} aria-label={`Ver ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" /></Link><button onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${product.name}`} className={`absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {

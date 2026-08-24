@@ -96,10 +96,14 @@ button, a {
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: 20px;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
+}
+.swipe-rail.inertial-active {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
 }
 .swipe-rail:active {
   cursor: grabbing;
