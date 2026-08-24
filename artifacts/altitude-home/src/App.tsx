@@ -123,8 +123,8 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
     <>
       <div className="announcement-strip flex h-7 items-center overflow-hidden bg-[#eeece9] text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
         <div className="announcement-track flex min-w-max items-center">
-          <span className="px-4">Envíos a todo el país <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
-          <span className="px-4" aria-hidden="true">Envíos a todo el país <span className="mx-2 text-[#c52d2a]">·</span> Productos 100% originales</span>
+           <span className="px-4">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE</span>
+           <span className="px-4" aria-hidden="true">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE</span>
         </div>
       </div>
       <header className="sticky top-0 z-30 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
