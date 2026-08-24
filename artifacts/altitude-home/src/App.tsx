@@ -170,6 +170,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
               : campaign.id === 'youngla'
                 ? 'translateY(-38px) scale(1.08)'
                 : undefined,
+            filter: campaign.id === 'youngla' ? 'contrast(0.8)' : undefined,
           }}
          loading="eager"
          decoding="async"
