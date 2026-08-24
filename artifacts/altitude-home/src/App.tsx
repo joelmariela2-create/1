@@ -57,12 +57,12 @@ const campaigns: Campaign[] = [
     id: 'naruto',
   },
   {
-    label: 'Gymshark',
-    title: 'Nuevos ingresos',
-    image: '/gymshark-logo.png',
+    label: 'YoungLA',
+    title: 'Nueva colección',
+    image: '/youngla-logo.png',
     position: 'center 35%',
     tone: 'light',
-    id: 'gymshark-featured',
+    id: 'youngla-featured',
   },
 ];
 
