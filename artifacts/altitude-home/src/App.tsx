@@ -7,7 +7,7 @@ import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, useLocation, Router as WouterRouter, useParams } from 'wouter';
 import {
   ArrowLeft, ArrowRight, Box, Check, CheckCircle2, ChevronRight, Crown, CreditCard, Flame, Heart, House,
-  LockKeyhole, MapPin, Menu, MessageCircle, Plus, RefreshCw, Search, ShieldCheck,
+  LockKeyhole, MapPin, Menu, MessageCircle, Phone, Plus, RefreshCw, Search, ShieldCheck, UserRound,
   ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, X, Zap,
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa6';
@@ -667,12 +667,27 @@ function SocialPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setLocation] = useLocation();
   const { cartItems } = useShop();
+  const [preRegistration, setPreRegistration] = useState({ fullName: '', phone: '', city: '', message: '' });
+  const [preRegistrationSent, setPreRegistrationSent] = useState(false);
   const socialLinks = [
     { name: 'Instagram', handle: '@olym.shop', href: 'https://www.instagram.com/olym.shop?igsi=dGJ0czViaHEyMzE0', color: '#E1306C', icon: FaInstagram },
     { name: 'Facebook', handle: 'Enlace pendiente', color: '#1877F2', icon: FaFacebookF },
     { name: 'WhatsApp', handle: '+52 222 378 6688', href: storeWhatsAppUrl, color: '#25D366', icon: FaWhatsapp },
     { name: 'TikTok', handle: '@olymposhop8', href: 'https://www.tiktok.com/@olymposhop8?_r=1&_t=ZS-99C3jER7LYD', color: '#FF0050', icon: FaTiktok },
   ];
+  const handlePreRegistration = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const message = [
+      '🌐 Vengo de la tienda virtual.',
+      'Quiero 🛑 pre-inscribirme para ser de los primeros en recibir los primeros lanzamientos.',
+      `Nombre completo: ${preRegistration.fullName.trim()}`,
+      `Número de teléfono: ${preRegistration.phone.trim()}`,
+      `Ciudad de México: ${preRegistration.city.trim()}`,
+      preRegistration.message.trim() ? `Mensaje adicional: ${preRegistration.message.trim()}` : '',
+    ].filter(Boolean).join('\n');
+    window.open(`${storeWhatsAppUrl}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+    setPreRegistrationSent(true);
+  };
 
   return (
     <div className="social-page page-shell min-h-[100dvh] bg-[#101010] pb-[76px] text-white">
@@ -690,6 +705,36 @@ function SocialPage() {
                 : <div key={name} aria-disabled="true" className="group flex min-h-[190px] cursor-not-allowed flex-col items-center justify-center border border-white/10 bg-white/[.02] p-4 text-white/70">{card}</div>;
             })}
           </div>
+          <section className="mt-16 border-t border-white/15 pt-10" aria-labelledby="pre-registration-title">
+            <p className="section-label text-[#df3933]">Acceso anticipado</p>
+            <h2 id="pre-registration-title" data-testid="text-pre-registration-title" className="mt-3 max-w-[660px] font-black uppercase leading-[.9] tracking-[-.06em] text-[clamp(2rem,7vw,4.5rem)]">Pre-inscríbete para ser de los primeros</h2>
+            <p className="mt-5 max-w-[480px] text-[12px] leading-[1.6] text-white/65 md:text-[14px]">Déjanos tus datos y recibe primero las novedades y los próximos lanzamientos.</p>
+            <form onSubmit={handlePreRegistration} className="mt-8 grid gap-4 md:grid-cols-2">
+              <label className="block">
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><UserRound size={14} /> Nombre completo</span>
+                <input required value={preRegistration.fullName} onChange={(event) => setPreRegistration((current) => ({ ...current, fullName: event.target.value }))} className="h-12 w-full border border-white/15 bg-white/[.05] px-4 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="Tu nombre completo" />
+              </label>
+              <label className="block">
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><Phone size={14} /> Número de teléfono</span>
+                <input required type="tel" value={preRegistration.phone} onChange={(event) => setPreRegistration((current) => ({ ...current, phone: event.target.value }))} className="h-12 w-full border border-white/15 bg-white/[.05] px-4 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="+52 222 378 6688" />
+              </label>
+              <label className="block">
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><MapPin size={14} /> Ciudad de México</span>
+                <input required value={preRegistration.city} onChange={(event) => setPreRegistration((current) => ({ ...current, city: event.target.value }))} className="h-12 w-full border border-white/15 bg-white/[.05] px-4 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="Tu ciudad o alcaldía" />
+              </label>
+              <label className="block">
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><MessageCircle size={14} /> Mensaje adicional</span>
+                <textarea value={preRegistration.message} onChange={(event) => setPreRegistration((current) => ({ ...current, message: event.target.value }))} rows={1} className="min-h-12 w-full resize-y border border-white/15 bg-white/[.05] px-4 py-3 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="Cuéntanos algo más (opcional)" />
+              </label>
+              <div className="md:col-span-2">
+                <button type="submit" data-testid="button-pre-registration-submit" className="group flex h-13 w-full items-center justify-between bg-[#df3933] px-5 text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#f04a43]">
+                  <span className="flex items-center gap-2"><MessageCircle size={17} /> Enviar pre-inscripción</span>
+                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                </button>
+                {preRegistrationSent && <p role="status" className="mt-3 text-[10px] text-[#25D366]">Tu mensaje está listo para enviarse por WhatsApp.</p>}
+              </div>
+            </form>
+          </section>
         </section>
       </main>
       <BottomNav active="home" onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
