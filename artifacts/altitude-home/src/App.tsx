@@ -20,13 +20,14 @@ type Campaign = {
   label: string;
   title: string;
   image: string;
+  video?: string;
   position: string;
   tone: 'light' | 'dark';
   id: string;
 };
 
 const campaigns: Campaign[] = [
-  { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.png', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
+  { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.png', video: '/olympo-sport-hero.mp4', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.png', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.png', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
   { label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.png', position: 'center center', tone: 'dark', id: 'breathe-divinity-featured' },
@@ -247,10 +248,22 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   const touchStartX = useRef<number | null>(null);
   const campaign = campaigns[activeIndex];
   useEffect(() => {
-    campaigns.forEach(({ image }) => { const preload = new Image(); preload.decoding = 'async'; preload.src = image; });
-    const timer = window.setInterval(() => setActiveIndex((index) => (index + 1) % campaigns.length), 1300);
-    return () => window.clearInterval(timer);
+    campaigns.forEach(({ image, video }) => {
+      if (video) {
+        const preload = document.createElement('video');
+        preload.preload = 'auto';
+        preload.src = video;
+      } else {
+        const preload = new Image();
+        preload.decoding = 'async';
+        preload.src = image;
+      }
+    });
   }, []);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setActiveIndex((index) => (index + 1) % campaigns.length), campaign.video ? 30000 : 1300);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, campaign.video]);
   const handleTouchStart = (event: TouchEvent<HTMLElement>) => { touchStartX.current = event.touches[0]?.clientX ?? null; };
   const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
     if (touchStartX.current === null) return;
@@ -269,7 +282,9 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   ];
   return (
     <section id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-       <img key={campaign.id} className="campaign-image absolute inset-0 h-full w-full object-contain" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined }} loading="eager" decoding="async" />
+       {campaign.video
+         ? <video key={campaign.id} className="campaign-image hero-video absolute inset-0 h-full w-full object-contain" src={campaign.video} aria-label={`${campaign.label} ${campaign.title}`} autoPlay muted loop playsInline preload="auto" style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : undefined }} />
+         : <img key={campaign.id} className="campaign-image absolute inset-0 h-full w-full object-contain" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined }} loading="eager" decoding="async" />}
       {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.2) 100%)' }} />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
