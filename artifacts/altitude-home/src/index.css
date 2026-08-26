@@ -481,9 +481,6 @@ button, a {
   }
 }
 @media (max-width: 767px) {
-  .detail-content {
-    padding-bottom: 24px;
-  }
   .detail-info {
     border-top: 1px solid #d9d3cc;
     padding-top: 16px;
@@ -596,7 +593,7 @@ button, a {
 }
 @media (max-width: 767px) {
   .detail-photo-wrap {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 1 / 1;
   }
   .detail-photo {
     object-fit: contain !important;

@@ -618,7 +618,7 @@ function ProductDetailPage() {
       <main aria-live="polite">
         {isLoading ? <div className="detail-loading grid gap-5 px-5 py-7 md:grid-cols-2 md:px-10 md:py-12"><div className="product-skeleton aspect-[.86]" /><div className="space-y-5 pt-3"><div className="h-3 w-1/4 bg-[#e8e4de]" /><div className="h-14 w-4/5 bg-[#e8e4de]" /><div className="h-8 w-1/3 bg-[#e8e4de]" /><div className="h-24 w-full bg-[#e8e4de]" /></div></div>
           : !product || !detail ? <section className="flex min-h-[590px] flex-col items-center justify-center px-5 text-center"><p className="section-label text-[#d93731]">404 / selección no encontrada</p><h1 data-testid="text-product-not-found" className="editorial-title mt-4 text-[clamp(2.8rem,9vw,6rem)] font-bold uppercase leading-[.84]">Este drop<br /><span className="text-[#d93731]">ya voló.</span></h1><p className="mt-5 max-w-[310px] text-[12px] leading-[1.5] text-[#716b65]">No encontramos ese producto en el catálogo actual. Explora la selección completa para encontrar tu próximo ritmo.</p><Link href="/products" data-testid="link-not-found-products" className="mt-7 flex h-12 items-center gap-3 bg-[#171717] px-5 text-[10px] font-bold uppercase tracking-[.12em] text-[#f6f4f0] transition-colors hover:bg-[#d93731]"><ArrowLeft size={16} /> Volver a la tienda</Link></section>
-           : <section className="detail-content px-4 py-4 md:px-10 md:py-10">
+          : <section className="detail-content px-5 py-6 md:px-10 md:py-10">
              <div className="mb-0 flex items-center justify-between gap-4 text-[9px] font-semibold uppercase tracking-[.14em] text-[#8b857e] md:mb-0">
               <Link href="/products" data-testid="link-detail-back" className="inline-flex items-center gap-2 transition-colors hover:text-[#d93731]"><ArrowLeft size={14} /> Volver a la tienda</Link>
               <span>{product.category} / {product.brand}</span>
@@ -631,9 +631,9 @@ function ProductDetailPage() {
               </div>
                <div className="detail-info min-w-0 md:sticky md:top-5">
                 <p data-testid="text-detail-brand" className="section-label text-[#d93731]">{product.brand}</p>
-                 <h1 data-testid="text-detail-name" className="editorial-title mt-3 max-w-[560px] text-[clamp(2rem,8vw,5rem)] font-bold uppercase leading-[.86] tracking-[-.065em]">{product.name}</h1>
-                 <div className="mt-5 flex items-end justify-between border-b border-[#d9d3cc] pb-4 md:mt-6 md:pb-5"><p data-testid="text-detail-price" className="text-[20px] font-bold tracking-[-.04em] md:text-[22px]">{product.price}</p><p data-testid="status-detail-availability" className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-[#4e6a50]"><span className="h-2 w-2 rounded-full bg-[#4e6a50]" /> {product.status === 'Últimas unidades' ? 'Quedan pocas' : 'Disponible'}</p></div>
-                 <div className="mt-4 md:mt-5" aria-label="Seleccionar talla">
+                <h1 data-testid="text-detail-name" className="editorial-title mt-3 max-w-[560px] text-[clamp(2.3rem,6vw,5rem)] font-bold uppercase leading-[.86] tracking-[-.065em]">{product.name}</h1>
+                 <div className="mt-6 flex items-end justify-between border-b border-[#d9d3cc] pb-5"><p data-testid="text-detail-price" className="text-[22px] font-bold tracking-[-.04em]">{product.price}</p><p data-testid="status-detail-availability" className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-[#4e6a50]"><span className="h-2 w-2 rounded-full bg-[#4e6a50]" /> {product.status === 'Últimas unidades' ? 'Quedan pocas' : 'Disponible'}</p></div>
+                 <div className="mt-5" aria-label="Seleccionar talla">
                    <div className="flex items-center justify-between gap-3">
                      <p className="text-[10px] font-bold uppercase tracking-[.12em]">Escoge tu talla</p>
                      <button type="button" onClick={() => document.getElementById('size-chart')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="text-[9px] font-semibold uppercase tracking-[.08em] text-[#8b857e] underline underline-offset-4">Guía de tallas</button>
@@ -647,15 +647,15 @@ function ProductDetailPage() {
                          aria-label={`Seleccionar talla ${size}`}
                          aria-pressed={selectedSize === size}
                          onClick={() => setSelectedSize(size)}
-                         className={`flex h-10 items-center justify-center border text-[11px] font-bold transition-colors md:h-11 ${selectedSize === size ? 'border-[#d93731] bg-[#d93731] text-white' : 'border-[#d9d3cc] bg-white text-[#171717] hover:border-[#171717]'}`}
+                         className={`flex h-11 items-center justify-center border text-[11px] font-bold transition-colors ${selectedSize === size ? 'border-[#d93731] bg-[#d93731] text-white' : 'border-[#d9d3cc] bg-white text-[#171717] hover:border-[#171717]'}`}
                        >
                          {size}
                        </button>
                      ))}
                    </div>
                  </div>
-                 <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-5 flex h-12 w-full items-center justify-between bg-[#d93731] px-4 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717] md:mt-6 md:h-14 md:px-5"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
-                  <button data-testid="button-detail-buy-whatsapp" onClick={handleBuy} className="mt-2 flex h-12 w-full items-center justify-between bg-[#25D366] px-4 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#1da851] md:h-14 md:px-5"><span className="flex items-center gap-2"><MessageCircle size={17} strokeWidth={1.8} /> Comprar por WhatsApp</span><ArrowRight size={18} /></button>
+                <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-6 flex h-14 w-full items-center justify-between bg-[#d93731] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717]"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
+                 <button data-testid="button-detail-buy-whatsapp" onClick={handleBuy} className="mt-2 flex h-14 w-full items-center justify-between bg-[#25D366] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#1da851]"><span className="flex items-center gap-2"><MessageCircle size={17} strokeWidth={1.8} /> Comprar por WhatsApp</span><ArrowRight size={18} /></button>
                  <div className="mt-8 border-t border-[#d9d3cc] pt-7">
                    <div className="space-y-5 text-[12px] leading-[1.65] text-[#5f5a55]">
                      <p><strong data-testid="text-detail-material" className="font-bold uppercase tracking-[.08em] text-[#171717]">MATERIAL:</strong> 72% Polyamide, 21% Polyester, 7% Elastane.</p>
