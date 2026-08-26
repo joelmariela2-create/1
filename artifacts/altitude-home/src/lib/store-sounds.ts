@@ -32,7 +32,6 @@ function playTone(
 ) {
   const oscillator = context.createOscillator();
   const gain = context.createGain();
-  const compressor = context.createDynamicsCompressor();
   oscillator.type = type;
   oscillator.frequency.setValueAtTime(frequency, start);
   oscillator.frequency.exponentialRampToValueAtTime(Math.max(20, endFrequency), start + duration);
@@ -40,13 +39,7 @@ function playTone(
   gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
   gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
   oscillator.connect(gain);
-  compressor.threshold.value = -24;
-  compressor.knee.value = 12;
-  compressor.ratio.value = 8;
-  compressor.attack.value = 0.003;
-  compressor.release.value = 0.16;
-  gain.connect(compressor);
-  compressor.connect(context.destination);
+  gain.connect(context.destination);
   oscillator.start(start);
   oscillator.stop(start + duration + 0.02);
 }
@@ -70,9 +63,9 @@ export function playEntranceSound(fromUserInteraction = false) {
     entranceSoundHasPlayed = true;
     const start = context.currentTime + 0.01;
     // A short rising sweep with a low impact gives the storefront an athletic arrival cue.
-    playTone(context, { frequency: 145, endFrequency: 48, start, duration: 0.48, volume: 0.58, type: 'sine' });
-    playTone(context, { frequency: 240, endFrequency: 620, start: start + 0.04, duration: 0.28, volume: 0.28, type: 'triangle' });
-    playTone(context, { frequency: 980, endFrequency: 720, start: start + 0.2, duration: 0.18, volume: 0.14, type: 'square' });
+    playTone(context, { frequency: 110, endFrequency: 62, start, duration: 0.42, volume: 0.16, type: 'sine' });
+    playTone(context, { frequency: 220, endFrequency: 520, start: start + 0.04, duration: 0.24, volume: 0.09, type: 'triangle' });
+    playTone(context, { frequency: 880, endFrequency: 660, start: start + 0.2, duration: 0.16, volume: 0.06, type: 'square' });
   }).catch(() => {
     // Autoplay restrictions are expected in some browsers; the interaction fallback retries later.
   }).finally(() => {
