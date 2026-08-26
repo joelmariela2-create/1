@@ -204,8 +204,8 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
       <header className="sticky top-0 z-30 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
         <div className="flex items-center gap-1">
           <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
-          <Link href="/" data-testid="link-home-logo" aria-label="ALTITUDE, inicio" className="relative -top-1 flex items-center gap-2 text-[#151515]">
-            <img src="/altitude-logo-circle.png" alt="Logo ALTITUDE" className="h-8 w-8 rounded-full object-cover ring-1 ring-[#171717] md:h-10 md:w-10" />
+          <Link href="/" data-testid="link-home-logo" aria-label="OLYM.SHOP, inicio" className="relative -top-1 flex items-center gap-2 text-[#151515]">
+            <img src="/olym-shop-logo.jpg" alt="Logo OLYM.SHOP" className="h-10 w-10 rounded-full object-cover ring-1 ring-[#171717] md:h-12 md:w-12" />
             <span className="header-wordmark text-[20px] md:text-[24px]">OLYMPO SHOP</span>
           </Link>
         </div>
