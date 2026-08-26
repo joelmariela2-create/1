@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 const queryClient = new QueryClient();
-const vipWhatsAppUrl = 'https://wa.me/59163944376';
+const storeWhatsAppUrl = 'https://wa.me/522223786688';
 
 type Campaign = {
   label: string;
@@ -24,8 +24,8 @@ type Campaign = {
 };
 
 const campaigns: Campaign[] = [
-  { label: 'Nuevo drop', title: 'Naruto', image: '/naruto-collection.png', position: 'center 35%', tone: 'light', id: 'youngla' },
-  { label: 'Naruto', title: 'Colección', image: '/naruto-live-now.jpg', position: 'center 35%', tone: 'light', id: 'naruto' },
+  { label: 'OLYM.SHOP', title: 'Batman Black', image: '/olym-shop-black.jpg', position: 'center 48%', tone: 'dark', id: 'olym-shop-black' },
+  { label: 'OLYM.SHOP', title: 'Batman Blue', image: '/olym-shop-blue.jpg', position: 'center 48%', tone: 'dark', id: 'olym-shop-blue' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.png', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.png', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
 ];
@@ -85,7 +85,7 @@ function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total
   return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: Bs. ${total}\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 DEPARTAMENTO: ${customer.department}»`;
 }
 function openOrderWhatsApp(customer: CustomerData, cartItems: CartItem[], total: number) {
-  const whatsappUrl = `${vipWhatsAppUrl}?text=${encodeURIComponent(createOrderMessage(customer, cartItems, total))}`;
+  const whatsappUrl = `${storeWhatsAppUrl}?text=${encodeURIComponent(createOrderMessage(customer, cartItems, total))}`;
   window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 }
 type ShopContextValue = {
@@ -263,7 +263,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <div id="benefits" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
         {benefits.map(({ label, detail, icon: Icon }, index) => <div key={label} className={`hero-benefit flex min-h-[93px] flex-col items-center justify-center px-1 text-center ${index < benefits.length - 1 ? 'border-r border-[#dedad6]' : ''}`}><Icon size={22} strokeWidth={1.45} className="mb-2 text-[#252525]" /><strong className="max-w-[78px] text-[8px] font-bold uppercase leading-[1.18] tracking-[.03em] md:max-w-none md:text-[10px]">{label}</strong><span className="mt-1 hidden text-[8px] text-[#77716c] md:block">{detail}</span></div>)}
       </div>
-      <div className="absolute bottom-[98px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>{Array.from({ length: 3 }, (_, index) => <span key={index} className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${activeIndex % 3 === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}</div>
+      <div className="absolute bottom-[98px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>{campaigns.map((item, index) => <span key={item.id} className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}</div>
     </section>
   );
 }
@@ -351,7 +351,7 @@ function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
 
 function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; onShowroom?: () => void; active?: string }) {
   const [, setLocation] = useLocation();
-   const items = [{ label: 'Inicio', icon: House, action: () => setLocation('/'), id: 'home' }, { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' }, { label: 'Showroom', icon: MapPin, action: onShowroom ?? (() => scrollToSection('showroom')), id: 'showroom' }, { label: 'VIP', icon: Crown, action: onVip, id: 'vip' }, { label: 'WhatsApp', icon: MessageCircle, action: () => window.open(vipWhatsAppUrl, '_blank'), id: 'whatsapp' }];
+   const items = [{ label: 'Inicio', icon: House, action: () => setLocation('/'), id: 'home' }, { label: 'Tienda', icon: ShoppingBag, action: () => setLocation('/products'), id: 'shop' }, { label: 'Showroom', icon: MapPin, action: onShowroom ?? (() => scrollToSection('showroom')), id: 'showroom' }, { label: 'VIP', icon: Crown, action: onVip, id: 'vip' }, { label: 'WhatsApp', icon: MessageCircle, action: () => window.open(storeWhatsAppUrl, '_blank'), id: 'whatsapp' }];
   return <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-40 flex h-[67px] items-center justify-around border-t px-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md" aria-label="Navegación principal móvil">{items.map(({ label, icon: Icon, action, id }) => <button key={id} data-testid={`nav-${id}`} onClick={action} className={`flex min-w-[52px] flex-col items-center gap-1 text-[8px] font-semibold uppercase tracking-[-.01em] ${active === id ? 'active-nav' : ''}`}><Icon size={21} strokeWidth={id === 'home' ? 2 : 1.55} /><span>{label}</span></button>)}</nav>;
 }
 
@@ -512,7 +512,7 @@ function Home() {
   const { cartItems, toast, addToCart, notify } = useShop();
   const [, setLocation] = useLocation();
   const openVip = () => setLocation('/vip');
-    return <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]"><Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} /><main className="home-main"><CampaignHero onShop={(item) => { if (item.id === 'altitude-vip-early-access') { setLocation('/vip'); return; } scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} /><ProductRail onAdd={(product) => addToCart(product)} /><section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8"><div className="mb-4 flex items-start justify-between gap-4"><div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">MÉXICO - PUEBLO MORELOS</h2><p className="mt-1 text-[11px] text-[#6b6660]">ciudad de mexico </p></div><a href="https://maps.app.goo.gl/Wc9X3uVsVmvPwSGg9?g_st=ac" target="_blank" rel="noreferrer" aria-label="Abrir showroom en Google Maps" className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]"><MapPin size={19} strokeWidth={1.5} /></a></div><div className="overflow-hidden border border-[#d8d3ce] bg-[#e7e3dd]"><iframe title="Mapa del showroom ALTITUDE en Av. Ayacucho, Cochabamba" src="https://www.google.com/maps?q=Av.+Ayacucho,+Cochabamba,+Bolivia&output=embed" className="h-[250px] w-full border-0 md:h-[320px]" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div><a href="https://wa.me/59163944376" target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-between bg-[#25D366] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-[#171717]"><span className="flex items-center gap-2"><MessageCircle size={16} /> WhatsApp · 63944376</span><ArrowRight size={15} /></a><a href="https://maps.app.goo.gl/Wc9X3uVsVmvPwSGg9?g_st=ac" target="_blank" rel="noreferrer" className="mt-2 flex items-center justify-between border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Abrir ubicación en Google Maps <ArrowRight size={15} /></a></section></main><footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8"><div className="altitude-wordmark text-[27px]">olympo.shop</div><p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p><div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button onClick={openVip}>ALTITUDE VIP</button></div></footer><BottomNav active="home" onVip={openVip} /><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />{toast && <div className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}</div>;
+    return <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]"><Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} /><main className="home-main"><CampaignHero onShop={(item) => { if (item.id === 'altitude-vip-early-access') { setLocation('/vip'); return; } scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} /><ProductRail onAdd={(product) => addToCart(product)} /><section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8"><div className="mb-4 flex items-start justify-between gap-4"><div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">MÉXICO - PUEBLO MORELOS</h2><p className="mt-1 text-[11px] text-[#6b6660]">ciudad de mexico </p></div><a href="https://www.google.com/maps/search/?api=1&query=Pueblo+Morelos%2C+Coahuila%2C+Mexico" target="_blank" rel="noreferrer" aria-label="Abrir Pueblo Morelos en Google Maps" className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]"><MapPin size={19} strokeWidth={1.5} /></a></div><div className="overflow-hidden border border-[#d8d3ce] bg-[#e7e3dd]"><iframe title="Mapa del showroom en Pueblo Morelos, Coahuila, México" src="https://www.google.com/maps?q=Pueblo+Morelos,+Coahuila,+Mexico&output=embed" className="h-[250px] w-full border-0 md:h-[320px]" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div><a href={storeWhatsAppUrl} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-between bg-[#25D366] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-[#171717]"><span className="flex items-center gap-2"><MessageCircle size={16} /> WhatsApp · +52 222 378 6688</span><ArrowRight size={15} /></a><a href="https://www.google.com/maps/search/?api=1&query=Pueblo+Morelos%2C+Coahuila%2C+Mexico" target="_blank" rel="noreferrer" className="mt-2 flex items-center justify-between border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Abrir Pueblo Morelos en Google Maps <ArrowRight size={15} /></a></section></main><footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8"><div className="altitude-wordmark text-[27px]">olympo.shop</div><p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p><div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button onClick={openVip}>ALTITUDE VIP</button></div></footer><BottomNav active="home" onVip={openVip} /><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />{toast && <div className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}</div>;
 }
 
 function CollectionPage() {
@@ -665,7 +665,7 @@ function VipPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setLocation] = useLocation();
   const { cartItems } = useShop();
-  const enterVip = () => window.open(vipWhatsAppUrl, '_blank', 'noopener,noreferrer');
+  const enterVip = () => window.open(storeWhatsAppUrl, '_blank', 'noopener,noreferrer');
   const benefits = [
     { label: 'Early access', detail: 'Accede antes del lanzamiento público.', icon: Zap },
     { label: 'Nuevos drops', detail: 'Entérate primero de cada lanzamiento.', icon: Flame },
