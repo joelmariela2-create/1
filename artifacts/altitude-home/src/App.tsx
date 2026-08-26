@@ -24,8 +24,8 @@ type Campaign = {
 };
 
 const campaigns: Campaign[] = [
-  { label: 'OLYM.SHOP', title: 'Batman Black', image: '/olym-shop-black.jpg', position: 'center 48%', tone: 'dark', id: 'olym-shop-black' },
-  { label: 'OLYM.SHOP', title: 'Batman Blue', image: '/olym-shop-blue.jpg', position: 'center 48%', tone: 'dark', id: 'olym-shop-blue' },
+  { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.png', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
+  { label: 'OLYM.SHOP', title: 'Nueva colección', image: '/olym-shop-collection.jpg', position: 'center center', tone: 'dark', id: 'olym-shop-blue' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.png', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.png', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
 ];
