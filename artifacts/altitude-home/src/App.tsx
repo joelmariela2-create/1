@@ -10,6 +10,7 @@ import {
   LockKeyhole, MapPin, Menu, MessageCircle, Plus, RefreshCw, Search, ShieldCheck,
   ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, X, Zap,
 } from 'lucide-react';
+import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa6';
 
 const queryClient = new QueryClient();
 const storeWhatsAppUrl = 'https://wa.me/522223786688';
@@ -354,8 +355,8 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location, setLocation] = useLocation();
   if (!open) return null;
-  const links = [['Productos', 'products'], ['Colección', 'collection'], ['Nuevos lanzamientos', 'new-releases'], ['Nuevo drop Naruto', 'youngla'], ['Naruto', 'gymshark'], ['Redes sociales', 'vip-access'], ['Showroom México', 'showroom']];
-  return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="drawer-panel relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 text-[#171717] shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px] text-[#171717]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú" className="text-[#171717]"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); if (id === 'products') setLocation('/products'); else if (id === 'collection') setLocation('/collection'); else if (id === 'vip-access') setLocation('/vip'); else if (location !== '/') { setLocation('/'); window.setTimeout(() => scrollToSection(id), 80); } else scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em] text-[#171717]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
+  const links = [['Productos', 'products'], ['Colección', 'collection'], ['Nuevos lanzamientos', 'new-releases'], ['Nuevo drop Naruto', 'youngla'], ['Naruto', 'gymshark'], ['Redes sociales', 'social'], ['Showroom México', 'showroom']];
+  return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="drawer-panel relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 text-[#171717] shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px] text-[#171717]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú" className="text-[#171717]"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); if (id === 'products') setLocation('/products'); else if (id === 'collection') setLocation('/collection'); else if (id === 'social') setLocation('/social'); else if (location !== '/') { setLocation('/'); window.setTimeout(() => scrollToSection(id), 80); } else scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em] text-[#171717]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
 }
 
 function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; onShowroom?: () => void; active?: string }) {
@@ -662,6 +663,41 @@ function ProductDetailPage() {
   );
 }
 
+function SocialPage() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [, setLocation] = useLocation();
+  const { cartItems } = useShop();
+  const socialLinks = [
+    { name: 'Instagram', handle: '@olym.shop', href: 'https://www.instagram.com/olym.shop?igsi=dGJ0czViaHEyMzE0', color: '#E1306C', icon: FaInstagram },
+    { name: 'Facebook', handle: 'Enlace pendiente', color: '#1877F2', icon: FaFacebookF },
+    { name: 'WhatsApp', handle: '+52 222 378 6688', href: storeWhatsAppUrl, color: '#25D366', icon: FaWhatsapp },
+    { name: 'TikTok', handle: 'Enlace pendiente', color: '#FF0050', icon: FaTiktok },
+  ];
+
+  return (
+    <div className="social-page page-shell min-h-[100dvh] bg-[#101010] pb-[76px] text-white">
+      <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
+      <main className="px-5 py-12 md:px-12 md:py-20">
+        <section className="mx-auto max-w-[820px]" aria-labelledby="social-title">
+          <p className="section-label text-[#df3933]">Conecta con Olympo</p>
+          <h1 id="social-title" data-testid="text-social-title" className="mt-3 max-w-[720px] font-black uppercase leading-[.86] tracking-[-.07em] text-[clamp(2.7rem,9vw,6.6rem)]">Visita nuestras redes sociales</h1>
+          <p className="mt-6 max-w-[440px] text-[12px] leading-[1.6] text-white/65 md:text-[14px]">Sigue cada lanzamiento, novedad y movimiento de Olympo online.</p>
+          <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            {socialLinks.map(({ name, handle, href, color, icon: Icon }) => {
+              const card = <><div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-black/35 transition-transform duration-300 group-hover:scale-110" style={{ color, boxShadow: `0 0 26px ${color}66, inset 0 0 18px ${color}22` }}><Icon size={29} /></div><strong className="mt-6 text-[11px] uppercase tracking-[.08em]">{name}</strong><span className="mt-2 text-center text-[9px] text-white/55">{handle}</span></>;
+              return href
+                ? <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`Visitar ${name}`} className="group flex min-h-[190px] flex-col items-center justify-center border border-white/15 bg-white/[.04] p-4 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/[.08]">{card}</a>
+                : <div key={name} aria-disabled="true" className="group flex min-h-[190px] cursor-not-allowed flex-col items-center justify-center border border-white/10 bg-white/[.02] p-4 text-white/70">{card}</div>;
+            })}
+          </div>
+        </section>
+      </main>
+      <BottomNav active="home" onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
+      <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+    </div>
+  );
+}
+
 function VipPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setLocation] = useLocation();
@@ -769,7 +805,7 @@ function Router() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [location]);
-  return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/vip" component={VipPage} /><Route path="/checkout" component={CheckoutPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
+  return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/social" component={SocialPage} /><Route path="/vip" component={VipPage} /><Route path="/checkout" component={CheckoutPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
 }
 function App() { return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>; }
 

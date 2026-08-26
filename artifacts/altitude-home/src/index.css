@@ -181,6 +181,10 @@ button, a {
   background-color: #fff !important;
 }
 
+.page-shell.social-page {
+  background-color: #101010 !important;
+}
+
 .detail-page {
   background-image: none !important;
 }
