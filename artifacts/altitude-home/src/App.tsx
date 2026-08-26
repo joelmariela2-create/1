@@ -1017,24 +1017,14 @@ function App() {
     const startMusicOnScroll = () => {
       startBackgroundMusic(true);
     };
-    const startMusicOnTouch = () => {
-      startBackgroundMusic(true);
-    };
-    const startMusicOnPointer = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') startBackgroundMusic(true);
-    };
     window.addEventListener('scroll', startMusicOnScroll, { once: true, passive: true });
-    window.addEventListener('touchstart', startMusicOnTouch, { once: true, passive: true });
     window.addEventListener('touchmove', startMusicOnScroll, { once: true, passive: true });
     window.addEventListener('wheel', startMusicOnScroll, { once: true, passive: true });
-    window.addEventListener('pointerdown', startMusicOnPointer, { once: true, passive: true });
     return () => {
       window.clearTimeout(entranceTimer);
       window.removeEventListener('scroll', startMusicOnScroll);
-      window.removeEventListener('touchstart', startMusicOnTouch);
       window.removeEventListener('touchmove', startMusicOnScroll);
       window.removeEventListener('wheel', startMusicOnScroll);
-      window.removeEventListener('pointerdown', startMusicOnPointer);
     };
   }, []);
   return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
