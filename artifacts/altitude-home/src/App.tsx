@@ -25,7 +25,6 @@ type Campaign = {
 
 const campaigns: Campaign[] = [
   { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.png', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
-  { label: 'OLYM.SHOP', title: 'Nueva colección', image: '/olym-shop-collection.jpg', position: 'center center', tone: 'dark', id: 'olym-shop-blue' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.png', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.png', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
 ];
@@ -252,7 +251,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   ];
   return (
     <section id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-      <img key={campaign.id} className="campaign-image absolute inset-0 h-full w-full object-contain" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'youngla' ? 'translateY(-38px) scale(1.08)' : undefined, filter: campaign.id === 'youngla' ? 'contrast(0.8)' : undefined }} loading="eager" decoding="async" />
+      <img key={campaign.id} className="campaign-image absolute inset-0 h-full w-full object-contain" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'youngla' ? 'translateY(-38px) scale(1.08)' : undefined, filter: campaign.id === 'youngla' ? 'contrast(0.8)' : undefined }} loading="eager" decoding="async" />
       {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
       <div className="absolute inset-0" style={{ background: campaign.id === 'youngla' ? 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.02) 42%, rgba(0,0,0,.46) 100%)' : 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.2) 100%)' }} />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
