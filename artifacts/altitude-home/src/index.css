@@ -322,20 +322,10 @@ button, a {
 .product-card-image img {
   transition: transform .55s cubic-bezier(.22,.61,.36,1), filter .35s ease;
 }
-.product-card:hover .product-card-image img,
-.product-card:focus-within .product-card-image img {
-  transform: scale(1.035);
-  filter: saturate(.9);
-}
 .product-card .product-add {
   transform: translateY(6px);
   opacity: 0;
   transition: transform .25s ease, opacity .25s ease, background-color .25s ease;
-}
-.product-card:hover .product-add,
-.product-card:focus-within .product-add {
-  transform: translateY(0);
-  opacity: 1;
 }
 .product-card .product-favorite svg {
   transition: transform .2s ease, fill .2s ease, color .2s ease;
@@ -346,6 +336,16 @@ button, a {
 .product-card .product-favorite.is-favorite svg {
   fill: #d93731;
   color: #d93731;
+}
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover .product-card-image img {
+    transform: scale(1.035);
+    filter: saturate(.9);
+  }
+  .product-card:hover .product-add {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 .filter-drawer {
   animation: filterReveal .24s cubic-bezier(.22,.61,.36,1) both;
