@@ -4,7 +4,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { playCartBell, playEntranceSound } from '@/lib/store-sounds';
+import { playCartBell, playEntranceSound, startBackgroundMusic } from '@/lib/store-sounds';
 import { Link, Route, Switch, useLocation, Router as WouterRouter, useParams } from 'wouter';
 import {
   ArrowLeft, ArrowRight, Box, Check, CheckCircle2, ChevronLeft, ChevronRight, Crown, CreditCard, Flame, Heart, House,
@@ -1011,12 +1011,17 @@ function Router() {
 function App() {
   useEffect(() => {
     const entranceTimer = window.setTimeout(() => playEntranceSound(), 1000);
-    const retryOnInteraction = () => playEntranceSound(true);
+    const musicTimer = window.setTimeout(() => startBackgroundMusic(), 1000);
+    const retryOnInteraction = () => {
+      playEntranceSound(true);
+      startBackgroundMusic(true);
+    };
     window.addEventListener('pointerdown', retryOnInteraction, { once: true, passive: true });
     window.addEventListener('keydown', retryOnInteraction, { once: true });
     window.addEventListener('touchstart', retryOnInteraction, { once: true, passive: true });
     return () => {
       window.clearTimeout(entranceTimer);
+      window.clearTimeout(musicTimer);
       window.removeEventListener('pointerdown', retryOnInteraction);
       window.removeEventListener('keydown', retryOnInteraction);
       window.removeEventListener('touchstart', retryOnInteraction);
