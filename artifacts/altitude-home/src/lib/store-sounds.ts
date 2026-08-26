@@ -28,6 +28,7 @@ function playTone(
     volume,
     type = 'sine',
     output,
+    filterFrequency,
   }: {
     frequency: number;
     endFrequency?: number;
@@ -36,17 +37,27 @@ function playTone(
     volume: number;
     type?: OscillatorType;
     output?: AudioNode;
+    filterFrequency?: number;
   },
 ) {
   const oscillator = context.createOscillator();
   const gain = context.createGain();
+  const filter = filterFrequency ? context.createBiquadFilter() : null;
   oscillator.type = type;
   oscillator.frequency.setValueAtTime(frequency, start);
   oscillator.frequency.exponentialRampToValueAtTime(Math.max(20, endFrequency), start + duration);
+  if (filter) {
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(filterFrequency ?? 1200, start);
+    filter.Q.setValueAtTime(0.65, start);
+    oscillator.connect(filter);
+    filter.connect(gain);
+  } else {
+    oscillator.connect(gain);
+  }
   gain.gain.setValueAtTime(0.0001, start);
   gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
   gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-  oscillator.connect(gain);
   gain.connect(output ?? context.destination);
   oscillator.start(start);
   oscillator.stop(start + duration + 0.02);
@@ -72,8 +83,8 @@ export function playEntranceSound(fromUserInteraction = false) {
     const start = context.currentTime + 0.01;
     // A short rising sweep with a low impact gives the storefront an athletic arrival cue.
     playTone(context, { frequency: 110, endFrequency: 62, start, duration: 0.42, volume: 0.16, type: 'sine' });
-    playTone(context, { frequency: 220, endFrequency: 520, start: start + 0.04, duration: 0.24, volume: 0.09, type: 'triangle' });
-    playTone(context, { frequency: 880, endFrequency: 660, start: start + 0.2, duration: 0.16, volume: 0.06, type: 'square' });
+    playTone(context, { frequency: 220, endFrequency: 520, start: start + 0.04, duration: 0.24, volume: 0.09, type: 'triangle', filterFrequency: 1800 });
+    playTone(context, { frequency: 660, endFrequency: 880, start: start + 0.2, duration: 0.18, volume: 0.05, type: 'triangle', filterFrequency: 2400 });
   }).catch(() => {
     // Autoplay restrictions are expected in some browsers; the interaction fallback retries later.
   }).finally(() => {
@@ -138,7 +149,7 @@ function scheduleMusicBar(context: AudioContext, start: number, bar: number) {
   for (let beat = 0; beat < 4; beat += 1) {
     const beatStart = start + beat * beatDuration;
     playTone(context, { frequency: 170, endFrequency: 48, start: beatStart, duration: 0.16, volume: 0.72, type: 'sine', output: backgroundMusicMaster });
-    playTone(context, { frequency: rootNotes[(bar + beat) % rootNotes.length], endFrequency: rootNotes[(bar + beat) % rootNotes.length] * 0.98, start: beatStart + 0.02, duration: 0.34, volume: 0.42, type: 'sawtooth', output: backgroundMusicMaster });
+    playTone(context, { frequency: rootNotes[(bar + beat) % rootNotes.length], endFrequency: rootNotes[(bar + beat) % rootNotes.length] * 0.98, start: beatStart + 0.02, duration: 0.34, volume: 0.34, type: 'triangle', filterFrequency: 900, output: backgroundMusicMaster });
     if (beat === 1 || beat === 3) playNoise(context, backgroundMusicMaster, { start: beatStart, duration: 0.12, volume: 0.22, frequency: 1200 });
     playNoise(context, backgroundMusicMaster, { start: beatStart + beatDuration / 2, duration: 0.035, volume: 0.06, frequency: 5200 });
   }
@@ -147,7 +158,7 @@ function scheduleMusicBar(context: AudioContext, start: number, bar: number) {
   const output = backgroundMusicMaster;
   if (!output) return;
   chord.forEach((frequency, index) => {
-    playTone(context, { frequency, endFrequency: frequency * 1.002, start: start + index * 0.018, duration: beatDuration * 1.8, volume: 0.045, type: 'triangle', output });
+    playTone(context, { frequency, endFrequency: frequency * 1.002, start: start + index * 0.018, duration: beatDuration * 1.8, volume: 0.045, type: 'triangle', filterFrequency: 1600, output });
   });
 }
 
