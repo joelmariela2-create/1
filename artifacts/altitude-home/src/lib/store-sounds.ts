@@ -106,6 +106,8 @@ export function startBackgroundMusic(fromUserInteraction = false) {
     backgroundMusic.loop = true;
     backgroundMusic.preload = 'auto';
     backgroundMusic.volume = 0.22;
+    backgroundMusic.setAttribute('playsinline', 'true');
+    backgroundMusic.load();
   }
   if (!backgroundMusic.paused) return;
   void backgroundMusic.play().catch(() => {
