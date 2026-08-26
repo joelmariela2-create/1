@@ -1102,6 +1102,9 @@ body {
 }
 
 .bottom-nav button.vip-nav-item svg {
+  color: var(--altitude-gold-bright) !important;
+  fill: currentColor;
+  stroke: currentColor;
   filter: drop-shadow(0 0 7px rgba(240, 207, 112, .32));
 }
 
