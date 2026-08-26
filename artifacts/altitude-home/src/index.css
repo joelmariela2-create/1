@@ -1173,6 +1173,18 @@ body {
   color: #080808 !important;
 }
 
+.product-rail-cart {
+  color: #171717;
+  box-shadow: 0 7px 16px rgba(0,0,0,.18);
+  transition: background-color .22s ease, color .22s ease, transform .22s ease;
+}
+
+.product-rail-cart:hover {
+  background: var(--altitude-gold-bright) !important;
+  color: #080808;
+  transform: scale(1.08);
+}
+
 .products-page .product-card h3 {
   letter-spacing: -.02em;
 }
