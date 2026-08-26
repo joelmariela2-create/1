@@ -286,7 +286,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   );
 }
 
-function ProductCardPhoto({ product, testId }: { product: Product; testId: string }) {
+function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Product; testId: string; zoomEnabled?: boolean }) {
   const [, setLocation] = useLocation();
   const [zoomOpen, setZoomOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -313,7 +313,8 @@ function ProductCardPhoto({ product, testId }: { product: Product; testId: strin
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     if (didSwipe.current) return;
-    setZoomOpen(true);
+    if (zoomEnabled) setZoomOpen(true);
+    else goToProduct(productIndex);
   };
 
   return (
@@ -322,10 +323,10 @@ function ProductCardPhoto({ product, testId }: { product: Product; testId: strin
         data-testid={testId}
         role="button"
         tabIndex={0}
-        aria-label={`Ampliar foto de ${product.name}; desliza para cambiar de producto`}
-        className="relative h-full w-full cursor-zoom-in"
+        aria-label={`${zoomEnabled ? 'Ampliar foto' : 'Ver detalle'} de ${product.name}; desliza para cambiar de producto`}
+        className={`relative h-full w-full ${zoomEnabled ? 'cursor-zoom-in' : 'cursor-pointer'}`}
         onClick={handleClick}
-        onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }}
+        onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); if (zoomEnabled) setZoomOpen(true); else goToProduct(productIndex); } }}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -333,7 +334,7 @@ function ProductCardPhoto({ product, testId }: { product: Product; testId: strin
         {productIndex > 0 && <button type="button" aria-label="Producto anterior" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex - 1); }} className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronLeft size={15} /></button>}
         {productIndex < products.length - 1 && <button type="button" aria-label="Producto siguiente" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex + 1); }} className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronRight size={15} /></button>}
       </div>
-      {zoomOpen && <div role="dialog" aria-modal="true" aria-label={`Foto ampliada de ${product.name}`} className="fixed inset-0 z-[70] flex items-center justify-center bg-[#050505]/95 p-4" onClick={() => setZoomOpen(false)}>
+      {zoomEnabled && zoomOpen && <div role="dialog" aria-modal="true" aria-label={`Foto ampliada de ${product.name}`} className="fixed inset-0 z-[70] flex items-center justify-center bg-[#050505]/95 p-4" onClick={() => setZoomOpen(false)}>
         <button type="button" aria-label="Cerrar foto ampliada" onClick={() => setZoomOpen(false)} className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center border border-white/40 text-white transition-colors hover:bg-white hover:text-[#171717]"><X size={21} /></button>
         <img src={product.image} alt={`${product.name}, ${product.brand}`} onClick={(event) => event.stopPropagation()} className="max-h-[88vh] max-w-[94vw] object-contain" />
         <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-center text-[9px] font-bold uppercase tracking-[.14em] text-white/75">{product.name} · toca fuera para cerrar</p>
@@ -413,7 +414,7 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
     stopInertia();
   };
 
-  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">olympo shop</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div ref={railRef} className={`swipe-rail scrollbar-hide -mx-5 flex gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 ${inertiaActive ? 'inertial-active' : ''}`} onTouchStart={handleRailTouchStart} onTouchMove={handleRailTouchMove} onTouchEnd={handleRailTouchEnd} onTouchCancel={handleRailTouchCancel}>{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} /><button onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${product.name}`} className={`absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
+  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">olympo shop</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div ref={railRef} className={`swipe-rail scrollbar-hide -mx-5 flex gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 ${inertiaActive ? 'inertial-active' : ''}`} onTouchStart={handleRailTouchStart} onTouchMove={handleRailTouchMove} onTouchEnd={handleRailTouchEnd} onTouchCancel={handleRailTouchCancel}>{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${product.name}`} className={`absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
 function HomeCartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -1010,7 +1011,7 @@ function Router() {
 function App() {
   useEffect(() => {
     const entranceTimer = window.setTimeout(() => playEntranceSound(), 1000);
-    const retryOnInteraction = () => playEntranceSound();
+    const retryOnInteraction = () => playEntranceSound(true);
     window.addEventListener('pointerdown', retryOnInteraction, { once: true, passive: true });
     window.addEventListener('keydown', retryOnInteraction, { once: true });
     window.addEventListener('touchstart', retryOnInteraction, { once: true, passive: true });

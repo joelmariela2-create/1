@@ -44,24 +44,28 @@ function playTone(
   oscillator.stop(start + duration + 0.02);
 }
 
-async function startAudio() {
+async function startAudio(allowResume = false) {
   const context = getAudioContext();
   if (!context) return null;
-  if (context.state === 'suspended') await context.resume();
+  if (context.state === 'suspended') {
+    if (!allowResume) return null;
+    await context.resume();
+  }
+  if (context.state !== 'running') return null;
   return context;
 }
 
-export function playEntranceSound() {
+export function playEntranceSound(fromUserInteraction = false) {
   if (entranceSoundHasPlayed || entranceSoundInFlight) return;
   entranceSoundInFlight = true;
-  void startAudio().then((context) => {
+  void startAudio(fromUserInteraction).then((context) => {
     if (!context) return;
     entranceSoundHasPlayed = true;
     const start = context.currentTime + 0.01;
     // A short rising sweep with a low impact gives the storefront an athletic arrival cue.
-    playTone(context, { frequency: 110, endFrequency: 62, start, duration: 0.42, volume: 0.08, type: 'sine' });
-    playTone(context, { frequency: 220, endFrequency: 520, start: start + 0.04, duration: 0.24, volume: 0.045, type: 'triangle' });
-    playTone(context, { frequency: 880, endFrequency: 660, start: start + 0.2, duration: 0.16, volume: 0.03, type: 'square' });
+    playTone(context, { frequency: 110, endFrequency: 62, start, duration: 0.42, volume: 0.16, type: 'sine' });
+    playTone(context, { frequency: 220, endFrequency: 520, start: start + 0.04, duration: 0.24, volume: 0.09, type: 'triangle' });
+    playTone(context, { frequency: 880, endFrequency: 660, start: start + 0.2, duration: 0.16, volume: 0.06, type: 'square' });
   }).catch(() => {
     // Autoplay restrictions are expected in some browsers; the interaction fallback retries later.
   }).finally(() => {
