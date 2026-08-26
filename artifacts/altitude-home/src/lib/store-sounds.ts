@@ -104,7 +104,8 @@ export function startBackgroundMusic(fromUserInteraction = false) {
   if (!backgroundMusic) {
     backgroundMusic = new Audio('/olympo-sport-background.mp3');
     backgroundMusic.loop = true;
-    backgroundMusic.preload = 'auto';
+    // Do not download the soundtrack until the first intentional interaction.
+    backgroundMusic.preload = 'none';
     backgroundMusic.volume = 0.22;
   }
   if (!backgroundMusic.paused) return;

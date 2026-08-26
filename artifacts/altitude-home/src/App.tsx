@@ -26,10 +26,10 @@ type Campaign = {
 };
 
 const campaigns: Campaign[] = [
-  { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.png', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
-  { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.png', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
-  { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.png', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
-  { label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.png', position: 'center center', tone: 'dark', id: 'breathe-divinity-featured' },
+  { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.webp', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
+  { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.webp', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
+  { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.webp', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
+  { label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.webp', position: 'center center', tone: 'dark', id: 'breathe-divinity-featured' },
 ];
 
 type Product = {
@@ -50,10 +50,10 @@ type Product = {
 };
 
 const products: Product[] = [
-  { id: 'breathe-sculpt-longline', name: 'Polera Compresión Core — Negra', brand: 'Breathe Divinity', price: 'Bs. 365', priceValue: 365, category: 'Compresión', status: 'Últimas unidades', image: '/breathe-compression-black.jpg' },
-  { id: 'breathe-compression-graphite', name: 'Polera Compresión Core — Grafito', brand: 'Breathe Divinity', price: 'Bs. 365', priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-graphite.jpg' },
-  { id: 'breathe-compression-white', name: 'Polera Compresión Core — Blanca', brand: 'Breathe Divinity', price: 'Bs. 365', priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-white.jpg' },
-  { id: 'breathe-compression-graphic', name: 'Polera Compresión Graphic — Negra', brand: 'Breathe Divinity', price: 'Bs. 399', priceValue: 399, category: 'Compresión', status: 'Nuevo', image: '/breathe-compression-graphic.jpg' },
+  { id: 'breathe-sculpt-longline', name: 'Polera Compresión Core — Negra', brand: 'Breathe Divinity', price: 'Bs. 365', priceValue: 365, category: 'Compresión', status: 'Últimas unidades', image: '/breathe-compression-black.webp' },
+  { id: 'breathe-compression-graphite', name: 'Polera Compresión Core — Grafito', brand: 'Breathe Divinity', price: 'Bs. 365', priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-graphite.webp' },
+  { id: 'breathe-compression-white', name: 'Polera Compresión Core — Blanca', brand: 'Breathe Divinity', price: 'Bs. 365', priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-white.webp' },
+  { id: 'breathe-compression-graphic', name: 'Polera Compresión Graphic — Negra', brand: 'Breathe Divinity', price: 'Bs. 399', priceValue: 399, category: 'Compresión', status: 'Nuevo', image: '/breathe-compression-graphic.webp' },
   { id: 'altitude-core-tee', name: 'Polera Essential Core', brand: 'ALTITUDE', price: 'Bs. 249', priceValue: 249, category: 'Poleras', status: 'Nuevo', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
   { id: 'youngla-everyday-heavy', name: 'Polera Everyday Heavy', brand: 'YoungLA', price: 'Bs. 289', priceValue: 289, category: 'Poleras', status: 'Disponible', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
   { id: 'gymshark-pace-short', name: 'Short de entrenamiento Pace 5”', brand: 'Gymshark', price: 'Bs. 319', priceValue: 319, category: 'Shorts', status: 'Nuevo', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=800' },
@@ -223,7 +223,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
         <div className="flex items-center gap-1">
           <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
           <Link href="/" data-testid="link-home-logo" aria-label="OLYM.SHOP, inicio" className="relative -top-1 flex items-center gap-2 text-[#151515]">
-            <img src="/olym-shop-logo.jpg" alt="Logo OLYM.SHOP" className="h-10 w-10 rounded-full object-cover ring-1 ring-[#171717] md:h-12 md:w-12" />
+            <img src="/olym-shop-logo.webp" alt="Logo OLYM.SHOP" className="h-10 w-10 rounded-full object-cover ring-1 ring-[#171717] md:h-12 md:w-12" />
             <span className="header-wordmark text-[20px] md:text-[24px]">OLYMPO SHOP</span>
           </Link>
         </div>
@@ -247,8 +247,14 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   const touchStartX = useRef<number | null>(null);
   const campaign = campaigns[activeIndex];
   useEffect(() => {
-    campaigns.forEach(({ image }) => { const preload = new Image(); preload.decoding = 'async'; preload.src = image; });
-  }, []);
+    const nextCampaign = campaigns[(activeIndex + 1) % campaigns.length];
+    const timer = window.setTimeout(() => {
+      const preload = new Image();
+      preload.decoding = 'async';
+      preload.src = nextCampaign.image;
+    }, 700);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex]);
   useEffect(() => {
     const timer = window.setTimeout(() => setActiveIndex((index) => (index + 1) % campaigns.length), 1300);
     return () => window.clearTimeout(timer);
@@ -271,7 +277,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   ];
   return (
     <section id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-       <img key={campaign.id} className="campaign-image absolute inset-0 h-full w-full object-contain" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined }} loading="eager" decoding="async" />
+       <img key={campaign.id} className="campaign-image absolute inset-0 h-full w-full object-contain" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined }} loading="eager" decoding="async" fetchPriority={activeIndex === 0 ? 'high' : 'auto'} />
       {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.2) 100%)' }} />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
@@ -331,7 +337,7 @@ function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Pr
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <img src={product.image} alt={product.name} draggable={false} className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" />
+        <img src={product.image} alt={product.name} draggable={false} loading={productIndex < 4 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" />
         {productIndex > 0 && <button type="button" aria-label="Producto anterior" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex - 1); }} className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronLeft size={15} /></button>}
         {productIndex < products.length - 1 && <button type="button" aria-label="Producto siguiente" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex + 1); }} className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronRight size={15} /></button>}
       </div>
@@ -585,7 +591,7 @@ function ProductsPage() {
             : filteredProducts.length === 0 ? <div data-testid="empty-product-results" className="flex min-h-[290px] flex-col items-center justify-center border border-dashed border-[#cfc9c2] bg-[#fbfaf8] px-5 text-center"><span className="flex h-12 w-12 items-center justify-center border border-[#d8d2cb] text-[#d93731]"><Search size={20} strokeWidth={1.4} /></span><h3 className="mt-5 text-[14px] font-bold uppercase tracking-[-.02em]">No encontramos ese drop</h3><p className="mt-2 max-w-[290px] text-[11px] leading-[1.5] text-[#716b65]">Prueba con otra palabra o vuelve a ver toda la selección.</p><button data-testid="button-empty-clear-filters" onClick={clearFilters} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Ver todos los productos</button></div>
               : <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} role="link" tabIndex={0} onClick={(event) => { if ((event.target as HTMLElement).closest('a,button')) return; setLocation(`/products/${product.id}`); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLocation(`/products/${product.id}`); } }} className="product-card group flex min-w-0 cursor-pointer flex-col">
                <div className="product-card-image relative aspect-[.66] overflow-hidden">
-                 <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} className="h-full w-full object-cover object-center" /></Link>
+                  <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-cover object-center" /></Link>
                    <button data-testid={`button-cart-product-${product.id}`} onClick={() => { addToCart(product); setCartOpen(true); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-cart absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-[#171717] hover:text-white"><ShoppingCart size={15} strokeWidth={1.6} /></button>
               </div>
                  <div className="flex flex-1 flex-col pt-2"><h3 data-testid={`text-product-name-${product.id}`} className="text-[14px] font-medium leading-[1.3] text-[#171717]"><Link href={`/products/${product.id}`} data-testid={`link-product-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><div className="mt-1 space-y-0.5 text-[11px] leading-[1.4] text-[#77716c]"><p>{productDetails[product.id]?.fit ?? product.category}</p><p>{productDetails[product.id]?.material ?? product.brand}</p></div><p data-testid={`text-product-price-${product.id}`} className="mt-1 text-[15px] font-bold leading-none text-[#171717]">{product.price}</p></div>
@@ -615,9 +621,9 @@ function CollectionPage() {
   const { cartItems, toast, notify } = useShop();
   const [, setLocation] = useLocation();
   const collectionCampaigns: Campaign[] = [
-    { id: 'youngla-new-drop', label: 'YoungLA', title: 'New Drop', image: '/youngla-cover.jpg', position: 'center center', tone: 'light' },
-    { id: 'gymshark-new-arrivals', label: 'Gymshark', title: 'New Arrivals', image: '/gymshark-cover.jpg', position: 'center center', tone: 'light' },
-     { id: 'breathe-divinity-featured', label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.png', position: 'center center', tone: 'dark' },
+     { id: 'youngla-new-drop', label: 'YoungLA', title: 'New Drop', image: '/youngla-cover.webp', position: 'center center', tone: 'light' },
+     { id: 'gymshark-new-arrivals', label: 'Gymshark', title: 'New Arrivals', image: '/gymshark-cover.webp', position: 'center center', tone: 'light' },
+      { id: 'breathe-divinity-featured', label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.webp', position: 'center center', tone: 'dark' },
   ];
   return (
     <div className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]">
@@ -631,7 +637,7 @@ function CollectionPage() {
         <div className="campaign-stack-list">
           {collectionCampaigns.map((campaign) => (
              <article key={campaign.id} className={`campaign-tile relative isolate min-h-[292px] overflow-hidden md:min-h-[390px] ${campaign.id === 'breathe-divinity-featured' ? 'bg-black text-white' : 'bg-[#dedbd7]'}`}>
-              <img className="absolute inset-0 h-full w-full object-cover" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position }} loading="eager" decoding="async" />
+             <img className="absolute inset-0 h-full w-full object-cover" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position }} loading="lazy" decoding="async" />
                <div className={`absolute inset-0 ${campaign.id === 'youngla-new-drop' || campaign.id === 'breathe-divinity-featured' ? 'bg-transparent' : 'bg-gradient-to-r from-white/90 via-white/35 to-transparent'}`} />
               <div className="relative z-10 flex min-h-[292px] flex-col items-start justify-center px-6 py-7 md:min-h-[390px] md:px-12">
                 <div className="-translate-y-16 md:-translate-y-20">
@@ -748,7 +754,7 @@ function ProductDetailPage() {
             </div>
             <div className="grid gap-0 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
                <div className="detail-photo-wrap relative overflow-hidden bg-[#e7e3dd] cursor-zoom-in" role="button" tabIndex={0} aria-label={`Ampliar foto de ${product.name}`} onClick={handlePhotoClick} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }} onTouchStart={handlePhotoTouchStart} onTouchEnd={handlePhotoTouchEnd}>
-                <img data-testid={`img-product-detail-${product.id}`} src={product.image} alt={`${product.name}, ${product.brand}`} draggable={false} className="detail-photo h-full w-full object-cover" />
+                <img data-testid={`img-product-detail-${product.id}`} src={product.image} alt={`${product.name}, ${product.brand}`} draggable={false} loading="eager" decoding="async" fetchPriority="high" className="detail-photo h-full w-full object-cover" />
                 <div className="absolute left-3 top-3 flex gap-2"><span className="bg-[#f6f4f0] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em]">{product.status}</span>{product.isBestSeller && <span className="bg-[#d93731] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em] text-white">Favorito</span>}</div>
                 <button data-testid="button-detail-favorite" onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar' : 'Añadir'} ${product.name} de favoritos`} className={`absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-white ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={18} strokeWidth={1.5} /></button>
                 {productIndex > 0 && <button type="button" aria-label="Producto anterior" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex - 1); }} className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white"><ChevronLeft size={20} /></button>}
@@ -918,7 +924,7 @@ function VipPage() {
       <main>
         <section className="vip-hero relative isolate overflow-hidden" aria-labelledby="vip-hero-title">
           <div className="vip-photo absolute inset-y-0 right-0 z-0" aria-hidden="true">
-            <img src="/vip-athlete.png" alt="" />
+            <img src="/vip-athlete.webp" alt="" loading="eager" decoding="async" />
           </div>
           <div className="relative z-10 flex min-h-[443px] flex-col justify-between px-5 pb-7 pt-8 md:min-h-[525px] md:px-12 md:pb-10 md:pt-12">
             <div className="flex items-start justify-between">
