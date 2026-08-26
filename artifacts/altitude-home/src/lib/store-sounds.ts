@@ -2,6 +2,7 @@ let audioContext: AudioContext | null = null;
 let entranceSoundHasPlayed = false;
 let entranceSoundInFlight = false;
 let backgroundMusic: HTMLAudioElement | null = null;
+let backgroundMusicPlayInFlight: Promise<void> | null = null;
 
 function getAudioContext() {
   if (typeof window === 'undefined') return null;
@@ -102,14 +103,24 @@ export function playCartBell() {
 export function startBackgroundMusic(fromUserInteraction = false) {
   if (!fromUserInteraction || typeof window === 'undefined') return;
   if (!backgroundMusic) {
-    backgroundMusic = new Audio('/olympo-sport-background.mp3');
+    const audioUrl = `${import.meta.env.BASE_URL}olympo-sport-background.mp3`;
+    backgroundMusic = new Audio(audioUrl);
     backgroundMusic.loop = true;
-    // Do not download the soundtrack until the first intentional interaction.
-    backgroundMusic.preload = 'none';
+    // Load after an intentional interaction so the published static asset is ready
+    // without asking the browser to autoplay on initial page load.
+    backgroundMusic.preload = 'auto';
     backgroundMusic.volume = 0.22;
+    backgroundMusic.addEventListener('error', () => {
+      // A missing/blocked soundtrack must never interrupt navigation or checkout.
+      backgroundMusicPlayInFlight = null;
+    });
   }
   if (!backgroundMusic.paused) return;
-  void backgroundMusic.play().catch(() => {
-    // The browser may still reject playback; the next gesture can retry it.
+  if (backgroundMusicPlayInFlight) return;
+  backgroundMusicPlayInFlight = backgroundMusic.play().catch(() => {
+    // Autoplay policies can reject a gesture from some browsers; the next
+    // intentional interaction retries the same audio element.
+  }).finally(() => {
+    backgroundMusicPlayInFlight = null;
   });
 }

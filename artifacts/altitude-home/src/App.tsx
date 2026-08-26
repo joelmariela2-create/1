@@ -1041,15 +1041,16 @@ function App() {
     const startMusicOnScroll = () => {
       startBackgroundMusic(true);
     };
-    window.addEventListener('scroll', startMusicOnScroll, { once: true, passive: true });
-    window.addEventListener('touchmove', startMusicOnScroll, { once: true, passive: true });
-    window.addEventListener('wheel', startMusicOnScroll, { once: true, passive: true });
+    const musicInteractionEvents: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll'];
+    musicInteractionEvents.forEach((eventName) => {
+      window.addEventListener(eventName, startMusicOnScroll, { passive: true });
+    });
     currencyObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
     return () => {
       window.clearTimeout(entranceTimer);
-      window.removeEventListener('scroll', startMusicOnScroll);
-      window.removeEventListener('touchmove', startMusicOnScroll);
-      window.removeEventListener('wheel', startMusicOnScroll);
+      musicInteractionEvents.forEach((eventName) => {
+        window.removeEventListener(eventName, startMusicOnScroll);
+      });
       currencyObserver.disconnect();
     };
   }, []);
