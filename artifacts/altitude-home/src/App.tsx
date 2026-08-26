@@ -4,6 +4,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
+import { playCartBell, playEntranceSound } from '@/lib/store-sounds';
 import { Link, Route, Switch, useLocation, Router as WouterRouter, useParams } from 'wouter';
 import {
   ArrowLeft, ArrowRight, Box, Check, CheckCircle2, ChevronLeft, ChevronRight, Crown, CreditCard, Flame, Heart, House,
@@ -193,6 +194,7 @@ function ShopProvider({ children }: { children: ReactNode }) {
     window.setTimeout(() => setToast(''), 2500);
   };
   const addToCart = (product: Product, selectedSize?: string) => {
+    playCartBell();
     setCartItems((items) => [...items, { ...product, selectedSize }]);
     notify(`${product.name}${selectedSize ? ` · talla ${selectedSize}` : ''} añadido al carrito`);
   };
@@ -415,6 +417,24 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
   return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">olympo shop</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div ref={railRef} className={`swipe-rail scrollbar-hide -mx-5 flex gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 ${inertiaActive ? 'inertial-active' : ''}`} onTouchStart={handleRailTouchStart} onTouchMove={handleRailTouchMove} onTouchEnd={handleRailTouchEnd} onTouchCancel={handleRailTouchCancel}>{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} /><button onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'}: ${product.name}`} className={`absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
+function HomeCartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [, setLocation] = useLocation();
+  const { cartItems, removeFromCart } = useShop();
+  const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
+  if (!open) return null;
+  return <div className="fixed inset-0 z-50">
+    <button data-testid="button-close-home-cart-overlay" aria-label="Cerrar carrito" onClick={onClose} className="absolute inset-0 bg-[#171717]/35 backdrop-blur-[1px]" />
+    <aside role="dialog" aria-modal="true" aria-labelledby="home-cart-title" className="absolute bottom-0 right-0 top-0 flex w-full max-w-[410px] flex-col bg-[#f6f4f0] px-5 py-6 shadow-2xl md:px-7">
+      <div className="flex items-center justify-between border-b border-[#d9d3cc] pb-5">
+        <div><p className="section-label text-[#d93731]">Tu selección</p><h2 id="home-cart-title" className="editorial-title mt-1 text-[25px] font-bold uppercase">Carrito <span className="font-mono text-[11px] text-[#8b857e]">({cartItems.length})</span></h2></div>
+        <button data-testid="button-close-home-cart" onClick={onClose} aria-label="Cerrar carrito" className="flex h-9 w-9 items-center justify-center border border-[#d9d3cc]"><X size={18} strokeWidth={1.5} /></button>
+      </div>
+      {cartItems.length === 0 ? <div className="flex flex-1 flex-col items-center justify-center text-center"><ShoppingBag size={27} strokeWidth={1.3} className="text-[#d93731]" /><p className="mt-4 text-[13px] font-bold uppercase">Tu bolsa está vacía</p><Link href="/products" onClick={onClose} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]">Ver productos</Link></div>
+        : <><div className="flex-1 overflow-y-auto py-5">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex gap-3 border-b border-[#ded8d1] py-4 first:pt-0"><img src={item.image} alt="" className="h-[78px] w-[62px] object-cover" /><div className="min-w-0 flex-1"><p className="text-[8px] font-bold uppercase tracking-[.12em] text-[#8b857e]">{item.brand}</p><p className="mt-1 text-[11px] font-semibold leading-[1.3]">{item.name}</p>{item.selectedSize && <p className="mt-1 text-[9px] uppercase tracking-[.08em] text-[#8b857e]">Talla {item.selectedSize}</p>}<p className="mt-2 text-[11px] font-bold">{item.price}</p></div><button data-testid={`button-remove-home-cart-${item.id}-${index}`} onClick={() => removeFromCart(item.id)} aria-label={`Quitar ${item.name}`} className="self-start text-[#8b857e] hover:text-[#d93731]"><X size={16} /></button></div>)}</div><div className="border-t border-[#171717] pt-5"><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total</span><strong className="text-[18px]">Bs. {total}</strong></div><button data-testid="button-home-cart-checkout" onClick={() => { onClose(); setLocation('/checkout'); }} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851]"><MessageCircle size={16} /> Completar datos del pedido <ArrowRight size={16} /></button></div></>}
+    </aside>
+  </div>;
+}
+
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location, setLocation] = useLocation();
   if (!open) return null;
@@ -565,7 +585,7 @@ function ProductsPage() {
               : <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} role="link" tabIndex={0} onClick={(event) => { if ((event.target as HTMLElement).closest('a,button')) return; setLocation(`/products/${product.id}`); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLocation(`/products/${product.id}`); } }} className="product-card group flex min-w-0 cursor-pointer flex-col">
                <div className="product-card-image relative aspect-[.66] overflow-hidden">
                  <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} className="h-full w-full object-cover object-center" /></Link>
-                  <button data-testid={`button-cart-product-${product.id}`} onClick={() => { addToCart(product); setLocation('/checkout'); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-cart absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-[#171717] hover:text-white"><ShoppingCart size={15} strokeWidth={1.6} /></button>
+                   <button data-testid={`button-cart-product-${product.id}`} onClick={() => { addToCart(product); setCartOpen(true); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-cart absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-[#171717] hover:text-white"><ShoppingCart size={15} strokeWidth={1.6} /></button>
               </div>
                  <div className="flex flex-1 flex-col pt-2"><h3 data-testid={`text-product-name-${product.id}`} className="text-[14px] font-medium leading-[1.3] text-[#171717]"><Link href={`/products/${product.id}`} data-testid={`link-product-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><div className="mt-1 space-y-0.5 text-[11px] leading-[1.4] text-[#77716c]"><p>{productDetails[product.id]?.fit ?? product.category}</p><p>{productDetails[product.id]?.material ?? product.brand}</p></div><p data-testid={`text-product-price-${product.id}`} className="mt-1 text-[15px] font-bold leading-none text-[#171717]">{product.price}</p></div>
             </article>)}</div>}
@@ -582,10 +602,11 @@ function ProductsPage() {
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const { cartItems, toast, addToCart, notify } = useShop();
   const [, setLocation] = useLocation();
   const openVip = () => setLocation('/vip');
-    return <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]"><Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} /><main className="home-main"><CampaignHero onShop={(item) => { if (item.id === 'breathe-divinity-featured') { setLocation('/products'); return; } scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} /><ProductRail onAdd={(product) => addToCart(product)} /><section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8"><div className="mb-4 flex items-start justify-between gap-4"><div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">MÉXICO - PUEBLO MORELOS</h2><p className="mt-1 text-[11px] text-[#6b6660]">ciudad de mexico </p></div><a href="https://www.google.com/maps/search/?api=1&query=Pueblo+Morelos%2C+Coahuila%2C+Mexico" target="_blank" rel="noreferrer" aria-label="Abrir Pueblo Morelos en Google Maps" className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]"><MapPin size={19} strokeWidth={1.5} /></a></div><div className="overflow-hidden border border-[#d8d3ce] bg-[#e7e3dd]"><iframe title="Mapa del showroom en Pueblo Morelos, Coahuila, México" src="https://www.google.com/maps?q=Pueblo+Morelos,+Coahuila,+Mexico&output=embed" className="h-[250px] w-full border-0 md:h-[320px]" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div><a href={storeWhatsAppUrl} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-between bg-[#25D366] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-[#171717]"><span className="flex items-center gap-2"><MessageCircle size={16} /> WhatsApp · +52 222 378 6688</span><ArrowRight size={15} /></a><a href="https://www.google.com/maps/search/?api=1&query=Pueblo+Morelos%2C+Coahuila%2C+Mexico" target="_blank" rel="noreferrer" className="mt-2 flex items-center justify-between border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Abrir Pueblo Morelos en Google Maps <ArrowRight size={15} /></a></section></main><footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8"><div className="altitude-wordmark text-[27px]">olympo.shop</div><p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p><div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button onClick={openVip}>ALTITUDE VIP</button></div></footer><BottomNav active="home" onVip={openVip} /><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />{toast && <div className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}</div>;
+    return <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]"><Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onCart={() => setCartOpen(true)} /><main className="home-main"><CampaignHero onShop={(item) => { if (item.id === 'breathe-divinity-featured') { setLocation('/products'); return; } scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} /><ProductRail onAdd={(product) => { addToCart(product); setCartOpen(true); }} /><section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8"><div className="mb-4 flex items-start justify-between gap-4"><div><p className="section-label mb-1 text-[#7c7772]">Visítanos</p><h2 className="editorial-title text-[20px] font-bold uppercase">MÉXICO - PUEBLO MORELOS</h2><p className="mt-1 text-[11px] text-[#6b6660]">ciudad de mexico </p></div><a href="https://www.google.com/maps/search/?api=1&query=Pueblo+Morelos%2C+Coahuila%2C+Mexico" target="_blank" rel="noreferrer" aria-label="Abrir Pueblo Morelos en Google Maps" className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]"><MapPin size={19} strokeWidth={1.5} /></a></div><div className="overflow-hidden border border-[#d8d3ce] bg-[#e7e3dd]"><iframe title="Mapa del showroom en Pueblo Morelos, Coahuila, México" src="https://www.google.com/maps?q=Pueblo+Morelos,+Coahuila,+Mexico&output=embed" className="h-[250px] w-full border-0 md:h-[320px]" loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div><a href={storeWhatsAppUrl} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-between bg-[#25D366] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-[#171717]"><span className="flex items-center gap-2"><MessageCircle size={16} /> WhatsApp · +52 222 378 6688</span><ArrowRight size={15} /></a><a href="https://www.google.com/maps/search/?api=1&query=Pueblo+Morelos%2C+Coahuila%2C+Mexico" target="_blank" rel="noreferrer" className="mt-2 flex items-center justify-between border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Abrir Pueblo Morelos en Google Maps <ArrowRight size={15} /></a></section></main><footer className="border-t border-[#e1ddda] px-5 py-7 text-center md:px-8"><div className="altitude-wordmark text-[27px]">olympo.shop</div><p className="mt-2 text-[9px] uppercase tracking-[.18em] text-[#8b857f]">Entrena más alto. Muévete distinto.</p><div className="mt-5 flex justify-center gap-5 text-[10px] text-[#766f69]"><button onClick={() => notify('Escríbenos por WhatsApp para ayudarte.')}>Ayuda</button><button onClick={() => notify('Envíos a toda Bolivia.')}>Envíos</button><button onClick={openVip}>ALTITUDE VIP</button></div></footer><BottomNav active="home" onVip={openVip} /><Drawer open={menuOpen} onClose={() => setMenuOpen(false)} /><HomeCartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />{toast && <div className="fixed bottom-[82px] left-1/2 z-50 -translate-x-1/2 whitespace-nowrap bg-[#191919] px-4 py-3 text-[10px] font-semibold uppercase tracking-[.06em] text-white shadow-md">{toast}</div>}</div>;
 }
 
 function CollectionPage() {
@@ -671,6 +692,7 @@ function ProductDetailPage() {
   const handleAdd = () => {
     if (!product || !detail) return;
     addToCart(product, selectedSize);
+    setCartOpen(true);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 3200);
   };
@@ -986,6 +1008,21 @@ function Router() {
   }, [location]);
   return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/social" component={SocialPage} /><Route path="/vip" component={VipPage} /><Route path="/checkout" component={CheckoutPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
 }
-function App() { return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>; }
+function App() {
+  useEffect(() => {
+    const entranceTimer = window.setTimeout(() => playEntranceSound(), 1000);
+    const retryOnInteraction = () => playEntranceSound();
+    window.addEventListener('pointerdown', retryOnInteraction, { once: true, passive: true });
+    window.addEventListener('keydown', retryOnInteraction, { once: true });
+    window.addEventListener('touchstart', retryOnInteraction, { once: true, passive: true });
+    return () => {
+      window.clearTimeout(entranceTimer);
+      window.removeEventListener('pointerdown', retryOnInteraction);
+      window.removeEventListener('keydown', retryOnInteraction);
+      window.removeEventListener('touchstart', retryOnInteraction);
+    };
+  }, []);
+  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
+}
 
 export default App;
