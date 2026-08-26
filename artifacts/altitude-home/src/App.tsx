@@ -4,12 +4,12 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { playCartBell, playEntranceSound, startBackgroundMusic } from '@/lib/store-sounds';
+import { isBackgroundMusicPlaying, playCartBell, playEntranceSound, startBackgroundMusic, subscribeToBackgroundMusic, toggleBackgroundMusic } from '@/lib/store-sounds';
 import { Link, Route, Switch, useLocation, Router as WouterRouter, useParams } from 'wouter';
 import {
   ArrowLeft, ArrowRight, Box, Check, CheckCircle2, ChevronLeft, ChevronRight, Crown, CreditCard, Flame, Heart, House,
   LockKeyhole, MapPin, Menu, MessageCircle, Phone, Plus, RefreshCw, Search, ShieldCheck, UserRound,
-  ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, X, Zap,
+  ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, Volume2, VolumeX, X, Zap,
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa6';
 
@@ -20,14 +20,13 @@ type Campaign = {
   label: string;
   title: string;
   image: string;
-  video?: string;
   position: string;
   tone: 'light' | 'dark';
   id: string;
 };
 
 const campaigns: Campaign[] = [
-  { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.png', video: '/olympo-sport-hero.mp4', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
+  { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.png', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.png', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.png', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
   { label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.png', position: 'center center', tone: 'dark', id: 'breathe-divinity-featured' },
@@ -136,17 +135,15 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
       <div className="space-y-1">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex justify-between gap-3 text-[11px]"><span className="min-w-0 truncate">{item.name}{item.selectedSize ? ` · ${item.selectedSize}` : ''}</span><strong className="shrink-0">Bs. {item.priceValue}</strong></div>)}</div>
       <div className="mt-3 flex justify-between border-t border-[#e6e2de] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">Bs. {total}</span></div>
     </div>
-     <div className="space-y-3">
-      <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo</span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Escribe tu nombre" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
-       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 55 1234 5678" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
-       <div className="grid gap-3 sm:grid-cols-2">
-         <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => setCustomer({ ...customer, country: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="México">México</option></select></label>
-         <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Ciudad o pueblo</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu ciudad o pueblo</option>{mexicoCities.map((city) => <option key={city} value={city}>{city}</option>)}</select></label>
-       </div>
-    </div>
-    <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[18px]">Bs. {total}</strong></div>
-    <button data-testid="button-confirm-order" type="submit" className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851]"><CheckCircle2 size={16} /> Confirmar pedido <ArrowRight size={16} /></button>
-    <p className="mt-3 text-center text-[9px] text-[#8b857e]">Tus datos se enviarán junto con el pedido por WhatsApp.</p>
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo</span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Escribe tu nombre" className="h-10 w-full border border-[#cfc9c2] bg-white px-2.5 text-[11px] outline-none focus:border-[#171717] sm:h-11 sm:px-3 sm:text-[12px]" /></label>
+        <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 55 1234 5678" className="h-10 w-full border border-[#cfc9c2] bg-white px-2.5 text-[11px] outline-none focus:border-[#171717] sm:h-11 sm:px-3 sm:text-[12px]" /></label>
+       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => setCustomer({ ...customer, country: event.target.value })} className="h-10 w-full border border-[#cfc9c2] bg-white px-2.5 text-[11px] outline-none focus:border-[#171717] sm:h-11 sm:px-3 sm:text-[12px]"><option value="México">México</option></select></label>
+       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Ciudad o pueblo</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="h-10 w-full border border-[#cfc9c2] bg-white px-2.5 text-[11px] outline-none focus:border-[#171717] sm:h-11 sm:px-3 sm:text-[12px]"><option value="">Selecciona tu ciudad o pueblo</option>{mexicoCities.map((city) => <option key={city} value={city}>{city}</option>)}</select></label>
+     </div>
+     <div className="mt-3 flex items-center justify-between border-t border-[#d9d3cc] pt-3"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[17px]">Bs. {total}</strong></div>
+     <button data-testid="button-confirm-order" type="submit" className="mt-3 flex h-11 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851]"><CheckCircle2 size={16} /> Confirmar pedido <ArrowRight size={16} /></button>
+     <p className="mt-2 text-center text-[9px] leading-tight text-[#8b857e]">Tus datos se enviarán junto con el pedido por WhatsApp.</p>
   </form>;
 }
 
@@ -248,22 +245,12 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   const touchStartX = useRef<number | null>(null);
   const campaign = campaigns[activeIndex];
   useEffect(() => {
-    campaigns.forEach(({ image, video }) => {
-      if (video) {
-        const preload = document.createElement('video');
-        preload.preload = 'auto';
-        preload.src = video;
-      } else {
-        const preload = new Image();
-        preload.decoding = 'async';
-        preload.src = image;
-      }
-    });
+    campaigns.forEach(({ image }) => { const preload = new Image(); preload.decoding = 'async'; preload.src = image; });
   }, []);
   useEffect(() => {
-    const timer = window.setTimeout(() => setActiveIndex((index) => (index + 1) % campaigns.length), campaign.video ? 30000 : 1300);
+    const timer = window.setTimeout(() => setActiveIndex((index) => (index + 1) % campaigns.length), 1300);
     return () => window.clearTimeout(timer);
-  }, [activeIndex, campaign.video]);
+  }, [activeIndex]);
   const handleTouchStart = (event: TouchEvent<HTMLElement>) => { touchStartX.current = event.touches[0]?.clientX ?? null; };
   const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
     if (touchStartX.current === null) return;
@@ -282,9 +269,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   ];
   return (
     <section id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-       {campaign.video
-         ? <video key={campaign.id} className="campaign-image hero-video absolute inset-0 h-full w-full object-contain" src={campaign.video} aria-label={`${campaign.label} ${campaign.title}`} autoPlay muted loop playsInline preload="auto" style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : undefined }} />
-         : <img key={campaign.id} className="campaign-image absolute inset-0 h-full w-full object-contain" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined }} loading="eager" decoding="async" />}
+       <img key={campaign.id} className="campaign-image absolute inset-0 h-full w-full object-contain" src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined }} loading="eager" decoding="async" />
       {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.2) 100%)' }} />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
@@ -1016,6 +1001,17 @@ function VipPage() {
 }
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) { const [location] = useLocation(); return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>; }
+
+function SoundControl() {
+  const [isPlaying, setIsPlaying] = useState(isBackgroundMusicPlaying);
+  useEffect(() => subscribeToBackgroundMusic(() => setIsPlaying(isBackgroundMusicPlaying())), []);
+  const handleToggle = () => setIsPlaying(toggleBackgroundMusic());
+  return <button type="button" onClick={handleToggle} aria-label={isPlaying ? 'Pausar sonido deportivo' : 'Activar sonido deportivo'} title={isPlaying ? 'Pausar sonido deportivo' : 'Activar sonido deportivo'} className="fixed bottom-[72px] left-4 z-[60] flex h-10 items-center gap-2 border border-[#171717] bg-white px-3 text-[9px] font-bold uppercase tracking-[.08em] text-[#171717] shadow-[3px_3px_0_#d93731] transition-transform hover:-translate-y-0.5 md:bottom-5 md:left-5">
+    {isPlaying ? <Volume2 size={15} /> : <VolumeX size={15} />}
+    <span className="hidden sm:inline">Sonido deportivo</span>
+  </button>;
+}
+
 function Router() {
   const [location] = useLocation();
   useEffect(() => {
@@ -1042,7 +1038,7 @@ function App() {
       window.removeEventListener('touchstart', retryOnInteraction);
     };
   }, []);
-  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><SoundControl /><Toaster /></TooltipProvider></QueryClientProvider>;
 }
 
 export default App;
