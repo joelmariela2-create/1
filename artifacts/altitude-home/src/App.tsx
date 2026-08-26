@@ -197,8 +197,8 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
     <>
       <div className="announcement-strip flex h-7 items-center overflow-hidden bg-[#eeece9] text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
         <div className="announcement-track flex min-w-max items-center">
-           <span className="px-4">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
-           <span className="px-4" aria-hidden="true">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
+           <span className="px-4">OLYMPO SHOP <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS 🇲🇽 <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
+           <span className="px-4" aria-hidden="true">OLYMPO SHOP <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS 🇲🇽 <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
         </div>
       </div>
       <header className="sticky top-0 z-30 flex h-[62px] items-center justify-between border-b border-[#e6e2de] bg-white px-5 text-[#151515] md:h-[76px] md:px-8">
@@ -206,7 +206,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
           <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
           <Link href="/" data-testid="link-home-logo" aria-label="ALTITUDE, inicio" className="relative -top-1 flex items-center gap-2 text-[#151515]">
             <img src="/altitude-logo-circle.png" alt="Logo ALTITUDE" className="h-8 w-8 rounded-full object-cover ring-1 ring-[#171717] md:h-10 md:w-10" />
-            <span className="header-wordmark text-[20px] md:text-[24px]">ALTITUDE</span>
+            <span className="header-wordmark text-[20px] md:text-[24px]">OLYMPO SHOP</span>
           </Link>
         </div>
          <div className="relative right-0 -top-2 flex items-center gap-2">
@@ -214,13 +214,13 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
           <button data-testid="button-open-cart" onClick={onCart ?? (() => window.alert('Tu carrito está listo para despegar.'))} aria-label="Abrir carrito" className="relative flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><ShoppingCart size={21} strokeWidth={1.7} />{cartCount > 0 && <span className="absolute -right-1 -top-1 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#ca2f2b] px-1 text-[9px] font-bold text-white">{cartCount}</span>}</button>
         </div>
       </header>
-       <nav className="desktop-nav sticky top-[62px] z-20 hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525] md:top-[76px]">
-        <button onClick={() => onShop ? onShop() : scrollToSection('new-releases')}>Tienda</button>
-         <button onClick={() => setLocation('/collection')}>Colección</button>
-        <button onClick={() => onShowroom ? onShowroom() : scrollToSection('showroom')}>Showroom</button>
-        <button onClick={() => setLocation('/vip')} className="text-[#ec413b]">Acceso VIP</button>
-        <button onClick={onBenefits ?? (() => scrollToSection('benefits'))}>Beneficios</button>
-      </nav>
+      <nav className="desktop-nav sticky top-[62px] z-20 hidden h-11 items-center justify-center gap-12 border-b border-[#e6e2de] bg-white text-[10px] font-semibold uppercase tracking-[.15em] text-[#252525] md:top-[76px]">
+       <button onClick={() => onShop ? onShop() : scrollToSection('new-releases')}>Tienda</button>
+        <button onClick={() => setLocation('/collection')}>Colección</button>
+       <button onClick={() => onShowroom ? onShowroom() : scrollToSection('showroom')}>Showroom</button>
+       <button onClick={() => setLocation('/vip')} className="text-[#ec413b]">Acceso VIP</button>
+       <button onClick={onBenefits ?? (() => scrollToSection('benefits'))}>Beneficios</button>
+     </nav>
     </>
   );
 }
