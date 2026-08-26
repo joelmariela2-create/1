@@ -562,8 +562,6 @@ function ProductDetailPage() {
   const { cartItems, favorites, toast, addToCart, removeFromCart, toggleFavorite, notify } = useShop();
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [selectedSize, setSelectedSize] = useState('');
-  const [sizeError, setSizeError] = useState('');
   const [added, setAdded] = useState(false);
   const [orderFormOpen, setOrderFormOpen] = useState(false);
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
@@ -579,24 +577,13 @@ function ProductDetailPage() {
 
   const handleAdd = () => {
     if (!product || !detail) return;
-    if (!selectedSize) {
-      setSizeError('Selecciona una talla para continuar');
-      document.getElementById('product-size')?.focus();
-      return;
-    }
-    setSizeError('');
-    addToCart(product, selectedSize);
+    addToCart(product);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 3200);
   };
   const handleBuy = () => {
     if (!product || !detail) return;
-    if (!selectedSize) {
-      setSizeError('Selecciona una talla para continuar');
-      document.getElementById('product-size')?.focus();
-      return;
-    }
-    addToCart(product, selectedSize);
+    addToCart(product);
     setLocation('/checkout');
   };
   const handleDetailCartCheckout = () => {
@@ -630,23 +617,30 @@ function ProductDetailPage() {
                 <p data-testid="text-detail-brand" className="section-label text-[#d93731]">{product.brand}</p>
                 <h1 data-testid="text-detail-name" className="editorial-title mt-3 max-w-[560px] text-[clamp(2.3rem,6vw,5rem)] font-bold uppercase leading-[.86] tracking-[-.065em]">{product.name}</h1>
                 <div className="mt-6 flex items-end justify-between border-b border-[#d9d3cc] pb-5"><p data-testid="text-detail-price" className="text-[22px] font-bold tracking-[-.04em]">{product.price}</p><p data-testid="status-detail-availability" className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-[#4e6a50]"><span className="h-2 w-2 rounded-full bg-[#4e6a50]" /> {product.status === 'Últimas unidades' ? 'Quedan pocas' : 'Disponible'}</p></div>
-                <div className="mt-6" role="group" aria-labelledby="product-size-label">
-                  <div className="flex items-center justify-between"><span id="product-size-label" className="text-[10px] font-bold uppercase tracking-[.12em]">Selecciona tu talla <span className="text-[#d93731]">*</span></span><button data-testid="button-size-guide" onClick={() => notify('Guía de tallas: elige tu talla habitual.')} className="text-[9px] font-semibold uppercase tracking-[.08em] text-[#8b857e] underline underline-offset-4 hover:text-[#171717]">Guía de tallas</button></div>
-                  <div id="product-size" tabIndex={-1} aria-describedby={sizeError ? 'size-error' : undefined} className="mt-3 grid grid-cols-5 gap-2" role="radiogroup" aria-label="Tallas disponibles">
-                    {(detail.sizes ?? []).map((size) => <button key={size} type="button" data-testid={`button-size-${size.toLowerCase()}`} role="radio" aria-checked={selectedSize === size} onClick={() => { setSelectedSize(size); setSizeError(''); }} className={`flex h-11 items-center justify-center border text-[11px] font-bold transition-colors ${selectedSize === size ? 'border-[#d93731] bg-[#d93731] text-white' : 'border-[#cfc9c2] bg-[#fbfaf8] hover:border-[#171717]'}`}>{size}</button>)}
-                  </div>
-                  {sizeError && <p id="size-error" data-testid="status-size-error" role="alert" className="mt-3 text-[10px] font-semibold text-[#d93731]">{sizeError}</p>}
-                </div>
                 <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-6 flex h-14 w-full items-center justify-between bg-[#d93731] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717]"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
                  <button data-testid="button-detail-buy-whatsapp" onClick={handleBuy} className="mt-2 flex h-14 w-full items-center justify-between bg-[#25D366] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#1da851]"><span className="flex items-center gap-2"><MessageCircle size={17} strokeWidth={1.8} /> Comprar por WhatsApp</span><ArrowRight size={18} /></button>
                 {added && <p data-testid="status-detail-added" role="status" className="mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.08em] text-[#4e6a50]"><Check size={14} /> Producto guardado · puedes seguir comprando</p>}
-                <div className="detail-spec-grid mt-8 border-y border-[#d9d3cc]">
-                  <div><span>Material</span><strong data-testid="text-detail-material">{detail.material}</strong></div>
-                  <div><span>GSM / peso</span><strong data-testid="text-detail-weight">{detail.fabricWeight}</strong></div>
-                  <div><span>Ajuste</span><strong data-testid="text-detail-fit">{detail.fit}</strong></div>
-                  <div><span>Envíos</span><strong>Todo Bolivia</strong></div>
-                </div>
-                <div className="mt-7"><p className="section-label text-[#8b857e]">Diseñado para moverte</p><ul className="detail-features mt-3">{(detail.features ?? []).map((feature) => <li key={feature}><Check size={14} strokeWidth={1.8} /> <span>{feature}</span></li>)}</ul></div>
+                 <div className="product-story mt-8 border-y border-[#d9d3cc] py-6">
+                   <div className="flex items-end justify-between gap-4">
+                     <div><p className="section-label text-[#d93731]">Detalles del producto</p><h2 className="editorial-title mt-1 text-[20px] font-bold uppercase">Hecho para moverte</h2></div>
+                     <span className="font-mono text-[9px] uppercase tracking-[.08em] text-[#8b857e]">OLYMPO / {product.brand}</span>
+                   </div>
+                   <div className="mt-6 grid grid-cols-2 gap-px border border-[#d9d3cc] bg-[#d9d3cc]">
+                     <div className="bg-[#f6f4f0] p-3"><span className="block text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">Material</span><strong data-testid="text-detail-material" className="mt-2 block text-[11px] leading-[1.35]">{detail.material}</strong></div>
+                     <div className="bg-[#f6f4f0] p-3"><span className="block text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">Fabric weight</span><strong data-testid="text-detail-weight" className="mt-2 block text-[11px] leading-[1.35]">{detail.fabricWeight}</strong></div>
+                     <div className="bg-[#f6f4f0] p-3"><span className="block text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">Fit</span><strong data-testid="text-detail-fit" className="mt-2 block text-[11px] leading-[1.35]">{detail.fit}</strong></div>
+                     <div className="bg-[#f6f4f0] p-3"><span className="block text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">Envíos</span><strong className="mt-2 block text-[11px] leading-[1.35]">Todo Bolivia</strong></div>
+                   </div>
+                   <div className="mt-6 border-l-2 border-[#d93731] pl-4">
+                     <p className="text-[9px] font-bold uppercase tracking-[.14em] text-[#d93731]">Design</p>
+                     <p className="mt-2 text-[12px] leading-[1.6] text-[#5f5a55]">{product.brand} diseñó esta pieza para acompañarte durante el entrenamiento y fuera del gym. Su construcción {(detail.fit ?? 'versátil').toLowerCase()} combina presencia, comodidad y libertad de movimiento.</p>
+                   </div>
+                   <div className="mt-5 border-t border-[#e3ded8] pt-5">
+                     <p className="text-[9px] font-bold uppercase tracking-[.14em] text-[#d93731]">Model</p>
+                     <p className="mt-2 text-[12px] leading-[1.6] text-[#5f5a55]">La referencia luce una talla habitual para mostrar el calce real de la prenda. Consulta con OLYMPO SHOP por WhatsApp si necesitas ayuda antes de confirmar tu pedido.</p>
+                   </div>
+                 </div>
+                 <div className="mt-7"><p className="section-label text-[#8b857e]">Diseñado para moverte</p><ul className="detail-features mt-3">{(detail.features ?? []).map((feature) => <li key={feature}><Check size={14} strokeWidth={1.8} /> <span>{feature}</span></li>)}</ul></div>
               </div>
             </div>
           </section>}
