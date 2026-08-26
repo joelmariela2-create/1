@@ -135,15 +135,17 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
       <div className="space-y-1">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex justify-between gap-3 text-[11px]"><span className="min-w-0 truncate">{item.name}{item.selectedSize ? ` · ${item.selectedSize}` : ''}</span><strong className="shrink-0">Bs. {item.priceValue}</strong></div>)}</div>
       <div className="mt-3 flex justify-between border-t border-[#e6e2de] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">Bs. {total}</span></div>
     </div>
-      <div className="grid grid-cols-2 gap-2 sm:gap-3">
-       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo</span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Escribe tu nombre" className="h-10 w-full border border-[#cfc9c2] bg-white px-2.5 text-[11px] outline-none focus:border-[#171717] sm:h-11 sm:px-3 sm:text-[12px]" /></label>
-        <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 55 1234 5678" className="h-10 w-full border border-[#cfc9c2] bg-white px-2.5 text-[11px] outline-none focus:border-[#171717] sm:h-11 sm:px-3 sm:text-[12px]" /></label>
-       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => setCustomer({ ...customer, country: event.target.value })} className="h-10 w-full border border-[#cfc9c2] bg-white px-2.5 text-[11px] outline-none focus:border-[#171717] sm:h-11 sm:px-3 sm:text-[12px]"><option value="México">México</option></select></label>
-       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Ciudad o pueblo</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="h-10 w-full border border-[#cfc9c2] bg-white px-2.5 text-[11px] outline-none focus:border-[#171717] sm:h-11 sm:px-3 sm:text-[12px]"><option value="">Selecciona tu ciudad o pueblo</option>{mexicoCities.map((city) => <option key={city} value={city}>{city}</option>)}</select></label>
+      <div className="space-y-3">
+       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo</span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Escribe tu nombre" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
+        <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 55 1234 5678" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => setCustomer({ ...customer, country: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="México">México</option></select></label>
+          <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Ciudad o pueblo</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu ciudad o pueblo</option>{mexicoCities.map((city) => <option key={city} value={city}>{city}</option>)}</select></label>
+        </div>
      </div>
-     <div className="mt-3 flex items-center justify-between border-t border-[#d9d3cc] pt-3"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[17px]">Bs. {total}</strong></div>
-     <button data-testid="button-confirm-order" type="submit" className="mt-3 flex h-11 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851]"><CheckCircle2 size={16} /> Confirmar pedido <ArrowRight size={16} /></button>
-     <p className="mt-2 text-center text-[9px] leading-tight text-[#8b857e]">Tus datos se enviarán junto con el pedido por WhatsApp.</p>
+     <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[18px]">Bs. {total}</strong></div>
+     <button data-testid="button-confirm-order" type="submit" className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851]"><CheckCircle2 size={16} /> Confirmar pedido <ArrowRight size={16} /></button>
+     <p className="mt-3 text-center text-[9px] text-[#8b857e]">Tus datos se enviarán junto con el pedido por WhatsApp.</p>
   </form>;
 }
 
@@ -1006,9 +1008,9 @@ function SoundControl() {
   const [isPlaying, setIsPlaying] = useState(isBackgroundMusicPlaying);
   useEffect(() => subscribeToBackgroundMusic(() => setIsPlaying(isBackgroundMusicPlaying())), []);
   const handleToggle = () => setIsPlaying(toggleBackgroundMusic());
-  return <button type="button" onClick={handleToggle} aria-label={isPlaying ? 'Pausar sonido deportivo' : 'Activar sonido deportivo'} title={isPlaying ? 'Pausar sonido deportivo' : 'Activar sonido deportivo'} className="fixed bottom-[72px] left-4 z-[60] flex h-10 items-center gap-2 border border-[#171717] bg-white px-3 text-[9px] font-bold uppercase tracking-[.08em] text-[#171717] shadow-[3px_3px_0_#d93731] transition-transform hover:-translate-y-0.5 md:bottom-5 md:left-5">
+  return <button type="button" data-sound-control onClick={handleToggle} aria-label={isPlaying ? 'Pausar sonido deportivo' : 'Activar sonido deportivo'} title={isPlaying ? 'Pausar sonido deportivo' : 'Activar sonido deportivo'} className="fixed bottom-[72px] left-4 z-[60] flex h-10 items-center gap-2 border border-[#171717] bg-white px-3 text-[9px] font-bold uppercase tracking-[.08em] text-[#171717] shadow-[3px_3px_0_#d93731] transition-transform hover:-translate-y-0.5 md:bottom-5 md:left-5">
     {isPlaying ? <Volume2 size={15} /> : <VolumeX size={15} />}
-    <span className="hidden sm:inline">Sonido deportivo</span>
+    <span>Sonido deportivo</span>
   </button>;
 }
 
@@ -1023,7 +1025,9 @@ function App() {
   useEffect(() => {
     const entranceTimer = window.setTimeout(() => playEntranceSound(), 1000);
     const musicTimer = window.setTimeout(() => startBackgroundMusic(), 1000);
-    const retryOnInteraction = () => {
+    const retryOnInteraction = (event: Event) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('[data-sound-control]')) return;
       playEntranceSound(true);
       startBackgroundMusic(true);
     };
