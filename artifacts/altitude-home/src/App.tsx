@@ -196,7 +196,6 @@ function ShopProvider({ children }: { children: ReactNode }) {
   const addToCart = (product: Product, selectedSize?: string) => {
     playCartBell();
     setCartItems((items) => [...items, { ...product, selectedSize }]);
-    notify(`${product.name}${selectedSize ? ` · talla ${selectedSize}` : ''} añadido al carrito`);
   };
   const removeFromCart = (id: string) => setCartItems((items) => {
     const index = items.findIndex((item) => item.id === id);
