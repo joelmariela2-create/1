@@ -77,11 +77,18 @@ function getProductDetails(product: Product) {
 }
 
 type CartItem = Product & { selectedSize?: string };
-const boliviaDepartments = ['La Paz', 'Cochabamba', 'Santa Cruz', 'Oruro', 'Potosí', 'Chuquisaca', 'Tarija', 'Beni', 'Pando'];
-type CustomerData = { name: string; phone: string; department: string };
+const mexicoCities = [
+  'Aguascalientes', 'Acapulco', 'Cancún', 'Campeche', 'Celaya', 'Chihuahua', 'Ciudad de México',
+  'Ciudad Juárez', 'Culiacán', 'Cuernavaca', 'Durango', 'Ensenada', 'Guanajuato', 'Guadalajara',
+  'Hermosillo', 'La Paz', 'León', 'Mérida', 'Mexicali', 'Morelia', 'Monterrey', 'Oaxaca',
+  'Pachuca', 'Puebla', 'Pueblo Morelos', 'Puerto Vallarta', 'Querétaro', 'Saltillo',
+  'San Luis Potosí', 'Tampico', 'Tepic', 'Tijuana', 'Toluca', 'Tuxtla Gutiérrez', 'Veracruz',
+  'Villahermosa', 'Zacatecas',
+];
+type CustomerData = { name: string; phone: string; country: string; city: string };
 function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total: number) {
   const summary = cartItems.map((item) => `${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join(', ');
-  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: Bs. ${total}\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 DEPARTAMENTO: ${customer.department}»`;
+  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: Bs. ${total}\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇲🇽 PAÍS: ${customer.country}\n📍 CIUDAD / PUEBLO: ${customer.city}»`;
 }
 function openOrderWhatsApp(customer: CustomerData, cartItems: CartItem[], total: number) {
   const whatsappUrl = `${storeWhatsAppUrl}?text=${encodeURIComponent(createOrderMessage(customer, cartItems, total))}`;
@@ -104,7 +111,7 @@ function useShop() {
 }
 
 function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; total: number; onConfirm: (customer: CustomerData) => void }) {
-  const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', department: '' });
+  const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'México', city: '' });
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onConfirm(customer);
@@ -119,10 +126,13 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
       <div className="space-y-1">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex justify-between gap-3 text-[11px]"><span className="min-w-0 truncate">{item.name}{item.selectedSize ? ` · ${item.selectedSize}` : ''}</span><strong className="shrink-0">Bs. {item.priceValue}</strong></div>)}</div>
       <div className="mt-3 flex justify-between border-t border-[#e6e2de] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">Bs. {total}</span></div>
     </div>
-    <div className="space-y-3">
+     <div className="space-y-3">
       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo</span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Escribe tu nombre" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
-      <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 63944376" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
-      <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Departamento</span><select data-testid="select-order-department" required value={customer.department} onChange={(event) => setCustomer({ ...customer, department: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu departamento</option>{boliviaDepartments.map((department) => <option key={department} value={department}>{department}</option>)}</select></label>
+       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 55 1234 5678" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
+       <div className="grid gap-3 sm:grid-cols-2">
+         <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => setCustomer({ ...customer, country: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="México">México</option></select></label>
+         <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Ciudad o pueblo</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu ciudad o pueblo</option>{mexicoCities.map((city) => <option key={city} value={city}>{city}</option>)}</select></label>
+       </div>
     </div>
     <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[18px]">Bs. {total}</strong></div>
     <button data-testid="button-confirm-order" type="submit" className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851]"><CheckCircle2 size={16} /> Confirmar pedido <ArrowRight size={16} /></button>
@@ -619,28 +629,26 @@ function ProductDetailPage() {
                 <div className="mt-6 flex items-end justify-between border-b border-[#d9d3cc] pb-5"><p data-testid="text-detail-price" className="text-[22px] font-bold tracking-[-.04em]">{product.price}</p><p data-testid="status-detail-availability" className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-[#4e6a50]"><span className="h-2 w-2 rounded-full bg-[#4e6a50]" /> {product.status === 'Últimas unidades' ? 'Quedan pocas' : 'Disponible'}</p></div>
                 <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-6 flex h-14 w-full items-center justify-between bg-[#d93731] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717]"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
                  <button data-testid="button-detail-buy-whatsapp" onClick={handleBuy} className="mt-2 flex h-14 w-full items-center justify-between bg-[#25D366] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#1da851]"><span className="flex items-center gap-2"><MessageCircle size={17} strokeWidth={1.8} /> Comprar por WhatsApp</span><ArrowRight size={18} /></button>
-                {added && <p data-testid="status-detail-added" role="status" className="mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.08em] text-[#4e6a50]"><Check size={14} /> Producto guardado · puedes seguir comprando</p>}
-                 <div className="product-story mt-8 border-y border-[#d9d3cc] py-6">
-                   <div className="flex items-end justify-between gap-4">
-                     <div><p className="section-label text-[#d93731]">Detalles del producto</p><h2 className="editorial-title mt-1 text-[20px] font-bold uppercase">Hecho para moverte</h2></div>
-                     <span className="font-mono text-[9px] uppercase tracking-[.08em] text-[#8b857e]">OLYMPO / {product.brand}</span>
+                 <div className="mt-8 border-t border-[#d9d3cc] pt-7">
+                   <div className="space-y-5 text-[12px] leading-[1.65] text-[#5f5a55]">
+                     <p><strong data-testid="text-detail-material" className="font-bold uppercase tracking-[.08em] text-[#171717]">MATERIAL:</strong> 72% Polyamide, 21% Polyester, 7% Elastane.</p>
+                     <p><strong data-testid="text-detail-weight" className="font-bold uppercase tracking-[.08em] text-[#171717]">FABRIC WEIGHT:</strong> 300 GSM.</p>
+                     <p><strong data-testid="text-detail-fit" className="font-bold uppercase tracking-[.08em] text-[#171717]">FIT:</strong> Fitted.</p>
+                     <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DESIGN:</strong> This compression tee hugs close with a structured, armored-style pattern. It’s lightweight, supportive, and moves with you. Whether you’re hitting chest day or just trying to look mysterious at the gym. The crisp Batman emblem seals the deal being sleek and tough.</p>
+                     <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">MODEL:</strong> Andoni in the first photo is wearing a size XL. Weight: 215lb Height: 6'1.</p>
+                     <p className="border-l-2 border-[#d93731] pl-4 text-[10px] leading-[1.6] text-[#716b65]">THE DARK KNIGHT TRILOGY and all related characters and elements © &amp; ™ DC and Warner Bros. Entertainment Inc. WB SHIELD: © &amp; ™ WBEI. (s26)</p>
                    </div>
-                   <div className="mt-6 grid grid-cols-2 gap-px border border-[#d9d3cc] bg-[#d9d3cc]">
-                     <div className="bg-[#f6f4f0] p-3"><span className="block text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">Material</span><strong data-testid="text-detail-material" className="mt-2 block text-[11px] leading-[1.35]">{detail.material}</strong></div>
-                     <div className="bg-[#f6f4f0] p-3"><span className="block text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">Fabric weight</span><strong data-testid="text-detail-weight" className="mt-2 block text-[11px] leading-[1.35]">{detail.fabricWeight}</strong></div>
-                     <div className="bg-[#f6f4f0] p-3"><span className="block text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">Fit</span><strong data-testid="text-detail-fit" className="mt-2 block text-[11px] leading-[1.35]">{detail.fit}</strong></div>
-                     <div className="bg-[#f6f4f0] p-3"><span className="block text-[8px] font-bold uppercase tracking-[.13em] text-[#8b857e]">Envíos</span><strong className="mt-2 block text-[11px] leading-[1.35]">Todo Bolivia</strong></div>
-                   </div>
-                   <div className="mt-6 border-l-2 border-[#d93731] pl-4">
-                     <p className="text-[9px] font-bold uppercase tracking-[.14em] text-[#d93731]">Design</p>
-                     <p className="mt-2 text-[12px] leading-[1.6] text-[#5f5a55]">{product.brand} diseñó esta pieza para acompañarte durante el entrenamiento y fuera del gym. Su construcción {(detail.fit ?? 'versátil').toLowerCase()} combina presencia, comodidad y libertad de movimiento.</p>
-                   </div>
-                   <div className="mt-5 border-t border-[#e3ded8] pt-5">
-                     <p className="text-[9px] font-bold uppercase tracking-[.14em] text-[#d93731]">Model</p>
-                     <p className="mt-2 text-[12px] leading-[1.6] text-[#5f5a55]">La referencia luce una talla habitual para mostrar el calce real de la prenda. Consulta con OLYMPO SHOP por WhatsApp si necesitas ayuda antes de confirmar tu pedido.</p>
+                   <div className="mt-8">
+                     <h2 className="editorial-title text-[19px] font-bold uppercase">4259 Size Chart <span className="font-sans text-[10px] font-medium normal-case tracking-normal text-[#8b857e]">(inches)</span></h2>
+                     <div className="mt-4 overflow-x-auto border border-[#d9d3cc]">
+                       <table className="w-full min-w-[520px] border-collapse text-left text-[11px]">
+                         <caption className="sr-only">4259 Size Chart in inches</caption>
+                         <thead className="bg-[#171717] text-white"><tr><th scope="col" className="px-3 py-3 font-bold uppercase tracking-[.1em]">Size</th><th scope="col" className="px-3 py-3 font-bold">S</th><th scope="col" className="px-3 py-3 font-bold">M</th><th scope="col" className="px-3 py-3 font-bold">L</th><th scope="col" className="px-3 py-3 font-bold">XL</th><th scope="col" className="px-3 py-3 font-bold">XXL</th></tr></thead>
+                         <tbody className="divide-y divide-[#d9d3cc]"><tr><th scope="row" className="bg-[#f1ede8] px-3 py-3 font-bold uppercase tracking-[.08em]">Length</th><td className="px-3 py-3">24.5</td><td className="px-3 py-3">25</td><td className="px-3 py-3">25.5</td><td className="px-3 py-3">25.9</td><td className="px-3 py-3">26.4</td></tr><tr><th scope="row" className="bg-[#f1ede8] px-3 py-3 font-bold uppercase tracking-[.08em]">Chest</th><td className="px-3 py-3">14.2</td><td className="px-3 py-3">15.4</td><td className="px-3 py-3">16.3</td><td className="px-3 py-3">17.3</td><td className="px-3 py-3">18.3</td></tr></tbody>
+                       </table>
+                     </div>
                    </div>
                  </div>
-                 <div className="mt-7"><p className="section-label text-[#8b857e]">Diseñado para moverte</p><ul className="detail-features mt-3">{(detail.features ?? []).map((feature) => <li key={feature}><Check size={14} strokeWidth={1.8} /> <span>{feature}</span></li>)}</ul></div>
               </div>
             </div>
           </section>}
