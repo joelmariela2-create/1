@@ -671,7 +671,7 @@ function SocialPage() {
     { name: 'Instagram', handle: '@olym.shop', href: 'https://www.instagram.com/olym.shop?igsi=dGJ0czViaHEyMzE0', color: '#E1306C', icon: FaInstagram },
     { name: 'Facebook', handle: 'Enlace pendiente', color: '#1877F2', icon: FaFacebookF },
     { name: 'WhatsApp', handle: '+52 222 378 6688', href: storeWhatsAppUrl, color: '#25D366', icon: FaWhatsapp },
-    { name: 'TikTok', handle: 'Enlace pendiente', color: '#FF0050', icon: FaTiktok },
+    { name: 'TikTok', handle: '@olymposhop8', href: 'https://www.tiktok.com/@olymposhop8?_r=1&_t=ZS-99C3jER7LYD', color: '#FF0050', icon: FaTiktok },
   ];
 
   return (
