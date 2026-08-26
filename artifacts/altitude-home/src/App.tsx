@@ -4,12 +4,12 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { isBackgroundMusicPlaying, playCartBell, playEntranceSound, startBackgroundMusic, subscribeToBackgroundMusic, toggleBackgroundMusic } from '@/lib/store-sounds';
+import { playCartBell, playEntranceSound, startBackgroundMusic } from '@/lib/store-sounds';
 import { Link, Route, Switch, useLocation, Router as WouterRouter, useParams } from 'wouter';
 import {
   ArrowLeft, ArrowRight, Box, Check, CheckCircle2, ChevronLeft, ChevronRight, Crown, CreditCard, Flame, Heart, House,
   LockKeyhole, MapPin, Menu, MessageCircle, Phone, Plus, RefreshCw, Search, ShieldCheck, UserRound,
-  ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, Volume2, VolumeX, X, Zap,
+  ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, X, Zap,
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa6';
 
@@ -1004,16 +1004,6 @@ function VipPage() {
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) { const [location] = useLocation(); return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>; }
 
-function SoundControl() {
-  const [isPlaying, setIsPlaying] = useState(isBackgroundMusicPlaying);
-  useEffect(() => subscribeToBackgroundMusic(() => setIsPlaying(isBackgroundMusicPlaying())), []);
-  const handleToggle = () => setIsPlaying(toggleBackgroundMusic());
-  return <button type="button" data-sound-control onClick={handleToggle} aria-label={isPlaying ? 'Pausar sonido deportivo' : 'Activar sonido deportivo'} title={isPlaying ? 'Pausar sonido deportivo' : 'Activar sonido deportivo'} className="fixed bottom-[72px] left-4 z-[60] flex h-10 items-center gap-2 border border-[#171717] bg-white px-3 text-[9px] font-bold uppercase tracking-[.08em] text-[#171717] shadow-[3px_3px_0_#d93731] transition-transform hover:-translate-y-0.5 md:bottom-5 md:left-5">
-    {isPlaying ? <Volume2 size={15} /> : <VolumeX size={15} />}
-    <span>Sonido deportivo</span>
-  </button>;
-}
-
 function Router() {
   const [location] = useLocation();
   useEffect(() => {
@@ -1024,25 +1014,20 @@ function Router() {
 function App() {
   useEffect(() => {
     const entranceTimer = window.setTimeout(() => playEntranceSound(), 1000);
-    const musicTimer = window.setTimeout(() => startBackgroundMusic(), 1000);
-    const retryOnInteraction = (event: Event) => {
-      const target = event.target;
-      if (target instanceof Element && target.closest('[data-sound-control]')) return;
-      playEntranceSound(true);
+    const startMusicOnScroll = () => {
       startBackgroundMusic(true);
     };
-    window.addEventListener('pointerdown', retryOnInteraction, { once: true, passive: true });
-    window.addEventListener('keydown', retryOnInteraction, { once: true });
-    window.addEventListener('touchstart', retryOnInteraction, { once: true, passive: true });
+    window.addEventListener('scroll', startMusicOnScroll, { once: true, passive: true });
+    window.addEventListener('touchmove', startMusicOnScroll, { once: true, passive: true });
+    window.addEventListener('wheel', startMusicOnScroll, { once: true, passive: true });
     return () => {
       window.clearTimeout(entranceTimer);
-      window.clearTimeout(musicTimer);
-      window.removeEventListener('pointerdown', retryOnInteraction);
-      window.removeEventListener('keydown', retryOnInteraction);
-      window.removeEventListener('touchstart', retryOnInteraction);
+      window.removeEventListener('scroll', startMusicOnScroll);
+      window.removeEventListener('touchmove', startMusicOnScroll);
+      window.removeEventListener('wheel', startMusicOnScroll);
     };
   }, []);
-  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><SoundControl /><Toaster /></TooltipProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
 }
 
 export default App;

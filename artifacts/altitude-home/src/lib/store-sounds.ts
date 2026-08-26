@@ -2,11 +2,6 @@ let audioContext: AudioContext | null = null;
 let entranceSoundHasPlayed = false;
 let entranceSoundInFlight = false;
 let backgroundMusic: HTMLAudioElement | null = null;
-const musicStateEvent = 'altitude-music-state';
-
-function notifyMusicState() {
-  window.dispatchEvent(new Event(musicStateEvent));
-}
 
 function getAudioContext() {
   if (typeof window === 'undefined') return null;
@@ -113,36 +108,7 @@ export function startBackgroundMusic(fromUserInteraction = false) {
     backgroundMusic.volume = 0.22;
   }
   if (!backgroundMusic.paused) return;
-  void backgroundMusic.play().then(notifyMusicState).catch(() => {
+  void backgroundMusic.play().catch(() => {
     // The browser may still reject playback; the next gesture can retry it.
   });
-}
-
-export function toggleBackgroundMusic() {
-  if (typeof window === 'undefined') return false;
-  if (!backgroundMusic) {
-    backgroundMusic = new Audio('/olympo-sport-background.mp3');
-    backgroundMusic.loop = true;
-    backgroundMusic.preload = 'auto';
-    backgroundMusic.volume = 0.22;
-  }
-  if (backgroundMusic.paused) {
-    void backgroundMusic.play().then(notifyMusicState).catch(() => {
-      // The control is a user gesture, but some browsers can still block media.
-    });
-    return true;
-  }
-  backgroundMusic.pause();
-  notifyMusicState();
-  return false;
-}
-
-export function isBackgroundMusicPlaying() {
-  return Boolean(backgroundMusic && !backgroundMusic.paused);
-}
-
-export function subscribeToBackgroundMusic(callback: () => void) {
-  if (typeof window === 'undefined') return () => undefined;
-  window.addEventListener(musicStateEvent, callback);
-  return () => window.removeEventListener(musicStateEvent, callback);
 }
