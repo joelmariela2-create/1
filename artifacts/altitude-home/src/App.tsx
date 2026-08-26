@@ -577,6 +577,7 @@ function ProductDetailPage() {
   const [orderFormOpen, setOrderFormOpen] = useState(false);
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedSize, setSelectedSize] = useState('');
   const product = products.find((item) => item.id === params.id);
   const detail = product ? getProductDetails(product) : undefined;
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
@@ -586,15 +587,19 @@ function ProductDetailPage() {
     return () => window.clearTimeout(timer);
   }, [params.id]);
 
+  useEffect(() => {
+    setSelectedSize(detail?.sizes?.[0] ?? '');
+  }, [detail?.sizes, params.id]);
+
   const handleAdd = () => {
     if (!product || !detail) return;
-    addToCart(product);
+    addToCart(product, selectedSize);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 3200);
   };
   const handleBuy = () => {
     if (!product || !detail) return;
-    addToCart(product);
+    addToCart(product, selectedSize);
     setLocation('/checkout');
   };
   const handleDetailCartCheckout = () => {
@@ -624,10 +629,31 @@ function ProductDetailPage() {
                 <div className="absolute left-3 top-3 flex gap-2"><span className="bg-[#f6f4f0] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em]">{product.status}</span>{product.isBestSeller && <span className="bg-[#d93731] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em] text-white">Favorito</span>}</div>
                 <button data-testid="button-detail-favorite" onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar' : 'Añadir'} ${product.name} de favoritos`} className={`absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-white ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={18} strokeWidth={1.5} /></button>
               </div>
-              <div className="detail-info md:sticky md:top-5">
+               <div className="detail-info min-w-0 md:sticky md:top-5">
                 <p data-testid="text-detail-brand" className="section-label text-[#d93731]">{product.brand}</p>
                 <h1 data-testid="text-detail-name" className="editorial-title mt-3 max-w-[560px] text-[clamp(2.3rem,6vw,5rem)] font-bold uppercase leading-[.86] tracking-[-.065em]">{product.name}</h1>
-                <div className="mt-6 flex items-end justify-between border-b border-[#d9d3cc] pb-5"><p data-testid="text-detail-price" className="text-[22px] font-bold tracking-[-.04em]">{product.price}</p><p data-testid="status-detail-availability" className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-[#4e6a50]"><span className="h-2 w-2 rounded-full bg-[#4e6a50]" /> {product.status === 'Últimas unidades' ? 'Quedan pocas' : 'Disponible'}</p></div>
+                 <div className="mt-6 flex items-end justify-between border-b border-[#d9d3cc] pb-5"><p data-testid="text-detail-price" className="text-[22px] font-bold tracking-[-.04em]">{product.price}</p><p data-testid="status-detail-availability" className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-[#4e6a50]"><span className="h-2 w-2 rounded-full bg-[#4e6a50]" /> {product.status === 'Últimas unidades' ? 'Quedan pocas' : 'Disponible'}</p></div>
+                 <div className="mt-5" aria-label="Seleccionar talla">
+                   <div className="flex items-center justify-between gap-3">
+                     <p className="text-[10px] font-bold uppercase tracking-[.12em]">Escoge tu talla</p>
+                     <button type="button" onClick={() => document.getElementById('size-chart')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="text-[9px] font-semibold uppercase tracking-[.08em] text-[#8b857e] underline underline-offset-4">Guía de tallas</button>
+                   </div>
+                   <div className="mt-3 grid grid-cols-5 gap-2">
+                     {(detail.sizes ?? []).map((size) => (
+                       <button
+                         key={size}
+                         type="button"
+                         data-testid={`button-size-${size}`}
+                         aria-label={`Seleccionar talla ${size}`}
+                         aria-pressed={selectedSize === size}
+                         onClick={() => setSelectedSize(size)}
+                         className={`flex h-11 items-center justify-center border text-[11px] font-bold transition-colors ${selectedSize === size ? 'border-[#d93731] bg-[#d93731] text-white' : 'border-[#d9d3cc] bg-white text-[#171717] hover:border-[#171717]'}`}
+                       >
+                         {size}
+                       </button>
+                     ))}
+                   </div>
+                 </div>
                 <button data-testid="button-detail-add-cart" onClick={handleAdd} className="mt-6 flex h-14 w-full items-center justify-between bg-[#d93731] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#171717]"><span>{added ? 'Añadido a tu carrito' : 'Añadir al carrito'}</span>{added ? <Check size={19} /> : <Plus size={19} />}</button>
                  <button data-testid="button-detail-buy-whatsapp" onClick={handleBuy} className="mt-2 flex h-14 w-full items-center justify-between bg-[#25D366] px-5 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors hover:bg-[#1da851]"><span className="flex items-center gap-2"><MessageCircle size={17} strokeWidth={1.8} /> Comprar por WhatsApp</span><ArrowRight size={18} /></button>
                  <div className="mt-8 border-t border-[#d9d3cc] pt-7">
@@ -639,7 +665,7 @@ function ProductDetailPage() {
                      <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">MODEL:</strong> Andoni in the first photo is wearing a size XL. Weight: 215lb Height: 6'1.</p>
                      <p className="border-l-2 border-[#d93731] pl-4 text-[10px] leading-[1.6] text-[#716b65]">THE DARK KNIGHT TRILOGY and all related characters and elements © &amp; ™ DC and Warner Bros. Entertainment Inc. WB SHIELD: © &amp; ™ WBEI. (s26)</p>
                    </div>
-                   <div className="mt-8">
+                    <div id="size-chart" className="mt-8 scroll-mt-24">
                      <h2 className="editorial-title text-[19px] font-bold uppercase">4259 Size Chart <span className="font-sans text-[10px] font-medium normal-case tracking-normal text-[#8b857e]">(inches)</span></h2>
                      <div className="mt-4 overflow-x-auto border border-[#d9d3cc]">
                        <table className="w-full min-w-[520px] border-collapse text-left text-[11px]">

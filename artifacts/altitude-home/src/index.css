@@ -394,14 +394,18 @@ button, a {
   box-shadow: 12px 12px 0 #e7e1da;
 }
 .detail-photo {
+  display: block;
   transition: transform .7s cubic-bezier(.22,.61,.36,1), filter .35s ease;
   filter: saturate(.9);
 }
-.detail-photo-wrap:hover .detail-photo {
-  transform: scale(1.025);
-  filter: saturate(1);
+@media (hover: hover) and (pointer: fine) {
+  .detail-photo-wrap:hover .detail-photo {
+    transform: scale(1.025);
+    filter: saturate(1);
+  }
 }
 .detail-info {
+  min-width: 0;
   animation: detailReveal .65s .08s cubic-bezier(.22,.61,.36,1) both;
 }
 .detail-spec-grid {
@@ -588,6 +592,13 @@ button, a {
   }
 }
 @media (max-width: 767px) {
+  .detail-photo-wrap {
+    aspect-ratio: 1 / 1;
+  }
+  .detail-photo {
+    object-fit: contain !important;
+    transform: none !important;
+  }
   .product-card .product-add {
     transform: none;
     opacity: 1;
