@@ -688,7 +688,7 @@ function VipPage() {
               </div>
             </div>
             <div className="max-w-[700px]">
-               <p className="vip-kicker mb-3 text-[clamp(1.65rem,7vw,3rem)] font-black uppercase leading-none tracking-[-.055em] text-white">ALTITUDE VIP</p>
+               <p className="vip-kicker mb-3 text-[clamp(1.65rem,7vw,3rem)] font-black uppercase leading-none tracking-[-.055em] text-white">OLYMPO  VIP</p>
               <h1 id="vip-hero-title" data-testid="text-vip-hero-title" className="vip-display text-[clamp(.75rem,2vw,1rem)] font-bold uppercase leading-none tracking-[.4em] text-[#e13832]">
                  Early access
               </h1>
@@ -756,7 +756,7 @@ function VipPage() {
           </div>
         </section>
       </main>
-       <BottomNav active="vip" onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
+      <BottomNav active="vip" onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );
