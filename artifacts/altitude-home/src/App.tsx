@@ -33,7 +33,6 @@ type Campaign = {
 };
 
 const campaigns: Campaign[] = [
-  { label: 'OLYM.SHOP', title: 'OLYM.SHOP', image: '/olym-shop-mark.webp', position: 'center center', tone: 'dark', id: 'olym-shop-black' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.webp', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.webp', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
   { label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.webp', position: 'center center', tone: 'dark', id: 'breathe-divinity-featured' },
