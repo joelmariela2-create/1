@@ -1,4 +1,4 @@
-import { createContext, type FormEvent, type MouseEvent, type PointerEvent, type ReactNode, type TouchEvent, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, type FormEvent, type MouseEvent, type ReactNode, type TouchEvent, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -33,7 +33,7 @@ type Campaign = {
 };
 
 const campaigns: Campaign[] = [
-  { label: 'ALTITUDE', title: 'ALTITUDE', image: '/altitude-hero.jpg', position: 'center center', tone: 'dark', id: 'altitude-hero' },
+  { label: 'ALTITUDE', title: 'ALTITUDE', image: '/altitude-hero.webp', position: 'center center', tone: 'dark', id: 'altitude-hero' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.webp', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.webp', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
   { label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.webp', position: 'center center', tone: 'dark', id: 'breathe-divinity-featured' },
@@ -61,15 +61,15 @@ const products: Product[] = [
   { id: 'breathe-compression-graphite', name: 'Polera Compresión Core — Grafito', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-graphite.webp' },
   { id: 'breathe-compression-white', name: 'Polera Compresión Core — Blanca', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-white.webp' },
   { id: 'breathe-compression-graphic', name: 'Polera Compresión Graphic — Negra', brand: 'Breathe Divinity', price: formatBs(399), priceValue: 399, category: 'Compresión', status: 'Nuevo', image: '/breathe-compression-graphic.webp' },
-  { id: 'altitude-core-tee', name: 'Polera Essential Core', brand: 'ALTITUDE', price: formatBs(249), priceValue: 249, category: 'Poleras', status: 'Nuevo', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
-  { id: 'youngla-everyday-heavy', name: 'Polera Everyday Heavy', brand: 'YoungLA', price: formatBs(289), priceValue: 289, category: 'Poleras', status: 'Disponible', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
-  { id: 'gymshark-pace-short', name: 'Short de entrenamiento Pace 5”', brand: 'Gymshark', price: formatBs(319), priceValue: 319, category: 'Shorts', status: 'Nuevo', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'altitude-studio-hoodie', name: 'Hoodie con cierre Studio', brand: 'ALTITUDE', price: formatBs(429), priceValue: 429, category: 'Hoodies', status: 'Disponible', image: 'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
-  { id: 'youngla-boxy-jogger', name: 'Jogger Boxy Essential', brand: 'YoungLA', price: formatBs(399), priceValue: 399, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311653/pexels-photo-6311653.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'gymshark-arrival-tee', name: 'Polera Arrival Seamless', brand: 'Gymshark', price: formatBs(279), priceValue: 279, category: 'Compresión', status: 'Nuevo', image: 'https://images.pexels.com/photos/6311387/pexels-photo-6311387.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
-  { id: 'altitude-training-short', name: 'Short Training Utility', brand: 'ALTITUDE', price: formatBs(299), priceValue: 299, category: 'Shorts', status: 'Disponible', image: 'https://images.pexels.com/photos/6551133/pexels-photo-6551133.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'breathe-ritual-hoodie', name: 'Hoodie Ritual Fleece', brand: 'Breathe Divinity', price: formatBs(449), priceValue: 449, category: 'Hoodies', status: 'Últimas unidades', image: 'https://images.pexels.com/photos/5698851/pexels-photo-5698851.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'youngla-combat-jogger', name: 'Jogger Combat Core', brand: 'YoungLA', price: formatBs(419), priceValue: 419, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311606/pexels-photo-6311606.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'altitude-core-tee', name: 'Polera Essential Core', brand: 'ALTITUDE', price: formatBs(249), priceValue: 249, category: 'Poleras', status: 'Nuevo', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=640&q=72', isBestSeller: true },
+  { id: 'youngla-everyday-heavy', name: 'Polera Everyday Heavy', brand: 'YoungLA', price: formatBs(289), priceValue: 289, category: 'Poleras', status: 'Disponible', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=640&q=72', isBestSeller: true },
+  { id: 'gymshark-pace-short', name: 'Short de entrenamiento Pace 5”', brand: 'Gymshark', price: formatBs(319), priceValue: 319, category: 'Shorts', status: 'Nuevo', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=640&q=72' },
+  { id: 'altitude-studio-hoodie', name: 'Hoodie con cierre Studio', brand: 'ALTITUDE', price: formatBs(429), priceValue: 429, category: 'Hoodies', status: 'Disponible', image: 'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=640&q=72', isBestSeller: true },
+  { id: 'youngla-boxy-jogger', name: 'Jogger Boxy Essential', brand: 'YoungLA', price: formatBs(399), priceValue: 399, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311653/pexels-photo-6311653.jpeg?auto=compress&cs=tinysrgb&w=640&q=72' },
+  { id: 'gymshark-arrival-tee', name: 'Polera Arrival Seamless', brand: 'Gymshark', price: formatBs(279), priceValue: 279, category: 'Compresión', status: 'Nuevo', image: 'https://images.pexels.com/photos/6311387/pexels-photo-6311387.jpeg?auto=compress&cs=tinysrgb&w=640&q=72', isBestSeller: true },
+  { id: 'altitude-training-short', name: 'Short Training Utility', brand: 'ALTITUDE', price: formatBs(299), priceValue: 299, category: 'Shorts', status: 'Disponible', image: 'https://images.pexels.com/photos/6551133/pexels-photo-6551133.jpeg?auto=compress&cs=tinysrgb&w=640&q=72' },
+  { id: 'breathe-ritual-hoodie', name: 'Hoodie Ritual Fleece', brand: 'Breathe Divinity', price: formatBs(449), priceValue: 449, category: 'Hoodies', status: 'Últimas unidades', image: 'https://images.pexels.com/photos/5698851/pexels-photo-5698851.jpeg?auto=compress&cs=tinysrgb&w=640&q=72' },
+  { id: 'youngla-combat-jogger', name: 'Jogger Combat Core', brand: 'YoungLA', price: formatBs(419), priceValue: 419, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311606/pexels-photo-6311606.jpeg?auto=compress&cs=tinysrgb&w=640&q=72' },
 ];
 
 const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' | 'fit' | 'features' | 'sizes'>> = {
@@ -155,7 +155,7 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
 function OrderConfirmed({ customer, cartItems, total, onClose }: { customer: CustomerData; cartItems: CartItem[]; total: number; onClose: () => void }) {
   return <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#171717]/55 px-5 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="order-confirmed-title">
     <div className="w-full max-w-[390px] overflow-hidden bg-[#f6f4f0] text-center shadow-2xl">
-      <img src="/pedido-confirmado.svg" alt="Pedido confirmado" className="h-[190px] w-full object-cover" />
+      <img src="/pedido-confirmado.svg" alt="Pedido confirmado" loading="lazy" decoding="async" className="h-[190px] w-full object-cover" />
       <div className="px-6 py-6"><p className="section-label text-[#d93731]">ALTITUDE / gracias</p><h2 id="order-confirmed-title" className="editorial-title mt-2 text-[27px] font-bold uppercase">Pedido confirmado</h2><p className="mt-3 text-[12px] leading-[1.5] text-[#716b65]">Recibimos tu solicitud, {customer.name.split(' ')[0]}. Tu pedido fue enviado a WhatsApp.</p><button data-testid="button-close-confirmation" onClick={onClose} className="mt-5 w-full border border-[#171717] py-3 text-[10px] font-bold uppercase tracking-[.1em]">Volver a la tienda</button></div>
     </div>
   </div>;
@@ -308,98 +308,31 @@ function HomeSearchOverlay({ open, onClose }: { open: boolean; onClose: () => vo
 
 function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [dragOffset, setDragOffset] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const heroRef = useRef<HTMLElement | null>(null);
-  const dragState = useRef({ startX: 0, startY: 0, lastX: 0, lastTime: 0, velocity: 0, axis: 'undecided' as 'undecided' | 'horizontal' | 'vertical' });
+  const touchStartX = useRef<number | null>(null);
   const campaign = campaigns[activeIndex];
-  const nextIndex = (activeIndex + 1) % campaigns.length;
-  const previousIndex = (activeIndex + campaigns.length - 1) % campaigns.length;
-
   useEffect(() => {
-    const preloadNearbyCampaigns = () => {
-      [nextIndex, previousIndex].forEach((index) => {
-        const preload = new Image();
-        preload.decoding = 'async';
-        preload.src = campaigns[index].image;
-      });
-    };
-    const preloadTimer = window.setTimeout(preloadNearbyCampaigns, 450);
-    return () => window.clearTimeout(preloadTimer);
-  }, [nextIndex, previousIndex]);
-
-  useEffect(() => {
-    if (isPaused || isDragging) return undefined;
-    const timer = window.setTimeout(() => setActiveIndex((index) => (index + 1) % campaigns.length), 5500);
+    const nextCampaign = campaigns[(activeIndex + 1) % campaigns.length];
+    const timer = window.setTimeout(() => {
+      const preload = new Image();
+      preload.decoding = 'async';
+      preload.src = nextCampaign.image;
+    }, 700);
     return () => window.clearTimeout(timer);
-  }, [activeIndex, isDragging, isPaused]);
-
+  }, [activeIndex]);
   useEffect(() => {
-    const handleVisibilityChange = () => setIsPaused(document.hidden);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, []);
-
-  const selectCampaign = (index: number) => {
-    setActiveIndex(index);
-    setDragOffset(0);
+    const timer = window.setTimeout(() => setActiveIndex((index) => (index + 1) % campaigns.length), 1300);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex]);
+  const handleTouchStart = (event: TouchEvent<HTMLElement>) => { touchStartX.current = event.touches[0]?.clientX ?? null; };
+  const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
+    if (touchStartX.current === null) return;
+    const endX = event.changedTouches[0]?.clientX;
+    const delta = endX === undefined ? 0 : endX - touchStartX.current;
+    touchStartX.current = null;
+    // A short flick should still advance the campaign; 18px feels responsive
+    // without treating an accidental tap as a swipe.
+    if (Math.abs(delta) >= 18) setActiveIndex((index) => (index + (delta < 0 ? 1 : campaigns.length - 1)) % campaigns.length);
   };
-
-  const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    event.currentTarget.setPointerCapture(event.pointerId);
-    dragState.current = { startX: event.clientX, startY: event.clientY, lastX: event.clientX, lastTime: performance.now(), velocity: 0, axis: 'undecided' };
-    setIsDragging(true);
-    setIsPaused(true);
-  };
-
-  const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
-    if (!isDragging) return;
-    const now = performance.now();
-    const totalX = event.clientX - dragState.current.startX;
-    const totalY = event.clientY - dragState.current.startY;
-    if (dragState.current.axis === 'undecided' && Math.max(Math.abs(totalX), Math.abs(totalY)) > 7) {
-      dragState.current.axis = Math.abs(totalX) >= Math.abs(totalY) ? 'horizontal' : 'vertical';
-    }
-    if (dragState.current.axis === 'vertical') {
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-      setIsDragging(false);
-      setDragOffset(0);
-      window.setTimeout(() => setIsPaused(false), 120);
-      return;
-    }
-    if (dragState.current.axis !== 'horizontal') return;
-    const delta = event.clientX - dragState.current.lastX;
-    const elapsed = Math.max(8, now - dragState.current.lastTime);
-    event.preventDefault();
-    const width = heroRef.current?.clientWidth ?? 1;
-    const distance = Math.abs(totalX);
-    const resistance = distance > width ? width + (distance - width) * 0.35 : distance;
-    setDragOffset(Math.sign(totalX) * resistance);
-    dragState.current = { ...dragState.current, lastX: event.clientX, lastTime: now, velocity: delta / elapsed };
-  };
-
-  const finishPointerDrag = (event?: PointerEvent<HTMLElement>) => {
-    if (!isDragging) return;
-    if (event && event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-    const totalDelta = dragState.current.lastX - dragState.current.startX;
-    if (dragState.current.axis !== 'horizontal') {
-      setIsDragging(false);
-      setDragOffset(0);
-      return;
-    }
-    const width = heroRef.current?.clientWidth ?? 1;
-    const threshold = Math.max(48, width * 0.12);
-    const shouldAdvance = Math.abs(totalDelta) >= threshold || (Math.abs(dragState.current.velocity) > 0.55 && Math.abs(totalDelta) > 24);
-    setIsDragging(false);
-    setDragOffset(0);
-    if (shouldAdvance) {
-      setActiveIndex((index) => (index + (totalDelta < 0 ? 1 : campaigns.length - 1)) % campaigns.length);
-    }
-    window.setTimeout(() => setIsPaused(false), 250);
-  };
-
   const benefits = [
     { label: 'Envíos nacionales', detail: 'A toda Bolivia', icon: Truck },
     { label: 'Productos originales', detail: 'Marcas 100% auténticas', icon: ShieldCheck },
@@ -407,19 +340,8 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
     { label: 'Cambios fáciles', detail: 'Compra con confianza', icon: RefreshCw },
   ];
   return (
-    <section ref={heroRef} id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515]" aria-label={`Campaña destacada: ${campaign.title}`} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={finishPointerDrag} onPointerCancel={finishPointerDrag} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => { if (!isDragging) setIsPaused(false); }} onFocus={() => setIsPaused(true)} onBlur={() => { if (!isDragging) setIsPaused(false); }}>
-      <div className={`campaign-track absolute inset-0 flex ${isDragging ? 'is-dragging' : ''}`} style={{ transform: `translate3d(calc(-${activeIndex * 100}% + ${dragOffset}px), 0, 0)` }}>
-        {campaigns.map((item, index) => {
-          const shouldLoad = index === activeIndex || index === nextIndex || index === previousIndex;
-          const imageTransform = item.id === 'olym-shop-black' ? 'translateY(-28px)' : item.id === 'olym-shop-blue' ? 'scale(1.22)' : item.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : item.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined;
-          return <div key={item.id} className="campaign-slide relative h-full min-w-full flex-none">
-            {shouldLoad && <picture>
-              {item.id === 'altitude-hero' && <source srcSet="/altitude-hero.webp" type="image/webp" />}
-              <img className={`campaign-image absolute inset-0 h-full w-full object-contain ${item.id === 'altitude-hero' ? 'campaign-image-altitude' : ''}`} src={item.image} alt={`${item.label} ${item.title}`} style={{ objectPosition: item.position, transform: imageTransform }} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === activeIndex && index === 0 ? 'high' : index === activeIndex ? 'auto' : 'low'} draggable={false} />
-            </picture>}
-          </div>;
-        })}
-      </div>
+    <section id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+       <img key={campaign.id} className={`campaign-image absolute inset-0 h-full w-full object-contain ${campaign.id === 'altitude-hero' ? 'campaign-image-altitude' : ''}`} src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined }} loading="eager" decoding="async" fetchPriority={activeIndex === 0 ? 'high' : 'auto'} />
       {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.2) 100%)' }} />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
@@ -430,7 +352,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <div id="benefits" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
         {benefits.map(({ label, detail, icon: Icon }, index) => <div key={label} className={`hero-benefit flex min-h-[93px] flex-col items-center justify-center px-1 text-center ${index < benefits.length - 1 ? 'border-r border-[#dedad6]' : ''}`}><Icon size={22} strokeWidth={1.45} className="mb-2 text-[#252525]" /><strong className="max-w-[78px] text-[8px] font-bold uppercase leading-[1.18] tracking-[.03em] md:max-w-none md:text-[10px]">{label}</strong><span className="mt-1 hidden text-[8px] text-[#77716c] md:block">{detail}</span></div>)}
       </div>
-       <div className="absolute bottom-[98px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-2" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`} aria-live="polite">{campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Ver campaña ${index + 1}: ${item.title}`} onClick={() => selectCampaign(index)} className={`campaign-dot h-2 w-2 rounded-full transition-all duration-300 ${activeIndex === index ? 'scale-125 bg-white' : 'bg-white/45 hover:bg-white/75'}`} />)}</div>
+      <div className="absolute bottom-[98px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>{campaigns.map((item, index) => <span key={item.id} className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}</div>
     </section>
   );
 }
@@ -763,7 +685,7 @@ function Home() {
       <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onSearch={() => setSearchOpen(true)} onCart={() => setCartOpen(true)} />
       <HomeSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
       <main className="home-main">
-        <CampaignHero onShop={(item) => { if (item.id === 'breathe-divinity-featured') { setLocation('/products'); return; } scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} />
+        <CampaignHero onShop={(item) => { setLocation('/products'); notify(`${item.label}: colección seleccionada`); }} />
         <ProductRail onAdd={(product) => { addToCart(product); setCartOpen(true); }} />
         <section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8">
           <div className="mb-4 flex items-start justify-between gap-4">
@@ -1046,45 +968,45 @@ function SocialPage() {
   };
 
   return (
-    <div className="social-page page-shell min-h-[100dvh] bg-[#101010] pb-[76px] text-white">
+    <div className="social-page page-shell min-h-[100dvh] bg-white pb-[76px] text-[#171717]">
       <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
       <main className="px-5 py-12 md:px-12 md:py-20">
         <section className="mx-auto max-w-[820px]" aria-labelledby="social-title">
-          <p className="section-label text-[#df3933]">Conecta con ALTITUDE</p>
-          <h1 id="social-title" data-testid="text-social-title" className="mt-3 max-w-[720px] font-black uppercase leading-[.86] tracking-[-.07em] text-[clamp(2.7rem,9vw,6.6rem)]">Visita nuestras redes sociales</h1>
-          <p className="mt-6 max-w-[440px] text-[12px] leading-[1.6] text-white/65 md:text-[14px]">Sigue cada lanzamiento, novedad y movimiento de ALTITUDE online.</p>
+          <p className="section-label text-[#d93731]">Conecta con ALTITUDE</p>
+          <h1 id="social-title" data-testid="text-social-title" className="mt-3 max-w-[720px] font-black uppercase leading-[.86] tracking-[-.07em] text-[#171717] text-[clamp(2.7rem,9vw,6.6rem)]">Visita nuestras redes sociales</h1>
+          <p className="mt-6 max-w-[440px] text-[12px] leading-[1.6] text-[#716b65] md:text-[14px]">Sigue cada lanzamiento, novedad y movimiento de ALTITUDE online.</p>
           <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             {socialLinks.map(({ name, handle, href, color, icon: Icon }) => {
-              const iconColor = '#fff';
-              const card = <><div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-black transition-transform duration-300 group-hover:scale-110" style={{ color: iconColor, boxShadow: `0 0 26px ${color}66, inset 0 0 18px ${color}22` }}><Icon size={29} /></div><strong className="mt-6 text-[11px] uppercase tracking-[.08em]">{name}</strong><span className="mt-2 text-center text-[9px] text-white/55">{handle}</span></>;
+              const iconColor = color;
+              const card = <><div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#171717] text-white shadow-[0_8px_20px_rgba(23,23,23,0.16)] transition-transform duration-300 group-hover:scale-110" style={{ color: iconColor }}><Icon size={29} /></div><strong className="mt-6 text-[11px] uppercase tracking-[.08em] text-[#171717]">{name}</strong><span className="mt-2 text-center text-[9px] text-[#8b857e]">{handle}</span></>;
               return href
-                ? <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`Visitar ${name}`} className="group flex min-h-[190px] flex-col items-center justify-center border border-white/15 bg-white/[.04] p-4 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/[.08]">{card}</a>
-                : <div key={name} aria-disabled="true" className="group flex min-h-[190px] cursor-not-allowed flex-col items-center justify-center border border-white/10 bg-white/[.02] p-4 text-white/70">{card}</div>;
+                ? <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`Visitar ${name}`} className="group flex min-h-[190px] flex-col items-center justify-center border border-[#ded8d1] bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#171717] hover:shadow-[0_12px_28px_rgba(23,23,23,0.08)]">{card}</a>
+                : <div key={name} aria-disabled="true" className="group flex min-h-[190px] cursor-not-allowed flex-col items-center justify-center border border-[#e8e4de] bg-[#fbfaf8] p-4 opacity-75">{card}</div>;
             })}
           </div>
-          <section className="mt-16 border-t border-white/15 pt-10" aria-labelledby="pre-registration-title">
-            <p className="section-label text-[#df3933]">Acceso anticipado</p>
-            <h2 id="pre-registration-title" data-testid="text-pre-registration-title" className="mt-3 max-w-[660px] font-black uppercase leading-[.9] tracking-[-.06em] text-[clamp(2rem,7vw,4.5rem)]">Pre-inscríbete para ser de los primeros</h2>
-            <p className="mt-5 max-w-[480px] text-[12px] leading-[1.6] text-white/65 md:text-[14px]">Déjanos tus datos y recibe primero las novedades y los próximos lanzamientos.</p>
+          <section className="mt-16 border-t border-[#ded8d1] pt-10" aria-labelledby="pre-registration-title">
+            <p className="section-label text-[#d93731]">Acceso anticipado</p>
+            <h2 id="pre-registration-title" data-testid="text-pre-registration-title" className="mt-3 max-w-[660px] font-black uppercase leading-[.9] tracking-[-.06em] text-[#171717] text-[clamp(2rem,7vw,4.5rem)]">Pre-inscríbete para ser de los primeros</h2>
+            <p className="mt-5 max-w-[480px] text-[12px] leading-[1.6] text-[#716b65] md:text-[14px]">Déjanos tus datos y recibe primero las novedades y los próximos lanzamientos.</p>
             <form onSubmit={handlePreRegistration} className="mt-8 grid gap-4 md:grid-cols-2">
               <label className="block">
-                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><UserRound size={14} /> Nombre completo</span>
-                <input required value={preRegistration.fullName} onChange={(event) => setPreRegistration((current) => ({ ...current, fullName: event.target.value }))} className="h-12 w-full border border-white/15 bg-white/[.05] px-4 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="Tu nombre completo" />
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-[#716b65]"><UserRound size={14} /> Nombre completo</span>
+                <input required value={preRegistration.fullName} onChange={(event) => setPreRegistration((current) => ({ ...current, fullName: event.target.value }))} className="h-12 w-full border border-[#d9d3cc] bg-white px-4 text-[12px] text-[#171717] outline-none transition-colors placeholder:text-[#aaa39b] focus:border-[#d93731]" placeholder="Tu nombre completo" />
               </label>
               <label className="block">
-                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><Phone size={14} /> Número de teléfono</span>
-                <input required type="tel" value={preRegistration.phone} onChange={(event) => setPreRegistration((current) => ({ ...current, phone: event.target.value }))} className="h-12 w-full border border-white/15 bg-white/[.05] px-4 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="+591 7 123 4567" />
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-[#716b65]"><Phone size={14} /> Número de teléfono</span>
+                <input required type="tel" value={preRegistration.phone} onChange={(event) => setPreRegistration((current) => ({ ...current, phone: event.target.value }))} className="h-12 w-full border border-[#d9d3cc] bg-white px-4 text-[12px] text-[#171717] outline-none transition-colors placeholder:text-[#aaa39b] focus:border-[#d93731]" placeholder="+591 7 123 4567" />
               </label>
               <label className="block">
-                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><MapPin size={14} /> Departamento de Bolivia</span>
-                <select required value={preRegistration.city} onChange={(event) => setPreRegistration((current) => ({ ...current, city: event.target.value }))} className="h-12 w-full border border-white/15 bg-[#171717] px-4 text-[12px] text-white outline-none transition-colors focus:border-[#df3933]">
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-[#716b65]"><MapPin size={14} /> Departamento de Bolivia</span>
+                <select required value={preRegistration.city} onChange={(event) => setPreRegistration((current) => ({ ...current, city: event.target.value }))} className="h-12 w-full border border-[#d9d3cc] bg-white px-4 text-[12px] text-[#171717] outline-none transition-colors focus:border-[#d93731]">
                   <option value="">Selecciona tu departamento</option>
                   {boliviaDepartments.map((department) => <option key={department} value={department}>{department}</option>)}
                 </select>
               </label>
               <label className="block">
-                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><MessageCircle size={14} /> Mensaje adicional</span>
-                <textarea value={preRegistration.message} onChange={(event) => setPreRegistration((current) => ({ ...current, message: event.target.value }))} rows={1} className="min-h-12 w-full resize-y border border-white/15 bg-white/[.05] px-4 py-3 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="Cuéntanos algo más (opcional)" />
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-[#716b65]"><MessageCircle size={14} /> Mensaje adicional</span>
+                <textarea value={preRegistration.message} onChange={(event) => setPreRegistration((current) => ({ ...current, message: event.target.value }))} rows={1} className="min-h-12 w-full resize-y border border-[#d9d3cc] bg-white px-4 py-3 text-[12px] text-[#171717] outline-none transition-colors placeholder:text-[#aaa39b] focus:border-[#d93731]" placeholder="Cuéntanos algo más (opcional)" />
               </label>
               <div className="md:col-span-2">
                 <button type="submit" data-testid="button-pre-registration-submit" className="group flex h-13 w-full items-center justify-between bg-[#df3933] px-5 text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#f04a43]">
