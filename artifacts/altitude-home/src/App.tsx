@@ -33,6 +33,8 @@ type Campaign = {
 };
 
 const campaigns: Campaign[] = [
+  { label: 'YoungLA × Naruto', title: 'Naruto Collection', image: '/naruto-collection-hero.jpg', position: 'center center', tone: 'dark', id: 'naruto-collection' },
+  { label: 'YoungLA × Naruto', title: 'Live Now', image: '/naruto-live-now-hero.jpg', position: 'center center', tone: 'dark', id: 'naruto-live-now' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.webp', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.webp', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
   { label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.webp', position: 'center center', tone: 'dark', id: 'breathe-divinity-featured' },
@@ -225,7 +227,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
         <div className="flex items-center gap-1">
           <button data-testid="button-open-menu" onClick={onMenu} aria-label="Abrir menú" className="group relative -left-3 -top-2 flex h-8 w-8 items-center justify-center transition-colors hover:text-[#ec413b]"><Menu size={19} strokeWidth={1.7} /></button>
            <Link href="/" data-testid="link-home-logo" aria-label="ALTITUDE, inicio" className="relative -top-1 flex items-center gap-2 text-[#151515]">
-             <img src="/olym-shop-logo.webp" alt="Logo ALTITUDE" className="header-logo-mark h-10 w-10 rounded-full object-cover ring-1 ring-[#171717] md:h-12 md:w-12" />
+             <img src="/altitude-logo-circle.png" alt="Logo ALTITUDE" className="header-logo-mark h-10 w-10 rounded-full object-cover ring-1 ring-[#171717] md:h-12 md:w-12" />
             <span className="header-wordmark text-[20px] md:text-[24px]">ALTITUDE</span>
           </Link>
         </div>
