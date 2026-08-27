@@ -119,6 +119,7 @@ button, a {
 .fade-up { animation: fadeUp .6s cubic-bezier(.22,.61,.36,1) both; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .campaign-hero .campaign-image { animation: campaignFade .8s ease both; }
+.campaign-hero .campaign-image-altitude { transform: translateY(-35px) scale(1.68); }
 @keyframes campaignFade { from { opacity: .2; } to { opacity: 1; } }
 .collection-page .campaign-tile,
 #showroom {
@@ -168,6 +169,7 @@ button, a {
   .mobile-header { display: none !important; }
   .campaign-hero { min-height: 680px; }
   .campaign-hero { height: auto; }
+  .campaign-hero .campaign-image-altitude { transform: translateY(-70px) scale(2.2); }
   .campaign-stack-list {
     gap: 5px;
   }
