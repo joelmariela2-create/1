@@ -33,8 +33,7 @@ type Campaign = {
 };
 
 const campaigns: Campaign[] = [
-  { label: 'YoungLA × Naruto', title: 'Naruto Collection', image: '/naruto-collection-hero.jpg', position: 'center center', tone: 'dark', id: 'naruto-collection' },
-  { label: 'YoungLA × Naruto', title: 'Live Now', image: '/naruto-live-now-hero.jpg', position: 'center center', tone: 'dark', id: 'naruto-live-now' },
+  { label: 'ALTITUDE', title: 'ALTITUDE', image: '/altitude-hero.jpg', position: 'center center', tone: 'dark', id: 'altitude-hero' },
   { label: 'Gymshark', title: 'Nuevos ingresos', image: '/gymshark-logo.webp', position: 'center 35%', tone: 'light', id: 'gymshark-featured' },
   { label: 'YoungLA', title: 'Nueva colección', image: '/youngla-logo.webp', position: 'center 35%', tone: 'light', id: 'youngla-featured' },
   { label: 'Breathe Divinity', title: 'Breathe Divinity', image: '/breathe-divinity-cover.webp', position: 'center center', tone: 'dark', id: 'breathe-divinity-featured' },
