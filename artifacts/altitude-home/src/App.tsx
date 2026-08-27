@@ -15,7 +15,7 @@ import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa6'
 
 const queryClient = new QueryClient();
 const storeWhatsAppUrl = 'https://wa.me/59163944376';
-const bobFormatter = new Intl.NumberFormat('es-BO', {
+const vipWhatsAppUrl = 'https://chat.whatsapp.com/GEZ219vgWOH4f7iOG9pKTt?s=cl&p=a&mlu=4';const bobFormatter = new Intl.NumberFormat('es-BO', {
   style: 'currency',
   currency: 'BOB',
   minimumFractionDigits: 0,
@@ -1029,7 +1029,7 @@ function VipPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setLocation] = useLocation();
   const { cartItems } = useShop();
-  const enterVip = () => window.open(storeWhatsAppUrl, '_blank', 'noopener,noreferrer');
+  const enterVip = () => window.open(vipWhatsAppUrl, '_blank', 'noopener,noreferrer');
   const benefits = [
     { label: 'Early access', detail: 'Accede antes del lanzamiento público.', icon: Zap },
     { label: 'Nuevos drops', detail: 'Entérate primero de cada lanzamiento.', icon: Flame },
