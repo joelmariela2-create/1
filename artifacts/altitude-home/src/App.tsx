@@ -1,4 +1,4 @@
-import { createContext, type FormEvent, type MouseEvent, type ReactNode, type TouchEvent, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, type FormEvent, type MouseEvent, type PointerEvent, type ReactNode, type TouchEvent, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
@@ -308,31 +308,98 @@ function HomeSearchOverlay({ open, onClose }: { open: boolean; onClose: () => vo
 
 function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const touchStartX = useRef<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const heroRef = useRef<HTMLElement | null>(null);
+  const dragState = useRef({ startX: 0, startY: 0, lastX: 0, lastTime: 0, velocity: 0, axis: 'undecided' as 'undecided' | 'horizontal' | 'vertical' });
   const campaign = campaigns[activeIndex];
+  const nextIndex = (activeIndex + 1) % campaigns.length;
+  const previousIndex = (activeIndex + campaigns.length - 1) % campaigns.length;
+
   useEffect(() => {
-    const nextCampaign = campaigns[(activeIndex + 1) % campaigns.length];
-    const timer = window.setTimeout(() => {
-      const preload = new Image();
-      preload.decoding = 'async';
-      preload.src = nextCampaign.image;
-    }, 700);
-    return () => window.clearTimeout(timer);
-  }, [activeIndex]);
+    const preloadNearbyCampaigns = () => {
+      [nextIndex, previousIndex].forEach((index) => {
+        const preload = new Image();
+        preload.decoding = 'async';
+        preload.src = campaigns[index].image;
+      });
+    };
+    const preloadTimer = window.setTimeout(preloadNearbyCampaigns, 450);
+    return () => window.clearTimeout(preloadTimer);
+  }, [nextIndex, previousIndex]);
+
   useEffect(() => {
-    const timer = window.setTimeout(() => setActiveIndex((index) => (index + 1) % campaigns.length), 1300);
+    if (isPaused || isDragging) return undefined;
+    const timer = window.setTimeout(() => setActiveIndex((index) => (index + 1) % campaigns.length), 5500);
     return () => window.clearTimeout(timer);
-  }, [activeIndex]);
-  const handleTouchStart = (event: TouchEvent<HTMLElement>) => { touchStartX.current = event.touches[0]?.clientX ?? null; };
-  const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
-    if (touchStartX.current === null) return;
-    const endX = event.changedTouches[0]?.clientX;
-    const delta = endX === undefined ? 0 : endX - touchStartX.current;
-    touchStartX.current = null;
-    // A short flick should still advance the campaign; 18px feels responsive
-    // without treating an accidental tap as a swipe.
-    if (Math.abs(delta) >= 18) setActiveIndex((index) => (index + (delta < 0 ? 1 : campaigns.length - 1)) % campaigns.length);
+  }, [activeIndex, isDragging, isPaused]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => setIsPaused(document.hidden);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  const selectCampaign = (index: number) => {
+    setActiveIndex(index);
+    setDragOffset(0);
   };
+
+  const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragState.current = { startX: event.clientX, startY: event.clientY, lastX: event.clientX, lastTime: performance.now(), velocity: 0, axis: 'undecided' };
+    setIsDragging(true);
+    setIsPaused(true);
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
+    if (!isDragging) return;
+    const now = performance.now();
+    const totalX = event.clientX - dragState.current.startX;
+    const totalY = event.clientY - dragState.current.startY;
+    if (dragState.current.axis === 'undecided' && Math.max(Math.abs(totalX), Math.abs(totalY)) > 7) {
+      dragState.current.axis = Math.abs(totalX) >= Math.abs(totalY) ? 'horizontal' : 'vertical';
+    }
+    if (dragState.current.axis === 'vertical') {
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+      setIsDragging(false);
+      setDragOffset(0);
+      window.setTimeout(() => setIsPaused(false), 120);
+      return;
+    }
+    if (dragState.current.axis !== 'horizontal') return;
+    const delta = event.clientX - dragState.current.lastX;
+    const elapsed = Math.max(8, now - dragState.current.lastTime);
+    event.preventDefault();
+    const width = heroRef.current?.clientWidth ?? 1;
+    const distance = Math.abs(totalX);
+    const resistance = distance > width ? width + (distance - width) * 0.35 : distance;
+    setDragOffset(Math.sign(totalX) * resistance);
+    dragState.current = { ...dragState.current, lastX: event.clientX, lastTime: now, velocity: delta / elapsed };
+  };
+
+  const finishPointerDrag = (event?: PointerEvent<HTMLElement>) => {
+    if (!isDragging) return;
+    if (event && event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    const totalDelta = dragState.current.lastX - dragState.current.startX;
+    if (dragState.current.axis !== 'horizontal') {
+      setIsDragging(false);
+      setDragOffset(0);
+      return;
+    }
+    const width = heroRef.current?.clientWidth ?? 1;
+    const threshold = Math.max(48, width * 0.12);
+    const shouldAdvance = Math.abs(totalDelta) >= threshold || (Math.abs(dragState.current.velocity) > 0.55 && Math.abs(totalDelta) > 24);
+    setIsDragging(false);
+    setDragOffset(0);
+    if (shouldAdvance) {
+      setActiveIndex((index) => (index + (totalDelta < 0 ? 1 : campaigns.length - 1)) % campaigns.length);
+    }
+    window.setTimeout(() => setIsPaused(false), 250);
+  };
+
   const benefits = [
     { label: 'Envíos nacionales', detail: 'A toda Bolivia', icon: Truck },
     { label: 'Productos originales', detail: 'Marcas 100% auténticas', icon: ShieldCheck },
@@ -340,8 +407,19 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
     { label: 'Cambios fáciles', detail: 'Compra con confianza', icon: RefreshCw },
   ];
   return (
-    <section id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515] md:h-auto md:min-h-[680px]" aria-label="Campaña destacada" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-       <img key={campaign.id} className={`campaign-image absolute inset-0 h-full w-full object-contain ${campaign.id === 'altitude-hero' ? 'campaign-image-altitude' : ''}`} src={campaign.image} alt={`${campaign.label} ${campaign.title}`} style={{ objectPosition: campaign.position, transform: campaign.id === 'olym-shop-black' ? 'translateY(-28px)' : campaign.id === 'olym-shop-blue' ? 'scale(1.22)' : campaign.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : campaign.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined }} loading="eager" decoding="async" fetchPriority={activeIndex === 0 ? 'high' : 'auto'} />
+    <section ref={heroRef} id="campaign-hero" className="campaign-hero relative flex h-auto min-h-0 flex-col overflow-hidden bg-[#050505] text-[#151515]" aria-label={`Campaña destacada: ${campaign.title}`} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={finishPointerDrag} onPointerCancel={finishPointerDrag} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => { if (!isDragging) setIsPaused(false); }} onFocus={() => setIsPaused(true)} onBlur={() => { if (!isDragging) setIsPaused(false); }}>
+      <div className={`campaign-track absolute inset-0 flex ${isDragging ? 'is-dragging' : ''}`} style={{ transform: `translate3d(calc(-${activeIndex * 100}% + ${dragOffset}px), 0, 0)` }}>
+        {campaigns.map((item, index) => {
+          const shouldLoad = index === activeIndex || index === nextIndex || index === previousIndex;
+          const imageTransform = item.id === 'olym-shop-black' ? 'translateY(-28px)' : item.id === 'olym-shop-blue' ? 'scale(1.22)' : item.id === 'youngla-featured' ? 'translateY(-24px) scale(1.08)' : item.id === 'breathe-divinity-featured' ? 'translateY(-42px)' : undefined;
+          return <div key={item.id} className="campaign-slide relative h-full min-w-full flex-none">
+            {shouldLoad && <picture>
+              {item.id === 'altitude-hero' && <source srcSet="/altitude-hero.webp" type="image/webp" />}
+              <img className={`campaign-image absolute inset-0 h-full w-full object-contain ${item.id === 'altitude-hero' ? 'campaign-image-altitude' : ''}`} src={item.image} alt={`${item.label} ${item.title}`} style={{ objectPosition: item.position, transform: imageTransform }} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === activeIndex && index === 0 ? 'high' : index === activeIndex ? 'auto' : 'low'} draggable={false} />
+            </picture>}
+          </div>;
+        })}
+      </div>
       {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.2) 100%)' }} />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
@@ -352,7 +430,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       <div id="benefits" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
         {benefits.map(({ label, detail, icon: Icon }, index) => <div key={label} className={`hero-benefit flex min-h-[93px] flex-col items-center justify-center px-1 text-center ${index < benefits.length - 1 ? 'border-r border-[#dedad6]' : ''}`}><Icon size={22} strokeWidth={1.45} className="mb-2 text-[#252525]" /><strong className="max-w-[78px] text-[8px] font-bold uppercase leading-[1.18] tracking-[.03em] md:max-w-none md:text-[10px]">{label}</strong><span className="mt-1 hidden text-[8px] text-[#77716c] md:block">{detail}</span></div>)}
       </div>
-      <div className="absolute bottom-[98px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`}>{campaigns.map((item, index) => <span key={item.id} className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}</div>
+       <div className="absolute bottom-[98px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-2" aria-label={`Campaña ${activeIndex + 1} de ${campaigns.length}`} aria-live="polite">{campaigns.map((item, index) => <button key={item.id} type="button" aria-label={`Ver campaña ${index + 1}: ${item.title}`} onClick={() => selectCampaign(index)} className={`campaign-dot h-2 w-2 rounded-full transition-all duration-300 ${activeIndex === index ? 'scale-125 bg-white' : 'bg-white/45 hover:bg-white/75'}`} />)}</div>
     </section>
   );
 }
@@ -401,7 +479,7 @@ function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Pr
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <img src={product.image} alt={product.name} draggable={false} loading={productIndex < 4 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" />
+        <img src={product.image} alt={product.name} draggable={false} loading={productIndex < 2 ? 'eager' : 'lazy'} decoding="async" fetchPriority={productIndex === 0 ? 'high' : 'low'} className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" />
         {productIndex > 0 && <button type="button" aria-label="Producto anterior" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex - 1); }} className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronLeft size={15} /></button>}
         {productIndex < products.length - 1 && <button type="button" aria-label="Producto siguiente" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex + 1); }} className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronRight size={15} /></button>}
       </div>
@@ -417,7 +495,7 @@ function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Pr
 function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
   const railRef = useRef<HTMLDivElement | null>(null);
   const inertiaFrame = useRef<number | null>(null);
-  const touchState = useRef({ startX: 0, lastX: 0, lastTime: 0, velocity: 0, horizontal: false });
+  const touchState = useRef({ startX: 0, startY: 0, lastX: 0, lastTime: 0, velocity: 0, axis: 'undecided' as 'undecided' | 'horizontal' | 'vertical' });
   const [inertiaActive, setInertiaActive] = useState(false);
 
   const stopInertia = () => {
@@ -430,20 +508,22 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
 
   const handleRailTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     stopInertia();
-    const x = event.touches[0]?.clientX;
-    if (x === undefined) return;
-    touchState.current = { startX: x, lastX: x, lastTime: performance.now(), velocity: 0, horizontal: false };
+    const touch = event.touches[0];
+    if (!touch) return;
+    touchState.current = { startX: touch.clientX, startY: touch.clientY, lastX: touch.clientX, lastTime: performance.now(), velocity: 0, axis: 'undecided' };
   };
 
   const handleRailTouchMove = (event: TouchEvent<HTMLDivElement>) => {
-    const x = event.touches[0]?.clientX;
-    if (x === undefined || !railRef.current) return;
+    const touch = event.touches[0];
+    if (!touch || !railRef.current) return;
+    const x = touch.clientX;
     const now = performance.now();
     const delta = x - touchState.current.lastX;
-    // Use the total distance from the initial touch so slow, continuous
-    // drags do not remain stuck below the per-event threshold.
-    if (!touchState.current.horizontal && Math.abs(x - touchState.current.startX) > 0.5) touchState.current.horizontal = true;
-    if (!touchState.current.horizontal) return;
+    const totalY = touch.clientY - touchState.current.startY;
+    if (touchState.current.axis === 'undecided' && Math.max(Math.abs(x - touchState.current.startX), Math.abs(totalY)) > 7) {
+      touchState.current.axis = Math.abs(x - touchState.current.startX) >= Math.abs(totalY) ? 'horizontal' : 'vertical';
+    }
+    if (touchState.current.axis !== 'horizontal') return;
     event.preventDefault();
     const elapsed = Math.max(8, now - touchState.current.lastTime);
     railRef.current.scrollLeft -= delta;
@@ -457,7 +537,7 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
     // If the finger has already stopped before leaving the screen, discard
     // the old velocity so the rail stops with the finger instead of jumping.
     const initialVelocity = timeSinceLastMove > 120 ? 0 : touchState.current.velocity;
-    if (!touchState.current.horizontal || Math.abs(initialVelocity) < 0.005 || !railRef.current) return;
+    if (touchState.current.axis !== 'horizontal' || Math.abs(initialVelocity) < 0.005 || !railRef.current) return;
     setInertiaActive(true);
     const startedAt = performance.now();
     let previousTime = startedAt;
@@ -479,12 +559,12 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
   };
 
   const handleRailTouchCancel = () => {
-    touchState.current.horizontal = false;
+    touchState.current.axis = 'undecided';
     touchState.current.velocity = 0;
     stopInertia();
   };
 
-  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">ALTITUDE</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div ref={railRef} className={`swipe-rail scrollbar-hide -mx-5 flex gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 ${inertiaActive ? 'inertial-active' : ''}`} onTouchStart={handleRailTouchStart} onTouchMove={handleRailTouchMove} onTouchEnd={handleRailTouchEnd} onTouchCancel={handleRailTouchCancel}>{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
+  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">ALTITUDE</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div ref={railRef} className={`swipe-rail scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 ${inertiaActive ? 'inertial-active' : ''}`} onTouchStart={handleRailTouchStart} onTouchMove={handleRailTouchMove} onTouchEnd={handleRailTouchEnd} onTouchCancel={handleRailTouchCancel}>{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
 function HomeCartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
