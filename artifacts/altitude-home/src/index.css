@@ -1287,3 +1287,273 @@ body {
     top: 4px;
   }
 }
+
+/* RESTAURACIÓN — interfaz clara con lienzo blanco puro. */
+body {
+  background: #fff !important;
+  color: #171717 !important;
+}
+
+.page-shell:not(.social-page),
+.products-page,
+.detail-page,
+.checkout-page {
+  background: #fff !important;
+  background-image: none !important;
+  color: #171717 !important;
+}
+
+.page-shell:not(.social-page) .announcement-strip,
+.products-page .announcement-strip,
+.detail-page .announcement-strip,
+.checkout-page .announcement-strip,
+.announcement-strip {
+  background: #fff !important;
+  border-color: #e6e2de !important;
+  color: #716b65 !important;
+}
+
+.page-shell:not(.social-page) header,
+.page-shell:not(.social-page) .desktop-nav,
+.products-page header,
+.products-page .desktop-nav,
+.detail-page header,
+.detail-page .desktop-nav,
+.checkout-page header {
+  background: rgba(255, 255, 255, .96) !important;
+  border-color: #e6e2de !important;
+  color: #171717 !important;
+}
+
+.page-shell:not(.social-page) header a,
+.page-shell:not(.social-page) header button,
+.page-shell:not(.social-page) .desktop-nav button,
+.products-page header a,
+.products-page header button,
+.products-page .desktop-nav button,
+.detail-page header a,
+.detail-page header button,
+.detail-page .desktop-nav button {
+  color: #171717 !important;
+}
+
+.page-shell:not(.social-page) .bottom-nav,
+.products-page .bottom-nav,
+.detail-page .bottom-nav {
+  background: rgba(255, 255, 255, .97) !important;
+  border-color: #e6e2de !important;
+  color: #171717 !important;
+}
+
+.page-shell:not(.social-page) .bottom-nav button,
+.products-page .bottom-nav button,
+.detail-page .bottom-nav button {
+  color: #716b65 !important;
+}
+
+.page-shell:not(.social-page) .bottom-nav button.active-nav,
+.products-page .bottom-nav button.active-nav,
+.detail-page .bottom-nav button.active-nav {
+  color: #d93731 !important;
+}
+
+.home-main,
+.collection-page,
+.products-content,
+.detail-content,
+.checkout-page main,
+.home-main #benefits,
+.home-main #new-releases,
+.home-main #showroom,
+.page-shell > footer,
+.collection-page > div:first-child {
+  background: #fff !important;
+  color: #171717 !important;
+  border-color: #e6e2de !important;
+}
+
+.home-main #benefits .hero-benefit {
+  border-color: #e6e2de !important;
+}
+
+.home-main #benefits .hero-benefit svg,
+.collection-page .campaign-tile h2,
+.collection-page .campaign-tile p,
+.collection-page .campaign-tile button {
+  color: #171717 !important;
+}
+
+.home-main #benefits .hero-benefit span {
+  color: #8b857f !important;
+}
+
+.home-main #new-releases .text-\[\#7c7772\],
+.home-main #showroom .text-\[\#7c7772\],
+.home-main #showroom .text-\[\#6b6660\],
+.page-shell > footer .text-\[\#8b857f\],
+.page-shell > footer .text-\[\#766f69\],
+.collection-page > div:first-child .text-\[\#6b6660\] {
+  color: #716b65 !important;
+}
+
+.hero-glass {
+  background: rgba(255, 255, 255, .86) !important;
+  border-color: #e6e2de !important;
+  color: #171717 !important;
+}
+
+.collection-page .campaign-tile {
+  background: #fff !important;
+  border-color: #e6e2de !important;
+}
+
+.products-page .products-content > section[aria-label="Herramientas del catálogo"],
+.products-page .products-content > section:first-child {
+  background: #fff !important;
+  border-color: #e6e2de !important;
+}
+
+.products-page .products-content button,
+.products-page .products-content select,
+.products-page .products-content input,
+.products-page .product-card h3,
+.products-page .product-card h3 a,
+.products-page .product-card .text-\[\#171717\],
+.products-page .product-card p.text-\[\#171717\] {
+  color: #171717 !important;
+}
+
+.products-page .products-content select option {
+  background: #fff !important;
+  color: #171717 !important;
+}
+
+.products-page .products-content button[class*="bg-[#fbfaf8]"],
+.products-page .products-content button[class*="bg-[#f6f4f0]"],
+.products-page .products-content label[class*="bg-[#fbfaf8]"],
+.products-page .products-content .bg-\[\#fbfaf8\] {
+  background: #fff !important;
+}
+
+.products-page .products-content button[class*="text-[#69635d]"],
+.products-page .products-content .text-\[\#8b857e\],
+.products-page .products-content .text-\[\#77716c\],
+.products-page .products-content .text-\[\#716b65\] {
+  color: #716b65 !important;
+}
+
+.products-page .product-card-image,
+.products-page .product-skeleton,
+.detail-page .product-skeleton,
+.detail-photo-wrap {
+  background: #fff !important;
+  border-color: #e6e2de !important;
+}
+
+.products-page .product-cart,
+.detail-page .detail-info button[class*="bg-white"],
+.detail-page .detail-info button[class*="bg-[#f6f4f0]"],
+.detail-page .detail-photo-wrap .bg-\[\#f6f4f0\] {
+  background: #fff !important;
+  color: #171717 !important;
+  border-color: #d9d3cc !important;
+}
+
+.products-page .filter-drawer,
+.products-page .products-content > section[aria-live="polite"],
+.detail-page .detail-content,
+.detail-page .detail-info,
+.detail-page .detail-content h2,
+.detail-page .detail-info h1,
+.detail-page .detail-info strong,
+.detail-page .detail-info .text-\[\#171717\] {
+  color: #171717 !important;
+  border-color: #d9d3cc !important;
+}
+
+.detail-page .detail-content .text-\[\#5f5a55\],
+.detail-page .detail-content .text-\[\#716b65\],
+.detail-page .detail-features li,
+.detail-page .detail-spec-grid span {
+  color: #716b65 !important;
+}
+
+.detail-page .detail-spec-grid > div,
+.detail-page .detail-content [class*="border-[#d9d3cc]"],
+.detail-page .detail-info [class*="border-[#d9d3cc]"],
+.detail-page .detail-info [class*="border-[#d8d3ce]"] {
+  border-color: #d9d3cc !important;
+}
+
+.checkout-page form > div,
+.checkout-page input,
+.checkout-page select,
+.checkout-page .bg-white,
+.checkout-page .bg-\[\#f6f4f0\] {
+  background: #fff !important;
+  color: #171717 !important;
+  border-color: #d9d3cc !important;
+}
+
+.checkout-page .text-\[\#716b65\],
+.checkout-page .text-\[\#8b857e\] {
+  color: #716b65 !important;
+}
+
+.drawer-panel,
+.products-page aside[role="dialog"],
+.detail-page aside[role="dialog"],
+.home-main aside[role="dialog"],
+.fixed[role="dialog"] > div.bg-\[\#f6f4f0\] {
+  background: #fff !important;
+  color: #171717 !important;
+  border-color: #e6e2de !important;
+}
+
+.drawer-panel .text-\[\#171717\],
+.drawer-panel button,
+.products-page aside[role="dialog"] .text-\[\#171717\],
+.detail-page aside[role="dialog"] .text-\[\#171717\],
+.home-main aside[role="dialog"] .text-\[\#171717\] {
+  color: #171717 !important;
+}
+
+.page-shell > footer .altitude-wordmark {
+  color: #171717 !important;
+}
+
+/* El acceso VIP conserva sus imágenes y estructura, pero vuelve al lienzo blanco. */
+.vip-page,
+.vip-page .vip-hero,
+.vip-page .vip-benefits,
+.vip-page .vip-editorial,
+.vip-page .vip-final-cta,
+.vip-page .vip-benefit-card {
+  background: #fff !important;
+  color: #171717 !important;
+  border-color: #e6e2de !important;
+}
+
+.vip-page .vip-hero {
+  background-image: none !important;
+}
+
+.vip-page .vip-display,
+.vip-page .vip-heading,
+.vip-page .vip-editorial-title,
+.vip-page .vip-benefit-card h3,
+.vip-page .vip-benefit-card p,
+.vip-page .vip-benefit-card svg,
+.vip-page .vip-benefits h2 {
+  color: #171717 !important;
+  text-shadow: none;
+}
+
+.vip-page .vip-button,
+.vip-page .vip-final-cta button {
+  color: #fff !important;
+}
+
+.vip-page .vip-benefit-card:hover {
+  background: #f6f4f0 !important;
+}
