@@ -14,7 +14,7 @@ import {
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa6';
 
 const queryClient = new QueryClient();
-const storeWhatsAppUrl = 'https://wa.me/522223786688';
+const storeWhatsAppUrl = 'https://wa.me/59163944376';
 const bobFormatter = new Intl.NumberFormat('es-BO', {
   style: 'currency',
   currency: 'BOB',
@@ -624,22 +624,22 @@ function Home() {
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
               <p className="section-label mb-1 text-[#7c7772]">Visítanos</p>
-              <h2 className="editorial-title text-[20px] font-bold uppercase">MÉXICO - PUEBLO MORELOS</h2>
-              <p className="mt-1 text-[11px] text-[#6b6660]">ciudad de mexico </p>
+              <h2 className="editorial-title text-[20px] font-bold uppercase">COCHABAMBA - BOLIVIA</h2>
+              <p className="mt-1 text-[11px] text-[#6b6660]">Cochabamba, Bolivia</p>
             </div>
-            <a href="https://www.google.com/maps/search/?api=1&query=Pueblo+Morelos%2C+Coahuila%2C+Mexico" target="_blank" rel="noreferrer" aria-label="Abrir Pueblo Morelos en Google Maps" className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]">
+            <a href="https://www.google.com/maps/search/?api=1&query=Cochabamba%2C+Bolivia" target="_blank" rel="noreferrer" aria-label="Abrir Cochabamba en Google Maps" className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#d8d3ce] hover:border-[#ca2f2b] hover:text-[#ca2f2b]">
               <MapPin size={19} strokeWidth={1.5} />
             </a>
           </div>
           <div className="overflow-hidden border border-[#d8d3ce] bg-[#e7e3dd]">
-            <iframe title="Mapa del showroom en Pueblo Morelos, Coahuila, México" src="https://www.google.com/maps?q=Pueblo+Morelos,+Coahuila,+Mexico&output=embed" className="h-[250px] w-full border-0 md:h-[320px]" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+            <iframe title="Mapa del showroom en Cochabamba, Bolivia" src="https://www.google.com/maps?q=Cochabamba,+Bolivia&output=embed" className="h-[250px] w-full border-0 md:h-[320px]" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
           </div>
           <a href={storeWhatsAppUrl} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-between bg-[#25D366] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-[#171717]">
-            <span className="flex items-center gap-2"><MessageCircle size={16} /> WhatsApp · +52 222 378 6688</span>
+            <span className="flex items-center gap-2"><MessageCircle size={16} /> WhatsApp · +591 63944376</span>
             <ArrowRight size={15} />
           </a>
-          <a href="https://www.google.com/maps/search/?api=1&query=Pueblo+Morelos%2C+Coahuila%2C+Mexico" target="_blank" rel="noreferrer" className="mt-2 flex items-center justify-between border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">
-            Abrir Pueblo Morelos en Google Maps <ArrowRight size={15} />
+          <a href="https://www.google.com/maps/search/?api=1&query=Cochabamba%2C+Bolivia" target="_blank" rel="noreferrer" className="mt-2 flex items-center justify-between border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">
+            Abrir Cochabamba en Google Maps <ArrowRight size={15} />
           </a>
         </section>
       </main>
@@ -880,10 +880,10 @@ function SocialPage() {
   const [preRegistration, setPreRegistration] = useState({ fullName: '', phone: '', city: '', message: '' });
   const [preRegistrationSent, setPreRegistrationSent] = useState(false);
   const socialLinks = [
-    { name: 'Instagram', handle: '@olym.shop', href: 'https://www.instagram.com/olym.shop?igsi=dGJ0czViaHEyMzE0', color: '#E1306C', icon: FaInstagram },
+    { name: 'Instagram', handle: '@altitude.bo', href: 'https://www.instagram.com/altitude.bo?igsi=Z2Z0MzhyN3huY28x', color: '#E1306C', icon: FaInstagram },
     { name: 'Facebook', handle: 'Enlace pendiente', color: '#1877F2', icon: FaFacebookF },
-    { name: 'WhatsApp', handle: '+52 222 378 6688', href: storeWhatsAppUrl, color: '#25D366', icon: FaWhatsapp },
-    { name: 'TikTok', handle: '@olymposhop8', href: 'https://www.tiktok.com/@olymposhop8?_r=1&_t=ZS-99C3jER7LYD', color: '#FF0050', icon: FaTiktok },
+    { name: 'WhatsApp', handle: '+591 63944376', href: storeWhatsAppUrl, color: '#25D366', icon: FaWhatsapp },
+    { name: 'TikTok', handle: '@altitude.bo', href: 'https://www.tiktok.com/@altitude.bo?_r=1&_t=ZS-99DmQPVjKOD', color: '#FF0050', icon: FaTiktok },
   ];
   const handlePreRegistration = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
