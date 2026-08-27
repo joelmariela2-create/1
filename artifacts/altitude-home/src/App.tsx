@@ -245,6 +245,67 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
   );
 }
 
+function HomeSearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [, setLocation] = useLocation();
+  const categories = [
+    { label: 'All Products', value: 'Todas' },
+    { label: 'T-Shirts & Tops', value: 'Poleras' },
+    { label: 'Shorts', value: 'Shorts' },
+    { label: 'Hoodies & Sweatshirts', value: 'Hoodies' },
+    { label: 'Joggers & Sweatpants', value: 'Joggers' },
+    { label: 'Pants', value: 'Joggers' },
+    { label: 'Tank Tops', value: 'Compresión' },
+    { label: 'Tracksuits', value: 'Compresión' },
+    { label: 'Long Sleeve Tops', value: 'Compresión' },
+    { label: 'Tank Tops', value: 'Compresión' },
+    { label: 'Jackets', value: 'Hoodies' },
+    { label: 'Outerwear', value: 'Hoodies' },
+    { label: 'Base Layers', value: 'Compresión' },
+    { label: 'Compression Wear', value: 'Compresión' },
+    { label: 'Accessories', value: 'Todas' },
+    { label: 'Socks', value: 'Todas' },
+    { label: 'New Arrivals', value: 'Todas' },
+    { label: 'Best Sellers', value: 'Todas' },
+    { label: 'Sale', value: 'Todas' },
+  ];
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, open]);
+
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[60] h-[100dvh] overflow-hidden bg-white text-[#171717]" role="dialog" aria-modal="true" aria-label="Categorías de productos">
+      <div className="mx-auto flex h-full w-full max-w-[1280px] flex-col">
+        <header className="relative flex h-[76px] items-center justify-center border-b border-[#eeeeee] px-5">
+          <button type="button" onClick={onClose} aria-label="Volver al inicio" className="absolute left-4 flex h-11 w-11 items-center justify-center transition-colors hover:text-[#d93731]">
+            <ArrowLeft size={25} strokeWidth={1.8} />
+          </button>
+          <h2 className="text-[16px] font-extrabold tracking-[-.03em]">PRODUCTS</h2>
+        </header>
+        <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-10 pt-7" aria-label="Categorías de productos">
+          {categories.map((category, index) => (
+            <button
+              key={`${category.label}-${index}`}
+              type="button"
+              onClick={() => { onClose(); setLocation(`/products?category=${encodeURIComponent(category.value)}`); }}
+              className="flex min-h-[60px] w-full items-center justify-between border-b border-[#eeeeee] px-1 text-left text-[14px] transition-colors hover:text-[#d93731]"
+            >
+              <span>{category.label}</span>
+              <ChevronRight size={19} strokeWidth={1.5} />
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+}
+
 function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -458,10 +519,11 @@ function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; 
 }
 
 function ProductsPage() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { cartItems, favorites, toast, addToCart, removeFromCart, toggleFavorite, notify } = useShop();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [category, setCategory] = useState('Todas');
+  const initialCategory = new URLSearchParams(location.split('?')[1] ?? '').get('category');
+  const [category, setCategory] = useState(() => ['Todas', 'Compresión', 'Hoodies', 'Joggers', 'Shorts', 'Poleras'].includes(initialCategory ?? '') ? initialCategory! : 'Todas');
   const [brand, setBrand] = useState('Todas');
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -612,12 +674,14 @@ function ProductsPage() {
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { cartItems, toast, addToCart, notify } = useShop();
   const [, setLocation] = useLocation();
   const openVip = () => setLocation('/vip');
   return (
     <div id="top" className="page-shell min-h-[100dvh] bg-[#f2efe9] pb-[80px]">
-      <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onCart={() => setCartOpen(true)} />
+      <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onSearch={() => setSearchOpen(true)} onCart={() => setCartOpen(true)} />
+      <HomeSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
       <main className="home-main">
         <CampaignHero onShop={(item) => { if (item.id === 'breathe-divinity-featured') { setLocation('/products'); return; } scrollToSection('new-releases'); notify(`${item.label}: colección seleccionada`); }} />
         <ProductRail onAdd={(product) => { addToCart(product); setCartOpen(true); }} />
