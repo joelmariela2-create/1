@@ -15,13 +15,13 @@ import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa6'
 
 const queryClient = new QueryClient();
 const storeWhatsAppUrl = 'https://wa.me/522223786688';
-const mxnFormatter = new Intl.NumberFormat('es-MX', {
+const bobFormatter = new Intl.NumberFormat('es-BO', {
   style: 'currency',
-  currency: 'MXN',
+  currency: 'BOB',
   minimumFractionDigits: 0,
   maximumFractionDigits: 0,
 });
-const formatMXN = (value: number) => `MXN ${mxnFormatter.format(value)}`;
+const formatBs = (value: number) => `Bs. ${bobFormatter.format(value).replace('BOB', '').trim()}`;
 
 type Campaign = {
   label: string;
@@ -56,19 +56,19 @@ type Product = {
 };
 
 const products: Product[] = [
-  { id: 'breathe-sculpt-longline', name: 'Polera Compresión Core — Negra', brand: 'Breathe Divinity', price: formatMXN(365), priceValue: 365, category: 'Compresión', status: 'Últimas unidades', image: '/breathe-compression-black.webp' },
-  { id: 'breathe-compression-graphite', name: 'Polera Compresión Core — Grafito', brand: 'Breathe Divinity', price: formatMXN(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-graphite.webp' },
-  { id: 'breathe-compression-white', name: 'Polera Compresión Core — Blanca', brand: 'Breathe Divinity', price: formatMXN(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-white.webp' },
-  { id: 'breathe-compression-graphic', name: 'Polera Compresión Graphic — Negra', brand: 'Breathe Divinity', price: formatMXN(399), priceValue: 399, category: 'Compresión', status: 'Nuevo', image: '/breathe-compression-graphic.webp' },
-  { id: 'altitude-core-tee', name: 'Polera Essential Core', brand: 'ALTITUDE', price: formatMXN(249), priceValue: 249, category: 'Poleras', status: 'Nuevo', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
-  { id: 'youngla-everyday-heavy', name: 'Polera Everyday Heavy', brand: 'YoungLA', price: formatMXN(289), priceValue: 289, category: 'Poleras', status: 'Disponible', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
-  { id: 'gymshark-pace-short', name: 'Short de entrenamiento Pace 5”', brand: 'Gymshark', price: formatMXN(319), priceValue: 319, category: 'Shorts', status: 'Nuevo', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'altitude-studio-hoodie', name: 'Hoodie con cierre Studio', brand: 'ALTITUDE', price: formatMXN(429), priceValue: 429, category: 'Hoodies', status: 'Disponible', image: 'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
-  { id: 'youngla-boxy-jogger', name: 'Jogger Boxy Essential', brand: 'YoungLA', price: formatMXN(399), priceValue: 399, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311653/pexels-photo-6311653.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'gymshark-arrival-tee', name: 'Polera Arrival Seamless', brand: 'Gymshark', price: formatMXN(279), priceValue: 279, category: 'Compresión', status: 'Nuevo', image: 'https://images.pexels.com/photos/6311387/pexels-photo-6311387.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
-  { id: 'altitude-training-short', name: 'Short Training Utility', brand: 'ALTITUDE', price: formatMXN(299), priceValue: 299, category: 'Shorts', status: 'Disponible', image: 'https://images.pexels.com/photos/6551133/pexels-photo-6551133.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'breathe-ritual-hoodie', name: 'Hoodie Ritual Fleece', brand: 'Breathe Divinity', price: formatMXN(449), priceValue: 449, category: 'Hoodies', status: 'Últimas unidades', image: 'https://images.pexels.com/photos/5698851/pexels-photo-5698851.jpeg?auto=compress&cs=tinysrgb&w=800' },
-  { id: 'youngla-combat-jogger', name: 'Jogger Combat Core', brand: 'YoungLA', price: formatMXN(419), priceValue: 419, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311606/pexels-photo-6311606.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'breathe-sculpt-longline', name: 'Polera Compresión Core — Negra', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Últimas unidades', image: '/breathe-compression-black.webp' },
+  { id: 'breathe-compression-graphite', name: 'Polera Compresión Core — Grafito', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-graphite.webp' },
+  { id: 'breathe-compression-white', name: 'Polera Compresión Core — Blanca', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-white.webp' },
+  { id: 'breathe-compression-graphic', name: 'Polera Compresión Graphic — Negra', brand: 'Breathe Divinity', price: formatBs(399), priceValue: 399, category: 'Compresión', status: 'Nuevo', image: '/breathe-compression-graphic.webp' },
+  { id: 'altitude-core-tee', name: 'Polera Essential Core', brand: 'ALTITUDE', price: formatBs(249), priceValue: 249, category: 'Poleras', status: 'Nuevo', image: 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
+  { id: 'youngla-everyday-heavy', name: 'Polera Everyday Heavy', brand: 'YoungLA', price: formatBs(289), priceValue: 289, category: 'Poleras', status: 'Disponible', image: 'https://images.pexels.com/photos/8532616/pexels-photo-8532616.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
+  { id: 'gymshark-pace-short', name: 'Short de entrenamiento Pace 5”', brand: 'Gymshark', price: formatBs(319), priceValue: 319, category: 'Shorts', status: 'Nuevo', image: 'https://images.pexels.com/photos/6550851/pexels-photo-6550851.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'altitude-studio-hoodie', name: 'Hoodie con cierre Studio', brand: 'ALTITUDE', price: formatBs(429), priceValue: 429, category: 'Hoodies', status: 'Disponible', image: 'https://images.pexels.com/photos/6347547/pexels-photo-6347547.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
+  { id: 'youngla-boxy-jogger', name: 'Jogger Boxy Essential', brand: 'YoungLA', price: formatBs(399), priceValue: 399, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311653/pexels-photo-6311653.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'gymshark-arrival-tee', name: 'Polera Arrival Seamless', brand: 'Gymshark', price: formatBs(279), priceValue: 279, category: 'Compresión', status: 'Nuevo', image: 'https://images.pexels.com/photos/6311387/pexels-photo-6311387.jpeg?auto=compress&cs=tinysrgb&w=800', isBestSeller: true },
+  { id: 'altitude-training-short', name: 'Short Training Utility', brand: 'ALTITUDE', price: formatBs(299), priceValue: 299, category: 'Shorts', status: 'Disponible', image: 'https://images.pexels.com/photos/6551133/pexels-photo-6551133.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'breathe-ritual-hoodie', name: 'Hoodie Ritual Fleece', brand: 'Breathe Divinity', price: formatBs(449), priceValue: 449, category: 'Hoodies', status: 'Últimas unidades', image: 'https://images.pexels.com/photos/5698851/pexels-photo-5698851.jpeg?auto=compress&cs=tinysrgb&w=800' },
+  { id: 'youngla-combat-jogger', name: 'Jogger Combat Core', brand: 'YoungLA', price: formatBs(419), priceValue: 419, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311606/pexels-photo-6311606.jpeg?auto=compress&cs=tinysrgb&w=800' },
 ];
 
 const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' | 'fit' | 'features' | 'sizes'>> = {
@@ -92,18 +92,14 @@ function getProductDetails(product: Product) {
 }
 
 type CartItem = Product & { selectedSize?: string };
-const mexicoCities = [
-  'Aguascalientes', 'Acapulco', 'Cancún', 'Campeche', 'Celaya', 'Chihuahua', 'Ciudad de México',
-  'Ciudad Juárez', 'Culiacán', 'Cuernavaca', 'Durango', 'Ensenada', 'Guanajuato', 'Guadalajara',
-  'Hermosillo', 'La Paz', 'León', 'Mérida', 'Mexicali', 'Morelia', 'Monterrey', 'Oaxaca',
-  'Pachuca', 'Puebla', 'Pueblo Morelos', 'Puerto Vallarta', 'Querétaro', 'Saltillo',
-  'San Luis Potosí', 'Tampico', 'Tepic', 'Tijuana', 'Toluca', 'Tuxtla Gutiérrez', 'Veracruz',
-  'Villahermosa', 'Zacatecas',
+const boliviaDepartments = [
+  'Chuquisaca', 'La Paz', 'Cochabamba', 'Oruro', 'Potosí',
+  'Tarija', 'Santa Cruz', 'Beni', 'Pando',
 ];
 type CustomerData = { name: string; phone: string; country: string; city: string };
 function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total: number) {
   const summary = cartItems.map((item) => `${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join(', ');
-  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: ${formatMXN(total)}\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇲🇽 PAÍS: ${customer.country}\n📍 CIUDAD / PUEBLO: ${customer.city}»`;
+  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: ${formatBs(total)}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}»`;
 }
 function openOrderWhatsApp(customer: CustomerData, cartItems: CartItem[], total: number) {
   const whatsappUrl = `${storeWhatsAppUrl}?text=${encodeURIComponent(createOrderMessage(customer, cartItems, total))}`;
@@ -126,7 +122,7 @@ function useShop() {
 }
 
 function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; total: number; onConfirm: (customer: CustomerData) => void }) {
-  const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'México', city: '' });
+  const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'Bolivia', city: '' });
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onConfirm(customer);
@@ -138,18 +134,18 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
     </div>
     <div className="mb-5 border border-[#d9d3cc] bg-white px-3 py-3">
       <p className="mb-2 text-[9px] font-bold uppercase tracking-[.1em] text-[#8b857e]">Resumen de pedido</p>
-       <div className="space-y-1">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex justify-between gap-3 text-[11px]"><span className="min-w-0 truncate">{item.name}{item.selectedSize ? ` · ${item.selectedSize}` : ''}</span><strong className="shrink-0">{formatMXN(item.priceValue)}</strong></div>)}</div>
-       <div className="mt-3 flex justify-between border-t border-[#e6e2de] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">{formatMXN(total)}</span></div>
+       <div className="space-y-1">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex justify-between gap-3 text-[11px]"><span className="min-w-0 truncate">{item.name}{item.selectedSize ? ` · ${item.selectedSize}` : ''}</span><strong className="shrink-0">{formatBs(item.priceValue)}</strong></div>)}</div>
+       <div className="mt-3 flex justify-between border-t border-[#e6e2de] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">{formatBs(total)}</span></div>
     </div>
       <div className="space-y-3">
        <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo</span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Escribe tu nombre" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
-        <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 55 1234 5678" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
+         <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 7 123 4567" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => setCustomer({ ...customer, country: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="México">México</option></select></label>
-          <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Ciudad o pueblo</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu ciudad o pueblo</option>{mexicoCities.map((city) => <option key={city} value={city}>{city}</option>)}</select></label>
+           <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => setCustomer({ ...customer, country: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="Bolivia">Bolivia</option></select></label>
+           <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Departamento</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu departamento</option>{boliviaDepartments.map((department) => <option key={department} value={department}>{department}</option>)}</select></label>
         </div>
      </div>
-      <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[18px]">{formatMXN(total)}</strong></div>
+      <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[18px]">{formatBs(total)}</strong></div>
      <button data-testid="button-confirm-order" type="submit" className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851]"><CheckCircle2 size={16} /> Confirmar pedido <ArrowRight size={16} /></button>
      <p className="mt-3 text-center text-[9px] text-[#8b857e]">Tus datos se enviarán junto con el pedido por WhatsApp.</p>
   </form>;
@@ -176,7 +172,7 @@ function CheckoutPage() {
   if (cartItems.length === 0) return <div className="page-shell flex min-h-[100dvh] flex-col items-center justify-center bg-[#f6f4f0] px-5 text-center"><ShoppingBag size={30} className="text-[#d93731]" /><p className="section-label mt-4 text-[#d93731]">Tu bolsa está vacía</p><h1 className="editorial-title mt-2 text-[28px] font-bold uppercase">Añade un producto para continuar</h1><button onClick={() => setLocation('/products')} className="mt-6 bg-[#171717] px-5 py-4 text-[10px] font-bold uppercase tracking-[.1em] text-white">Ver productos</button></div>;
   return <div className="checkout-page page-shell min-h-[100dvh] bg-[#f6f4f0] px-5 py-6 text-[#171717] md:px-10 md:py-10">
     <header className="flex items-center justify-between border-b border-[#d9d3cc] pb-5"><button onClick={() => setLocation('/products')} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.1em]"><ArrowLeft size={16} /> Volver a la tienda</button><span className="altitude-wordmark text-[25px]">ALTITUDE online</span></header>
-     <main className="mx-auto max-w-[560px] py-8 md:py-14"><p className="section-label text-[#d93731]">ALTITUDE / checkout</p><h1 className="editorial-title mt-2 text-[clamp(2.2rem,6vw,4rem)] font-bold uppercase leading-[.9]">Confirma tu pedido</h1><p className="mt-3 max-w-[420px] text-[12px] leading-[1.5] text-[#716b65] rounded-tl-[0px] rounded-tr-[0px] rounded-br-[0px] rounded-bl-[0px]">Revisa tu selección y completa tus datos para coordinar la entrega en México.</p><OrderForm cartItems={cartItems} total={total} onConfirm={handleOrderConfirm} /></main>
+      <main className="mx-auto max-w-[560px] py-8 md:py-14"><p className="section-label text-[#d93731]">ALTITUDE / checkout</p><h1 className="editorial-title mt-2 text-[clamp(2.2rem,6vw,4rem)] font-bold uppercase leading-[.9]">Confirma tu pedido</h1><p className="mt-3 max-w-[420px] text-[12px] leading-[1.5] text-[#716b65] rounded-tl-[0px] rounded-tr-[0px] rounded-br-[0px] rounded-bl-[0px]">Revisa tu selección y completa tus datos para coordinar la entrega en Bolivia.</p><OrderForm cartItems={cartItems} total={total} onConfirm={handleOrderConfirm} /></main>
     {confirmedCustomer && <OrderConfirmed customer={confirmedCustomer} cartItems={cartItems} total={total} onClose={() => setLocation('/products')} />}
   </div>;
 }
@@ -276,7 +272,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
     if (Math.abs(delta) >= 18) setActiveIndex((index) => (index + (delta < 0 ? 1 : campaigns.length - 1)) % campaigns.length);
   };
   const benefits = [
-    { label: 'Envíos nacionales', detail: 'A todo México', icon: Truck },
+    { label: 'Envíos nacionales', detail: 'A toda Bolivia', icon: Truck },
     { label: 'Productos originales', detail: 'Marcas 100% auténticas', icon: ShieldCheck },
     { label: 'Pago seguro', detail: 'Contra entrega', icon: CreditCard },
     { label: 'Cambios fáciles', detail: 'Compra con confianza', icon: RefreshCw },
@@ -442,7 +438,7 @@ function HomeCartDrawer({ open, onClose }: { open: boolean; onClose: () => void 
         <button data-testid="button-close-home-cart" onClick={onClose} aria-label="Cerrar carrito" className="flex h-9 w-9 items-center justify-center border border-[#d9d3cc]"><X size={18} strokeWidth={1.5} /></button>
       </div>
       {cartItems.length === 0 ? <div className="flex flex-1 flex-col items-center justify-center text-center"><ShoppingBag size={27} strokeWidth={1.3} className="text-[#d93731]" /><p className="mt-4 text-[13px] font-bold uppercase">Tu bolsa está vacía</p><Link href="/products" onClick={onClose} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]">Ver productos</Link></div>
-        : <><div className="flex-1 overflow-y-auto py-5">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex gap-3 border-b border-[#ded8d1] py-4 first:pt-0"><img src={item.image} alt="" className="h-[78px] w-[62px] object-cover" /><div className="min-w-0 flex-1"><p className="text-[8px] font-bold uppercase tracking-[.12em] text-[#8b857e]">{item.brand}</p><p className="mt-1 text-[11px] font-semibold leading-[1.3]">{item.name}</p>{item.selectedSize && <p className="mt-1 text-[9px] uppercase tracking-[.08em] text-[#8b857e]">Talla {item.selectedSize}</p>}<p className="mt-2 text-[11px] font-bold">{item.price}</p></div><button data-testid={`button-remove-home-cart-${item.id}-${index}`} onClick={() => removeFromCart(item.id)} aria-label={`Quitar ${item.name}`} className="self-start text-[#8b857e] hover:text-[#d93731]"><X size={16} /></button></div>)}</div><div className="border-t border-[#171717] pt-5"><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total</span><strong className="text-[18px]">{formatMXN(total)}</strong></div><button data-testid="button-home-cart-checkout" onClick={() => { onClose(); setLocation('/checkout'); }} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-[#1da851]"><MessageCircle size={16} /> Completar datos del pedido <ArrowRight size={16} /></button></div></>}
+        : <><div className="flex-1 overflow-y-auto py-5">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex gap-3 border-b border-[#ded8d1] py-4 first:pt-0"><img src={item.image} alt="" className="h-[78px] w-[62px] object-cover" /><div className="min-w-0 flex-1"><p className="text-[8px] font-bold uppercase tracking-[.12em] text-[#8b857e]">{item.brand}</p><p className="mt-1 text-[11px] font-semibold leading-[1.3]">{item.name}</p>{item.selectedSize && <p className="mt-1 text-[9px] uppercase tracking-[.08em] text-[#8b857e]">Talla {item.selectedSize}</p>}<p className="mt-2 text-[11px] font-bold">{item.price}</p></div><button data-testid={`button-remove-home-cart-${item.id}-${index}`} onClick={() => removeFromCart(item.id)} aria-label={`Quitar ${item.name}`} className="self-start text-[#8b857e] hover:text-[#d93731]"><X size={16} /></button></div>)}</div><div className="border-t border-[#171717] pt-5"><div className="flex items-center justify-between"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total</span><strong className="text-[18px]">{formatBs(total)}</strong></div><button data-testid="button-home-cart-checkout" onClick={() => { onClose(); setLocation('/checkout'); }} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-[#1da851]"><MessageCircle size={16} /> Completar datos del pedido <ArrowRight size={16} /></button></div></>}
     </aside>
   </div>;
 }
@@ -896,7 +892,8 @@ function SocialPage() {
       'Quiero 🛑 pre-inscribirme para ser de los primeros en recibir los primeros lanzamientos.',
       `Nombre completo: ${preRegistration.fullName.trim()}`,
       `Número de teléfono: ${preRegistration.phone.trim()}`,
-      `Ciudad de México: ${preRegistration.city.trim()}`,
+      '🇧🇴 País: Bolivia',
+      `Departamento: ${preRegistration.city.trim()}`,
       preRegistration.message.trim() ? `Mensaje adicional: ${preRegistration.message.trim()}` : '',
     ].filter(Boolean).join('\n');
     window.open(`${storeWhatsAppUrl}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
@@ -931,11 +928,14 @@ function SocialPage() {
               </label>
               <label className="block">
                 <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><Phone size={14} /> Número de teléfono</span>
-                <input required type="tel" value={preRegistration.phone} onChange={(event) => setPreRegistration((current) => ({ ...current, phone: event.target.value }))} className="h-12 w-full border border-white/15 bg-white/[.05] px-4 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="+52 222 378 6688" />
+                <input required type="tel" value={preRegistration.phone} onChange={(event) => setPreRegistration((current) => ({ ...current, phone: event.target.value }))} className="h-12 w-full border border-white/15 bg-white/[.05] px-4 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="+591 7 123 4567" />
               </label>
               <label className="block">
-                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><MapPin size={14} /> Ciudad de México</span>
-                <input required value={preRegistration.city} onChange={(event) => setPreRegistration((current) => ({ ...current, city: event.target.value }))} className="h-12 w-full border border-white/15 bg-white/[.05] px-4 text-[12px] text-white outline-none transition-colors placeholder:text-white/30 focus:border-[#df3933]" placeholder="Tu ciudad o alcaldía" />
+                <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><MapPin size={14} /> Departamento de Bolivia</span>
+                <select required value={preRegistration.city} onChange={(event) => setPreRegistration((current) => ({ ...current, city: event.target.value }))} className="h-12 w-full border border-white/15 bg-[#171717] px-4 text-[12px] text-white outline-none transition-colors focus:border-[#df3933]">
+                  <option value="">Selecciona tu departamento</option>
+                  {boliviaDepartments.map((department) => <option key={department} value={department}>{department}</option>)}
+                </select>
               </label>
               <label className="block">
                 <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-white/65"><MessageCircle size={14} /> Mensaje adicional</span>
@@ -1061,15 +1061,6 @@ function VipPage() {
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) { const [location] = useLocation(); return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>; }
 
-function replaceLegacyCurrency(root: Node) {
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-  let current: Node | null = walker.nextNode();
-  while (current) {
-    if (current.nodeValue?.includes('Bs.')) current.nodeValue = current.nodeValue.replaceAll('Bs.', 'MXN $');
-    current = walker.nextNode();
-  }
-}
-
 function Router() {
   const [location] = useLocation();
   useEffect(() => {
@@ -1079,8 +1070,6 @@ function Router() {
 }
 function App() {
   useEffect(() => {
-    replaceLegacyCurrency(document.body);
-    const currencyObserver = new MutationObserver(() => replaceLegacyCurrency(document.body));
     const entranceTimer = window.setTimeout(() => playEntranceSound(), 1000);
     const startMusicOnScroll = () => {
       startBackgroundMusic(true);
@@ -1089,13 +1078,11 @@ function App() {
     musicInteractionEvents.forEach((eventName) => {
       window.addEventListener(eventName, startMusicOnScroll, { passive: true });
     });
-    currencyObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
     return () => {
       window.clearTimeout(entranceTimer);
       musicInteractionEvents.forEach((eventName) => {
         window.removeEventListener(eventName, startMusicOnScroll);
       });
-      currencyObserver.disconnect();
     };
   }, []);
   return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
