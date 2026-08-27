@@ -1055,7 +1055,7 @@ function SocialPage() {
           <p className="mt-6 max-w-[440px] text-[12px] leading-[1.6] text-white/65 md:text-[14px]">Sigue cada lanzamiento, novedad y movimiento de ALTITUDE online.</p>
           <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             {socialLinks.map(({ name, handle, href, color, icon: Icon }) => {
-              const iconColor = name === 'TikTok' ? '#fff' : color;
+              const iconColor = '#fff';
               const card = <><div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-black transition-transform duration-300 group-hover:scale-110" style={{ color: iconColor, boxShadow: `0 0 26px ${color}66, inset 0 0 18px ${color}22` }}><Icon size={29} /></div><strong className="mt-6 text-[11px] uppercase tracking-[.08em]">{name}</strong><span className="mt-2 text-center text-[9px] text-white/55">{handle}</span></>;
               return href
                 ? <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`Visitar ${name}`} className="group flex min-h-[190px] flex-col items-center justify-center border border-white/15 bg-white/[.04] p-4 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:bg-white/[.08]">{card}</a>
