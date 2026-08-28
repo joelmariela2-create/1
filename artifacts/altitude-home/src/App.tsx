@@ -766,6 +766,65 @@ function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
   return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">ALTITUDE</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div ref={railRef} className={`swipe-rail scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 ${inertiaActive ? 'inertial-active' : ''}`} onTouchStart={handleRailTouchStart} onTouchMove={handleRailTouchMove} onTouchEnd={handleRailTouchEnd} onTouchCancel={handleRailTouchCancel}>{products.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
+const narutoDropCarouselImages = [
+  '/naruto-drop-1.jpg',
+  '/naruto-drop-2.jpg',
+  '/naruto-drop-3.jpg',
+];
+
+function NarutoDropCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+
+  const goToSlide = (index: number) => {
+    setActiveIndex((index + narutoDropCarouselImages.length) % narutoDropCarouselImages.length);
+  };
+
+  const handleTouchStart = (event: TouchEvent<HTMLElement>) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
+    if (touchStartX.current === null) return;
+    const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
+    const distance = endX - touchStartX.current;
+    if (Math.abs(distance) > 45) goToSlide(activeIndex + (distance < 0 ? 1 : -1));
+    touchStartX.current = null;
+  };
+
+  return (
+    <section id="youngla" className="mx-5 mb-7 border-t border-[#e1ddda] pt-5 md:mx-8" aria-labelledby="naruto-drop-title" aria-roledescription="carrusel">
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <div>
+          <p className="section-label mb-1 text-[#ca2f2b]">YoungLA × Naruto</p>
+          <h2 id="naruto-drop-title" className="editorial-title text-[22px] font-bold uppercase tracking-[-.04em]">Nuevo drop Naruto</h2>
+        </div>
+        <span className="font-mono text-[10px] text-[#8b857e]" aria-live="polite">{String(activeIndex + 1).padStart(2, '0')} / {String(narutoDropCarouselImages.length).padStart(2, '0')}</span>
+      </div>
+      <div className="relative overflow-hidden bg-[#171717]" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+          {narutoDropCarouselImages.map((image, index) => (
+            <div key={image} className="h-[min(118vw,620px)] w-full shrink-0 md:h-[560px]">
+              <img src={image} alt={`Nuevo drop Naruto, foto ${index + 1} de ${narutoDropCarouselImages.length}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-contain" />
+            </div>
+          ))}
+        </div>
+        <button type="button" aria-label="Foto anterior del nuevo drop Naruto" onClick={() => goToSlide(activeIndex - 1)} className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] shadow-sm transition-colors hover:bg-[#ca2f2b] hover:text-white">
+          <ChevronLeft size={19} strokeWidth={1.6} />
+        </button>
+        <button type="button" aria-label="Foto siguiente del nuevo drop Naruto" onClick={() => goToSlide(activeIndex + 1)} className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] shadow-sm transition-colors hover:bg-[#ca2f2b] hover:text-white">
+          <ChevronRight size={19} strokeWidth={1.6} />
+        </button>
+      </div>
+      <div className="mt-3 flex items-center justify-center gap-2" role="tablist" aria-label="Seleccionar foto del nuevo drop Naruto">
+        {narutoDropCarouselImages.map((image, index) => (
+          <button key={image} type="button" role="tab" aria-selected={activeIndex === index} aria-label={`Ver foto ${index + 1}`} onClick={() => goToSlide(index)} className={`h-1.5 rounded-full transition-all ${activeIndex === index ? 'w-7 bg-[#ca2f2b]' : 'w-1.5 bg-[#bcb5ae]'}`} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function HomeCartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [, setLocation] = useLocation();
   const { cartItems, removeFromCart } = useShop();
@@ -787,7 +846,7 @@ function HomeCartDrawer({ open, onClose }: { open: boolean; onClose: () => void 
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location, setLocation] = useLocation();
   if (!open) return null;
-  const links = [['Redes sociales', 'social'], ['Colección', 'collection'], ['Nuevos lanzamientos', 'new-releases'], ['Nuevo drop Naruto', 'youngla']];
+  const links = [['Redes sociales', 'social'], ['Colección', 'collection'], ['Próximos lanzamientos', 'new-releases'], ['Nuevo drop Naruto', 'youngla']];
   return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="drawer-panel relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 text-[#171717] shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px] text-[#171717]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú" className="text-[#171717]"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); if (id === 'products') setLocation('/products'); else if (id === 'collection') setLocation('/collection'); else if (id === 'social') setLocation('/social'); else if (location !== '/') { setLocation('/'); window.setTimeout(() => scrollToSection(id), 80); } else scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em] text-[#171717]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
 }
 
@@ -965,6 +1024,7 @@ function Home() {
       <main className="home-main">
         <CampaignHero onShop={(item) => { setLocation(item.id === 'youngla-featured' ? '/products?brand=YoungLA' : '/products'); notify(`${item.label}: colección seleccionada`); }} />
         <ProductRail onAdd={(product) => { addToCart(product); setCartOpen(true); }} />
+        <NarutoDropCarousel />
         <section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8">
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
