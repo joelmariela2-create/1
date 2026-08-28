@@ -495,7 +495,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
   const [, setLocation] = useLocation();
   return (
     <>
-      <div className="announcement-strip flex h-7 items-center overflow-hidden bg-[#eeece9] text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
+      <div className="announcement-strip flex h-7 items-center overflow-hidden bg-white text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
         <div className="announcement-track flex min-w-max items-center">
            <span className="px-4 text-[#252525]">ALTITUDE <span className="announcement-separator mx-2">•</span> ONLINE <span className="announcement-separator mx-2">-</span> 📦 ENVÍOS A TODO EL PAÍS 🇧🇴 <span className="announcement-separator mx-2">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="announcement-separator ml-8 mr-2">•</span> ONLINE <span className="announcement-separator mx-2">-</span></span>
            <span className="px-4 text-[#252525]" aria-hidden="true">ALTITUDE <span className="announcement-separator mx-2">•</span> ONLINE <span className="announcement-separator mx-2">-</span> 📦 ENVÍOS A TODO EL PAÍS 🇧🇴 <span className="announcement-separator mx-2">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="announcement-separator ml-8 mr-2">•</span> ONLINE <span className="announcement-separator mx-2">-</span></span>

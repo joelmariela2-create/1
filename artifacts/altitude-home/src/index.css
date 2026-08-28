@@ -708,9 +708,9 @@ body {
 .products-page .announcement-strip,
 .detail-page .announcement-strip,
 .checkout-page .announcement-strip {
-  background: #111 !important;
+  background: #fff !important;
   border-color: #252525 !important;
-  color: rgba(244, 241, 236, .72) !important;
+  color: #252525 !important;
 }
 
 .page-shell:not(.social-page) header,
