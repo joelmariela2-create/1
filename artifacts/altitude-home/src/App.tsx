@@ -772,6 +772,8 @@ const narutoDropCarouselImages = [
   '/naruto-drop-3.jpg',
 ];
 
+const narutoDropCarouselAspectRatios = ['9 / 20', '9 / 20', '2 / 3'];
+
 function NarutoDropCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -801,11 +803,11 @@ function NarutoDropCarousel() {
         </div>
         <span className="font-mono text-[10px] text-[#8b857e]" aria-live="polite">{String(activeIndex + 1).padStart(2, '0')} / {String(narutoDropCarouselImages.length).padStart(2, '0')}</span>
       </div>
-      <div className="relative overflow-hidden bg-[#171717]" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <div className="relative mx-auto w-full max-w-[520px] overflow-hidden bg-[#171717] transition-[aspect-ratio] duration-500" style={{ aspectRatio: narutoDropCarouselAspectRatios[activeIndex] }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
           {narutoDropCarouselImages.map((image, index) => (
-            <div key={image} className="h-[min(118vw,620px)] w-full shrink-0 md:h-[560px]">
-              <img src={image} alt={`Nuevo drop Naruto, foto ${index + 1} de ${narutoDropCarouselImages.length}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-contain" />
+            <div key={image} className="w-full shrink-0">
+              <img src={image} alt={`Nuevo drop Naruto, foto ${index + 1} de ${narutoDropCarouselImages.length}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" className="block h-auto w-full" />
             </div>
           ))}
         </div>
