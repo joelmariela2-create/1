@@ -92,6 +92,25 @@ function getProductDetails(product: Product) {
   return { ...product, ...productDetails[product.id] };
 }
 
+const breatheCompressionGallery = [
+  '/breathe-compression-black.webp',
+  '/breathe-compression-graphite.webp',
+  '/breathe-compression-white.webp',
+  '/breathe-compression-graphic.webp',
+];
+
+function getProductGallery(product: Product) {
+  if (product.brand === 'Breathe Divinity' && product.category === 'Compresión') {
+    return breatheCompressionGallery;
+  }
+
+  const relatedImages = products
+    .filter((item) => item.id !== product.id && item.category === product.category)
+    .map((item) => item.image);
+
+  return Array.from(new Set([product.image, ...relatedImages])).slice(0, 3);
+}
+
 type CartItem = Product & { selectedSize?: string };
 const boliviaDepartments = [
   'Chuquisaca', 'La Paz', 'Cochabamba', 'Oruro', 'Potosí',
@@ -784,11 +803,13 @@ function ProductDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState('');
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const galleryRef = useRef<HTMLDivElement | null>(null);
   const photoTouchStartX = useRef<number | null>(null);
   const photoDidSwipe = useRef(false);
   const product = products.find((item) => item.id === params.id);
   const detail = product ? getProductDetails(product) : undefined;
-  const productIndex = product ? products.findIndex((item) => item.id === product.id) : -1;
+  const galleryImages = product ? getProductGallery(product) : [];
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
 
   useEffect(() => {
@@ -799,6 +820,8 @@ function ProductDetailPage() {
   useEffect(() => {
     setSelectedSize(detail?.sizes?.[0] ?? '');
     setZoomOpen(false);
+    setActiveGalleryIndex(0);
+    galleryRef.current?.scrollTo({ left: 0, behavior: 'auto' });
   }, [detail?.sizes, params.id]);
 
   useEffect(() => {
@@ -831,24 +854,25 @@ function ProductDetailPage() {
     openOrderWhatsApp(customer, cartItems, total);
     setConfirmedCustomer(customer);
   };
-  const goToProduct = (index: number) => {
-    const nextProduct = products[index];
-    if (!nextProduct) return;
-    setZoomOpen(false);
-    setLocation(`/products/${nextProduct.id}`);
+  const scrollGallery = (direction: number) => {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+    const firstSlide = gallery.querySelector<HTMLElement>('.detail-gallery-slide');
+    const slideWidth = firstSlide?.getBoundingClientRect().width ?? gallery.clientWidth;
+    const gap = 2;
+    gallery.scrollBy({ left: direction * (slideWidth + gap), behavior: 'smooth' });
   };
   const handlePhotoTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     photoTouchStartX.current = event.touches[0]?.clientX ?? null;
   };
   const handlePhotoTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
-    if (photoTouchStartX.current === null || productIndex < 0) return;
+    if (photoTouchStartX.current === null) return;
     const endX = event.changedTouches[0]?.clientX;
     const delta = endX === undefined ? 0 : endX - photoTouchStartX.current;
     photoTouchStartX.current = null;
-    if (Math.abs(delta) < 36) return;
+    if (Math.abs(delta) < 18) return;
     photoDidSwipe.current = true;
     window.setTimeout(() => { photoDidSwipe.current = false; }, 300);
-    goToProduct(productIndex + (delta < 0 ? 1 : -1));
   };
   const handlePhotoClick = (event: MouseEvent<HTMLDivElement>) => {
     if (photoDidSwipe.current || (event.target as HTMLElement).closest('button')) return;
@@ -867,13 +891,26 @@ function ProductDetailPage() {
               <span>{product.category} / {product.brand}</span>
             </div>
             <div className="grid gap-0 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
-               <div className="detail-photo-wrap relative overflow-hidden bg-[#e7e3dd] cursor-zoom-in" role="button" tabIndex={0} aria-label={`Ampliar foto de ${product.name}`} onClick={handlePhotoClick} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }} onTouchStart={handlePhotoTouchStart} onTouchEnd={handlePhotoTouchEnd}>
-                <img data-testid={`img-product-detail-${product.id}`} src={product.image} alt={`${product.name}, ${product.brand}`} draggable={false} loading="eager" decoding="async" fetchPriority="high" className="detail-photo h-full w-full object-cover" />
-                <div className="absolute left-3 top-3 flex gap-2"><span className="bg-[#f6f4f0] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em]">{product.status}</span>{product.isBestSeller && <span className="bg-[#d93731] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em] text-white">Favorito</span>}</div>
-                <button data-testid="button-detail-favorite" onClick={() => toggleFavorite(product.id)} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar' : 'Añadir'} ${product.name} de favoritos`} className={`absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-white ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={18} strokeWidth={1.5} /></button>
-                {productIndex > 0 && <button type="button" aria-label="Producto anterior" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex - 1); }} className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white"><ChevronLeft size={20} /></button>}
-                {productIndex < products.length - 1 && <button type="button" aria-label="Producto siguiente" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex + 1); }} className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white"><ChevronRight size={20} /></button>}
-                <span className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-[#171717]/75 px-3 py-1.5 text-[8px] font-bold uppercase tracking-[.12em] text-white">Toca para ampliar · desliza para cambiar</span>
+                <div className="detail-photo-wrap detail-gallery-wrap relative overflow-hidden bg-[#e7e3dd]" role="button" tabIndex={0} aria-label={`Ampliar foto de ${product.name}; desliza para ver más imágenes`} onClick={handlePhotoClick} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }} onTouchStart={handlePhotoTouchStart} onTouchEnd={handlePhotoTouchEnd}>
+                 <div ref={galleryRef} className="detail-gallery scrollbar-hide" onScroll={(event) => {
+                   const gallery = event.currentTarget;
+                   const firstSlide = gallery.querySelector<HTMLElement>('.detail-gallery-slide');
+                   const slideWidth = firstSlide?.getBoundingClientRect().width ?? gallery.clientWidth;
+                   setActiveGalleryIndex(Math.round(gallery.scrollLeft / (slideWidth + 2)));
+                 }}>
+                   {galleryImages.map((image, index) => (
+                     <div key={image} className="detail-gallery-slide">
+                       <img data-testid={index === 0 ? `img-product-detail-${product.id}` : undefined} src={image} alt={`${product.name}, vista ${index + 1}`} draggable={false} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === 0 ? 'high' : 'low'} className="detail-photo h-full w-full object-cover" />
+                     </div>
+                   ))}
+                 </div>
+                 <div className="absolute left-3 top-3 flex gap-2"><span className="bg-[#f6f4f0] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em]">{product.status}</span>{product.isBestSeller && <span className="bg-[#d93731] px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[.1em] text-white">Favorito</span>}</div>
+                 <button data-testid="button-detail-favorite" onClick={(event) => { event.stopPropagation(); toggleFavorite(product.id); }} aria-pressed={favorites.includes(product.id)} aria-label={`${favorites.includes(product.id) ? 'Quitar' : 'Añadir'} ${product.name} de favoritos`} className={`absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-white ${favorites.includes(product.id) ? 'is-favorite' : ''}`}><Heart size={18} strokeWidth={1.5} /></button>
+                 {activeGalleryIndex > 0 && <button type="button" aria-label="Imagen anterior" onClick={(event) => { event.stopPropagation(); scrollGallery(-1); }} className="gallery-arrow absolute left-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:flex"><ChevronLeft size={20} /></button>}
+                 {activeGalleryIndex < galleryImages.length - 1 && <button type="button" aria-label="Imagen siguiente" onClick={(event) => { event.stopPropagation(); scrollGallery(1); }} className="gallery-arrow absolute right-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:flex"><ChevronRight size={20} /></button>}
+                 <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-[#171717]/65 px-2.5 py-1.5" aria-label={`Imagen ${activeGalleryIndex + 1} de ${galleryImages.length}`}>
+                   {galleryImages.map((image, index) => <span key={image} className={`h-1.5 w-1.5 rounded-full transition-all ${activeGalleryIndex === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}
+                 </div>
               </div>
                <div className="detail-info min-w-0 md:sticky md:top-5">
                 <h1 data-testid="text-detail-name" className="editorial-title mt-3 max-w-[560px] text-[clamp(2.3rem,6vw,5rem)] font-bold uppercase leading-[.86] tracking-[-.065em]">{product.name}</h1>
@@ -928,7 +965,7 @@ function ProductDetailPage() {
        </main>
        {zoomOpen && product && <div role="dialog" aria-modal="true" aria-label={`Foto ampliada de ${product.name}`} className="fixed inset-0 z-[70] flex items-center justify-center bg-[#050505]/95 p-4" onClick={() => setZoomOpen(false)}>
          <button type="button" aria-label="Cerrar foto ampliada" onClick={() => setZoomOpen(false)} className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center border border-white/40 text-white transition-colors hover:bg-white hover:text-[#171717]"><X size={21} /></button>
-         <img src={product.image} alt={`${product.name}, ${product.brand}`} onClick={(event) => event.stopPropagation()} className="max-h-[88vh] max-w-[94vw] object-contain" />
+          <img src={galleryImages[activeGalleryIndex] ?? product.image} alt={`${product.name}, ${product.brand}`} onClick={(event) => event.stopPropagation()} className="max-h-[88vh] max-w-[94vw] object-contain" />
          <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-center text-[9px] font-bold uppercase tracking-[.14em] text-white/75">{product.name} · toca fuera para cerrar</p>
        </div>}
       <BottomNav active="shop" onVip={() => setLocation('/vip')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
