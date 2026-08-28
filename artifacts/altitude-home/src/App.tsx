@@ -96,6 +96,7 @@ const products: Product[] = [
   { id: 'youngla-combat-jogger', name: 'Jogger Combat Core', brand: 'YoungLA', price: formatBs(419), priceValue: 419, category: 'Joggers', status: 'Disponible', image: 'https://images.pexels.com/photos/6311606/pexels-photo-6311606.jpeg?auto=compress&cs=tinysrgb&w=640&q=72' },
 ];
 const homePoleraProducts = products.filter((product) => product.category === 'Poleras');
+const isNarutoProduct = (product: Product) => /naruto|sasuke|kurama|itachi|akatsuki|sasori/i.test(`${product.id} ${product.name}`);
 
 const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' | 'fit' | 'features' | 'sizes'>> = {
   'youngla-one-punch-man': { material: 'Algodón de alto gramaje', fabricWeight: '380 GSM · pesado', fit: 'Relaxed fit', sizes: ['M', 'L', 'XL'], features: ['Cintura elástica ajustable', 'Bolsillos laterales', 'Gráfico One Punch Man'] },
@@ -624,7 +625,7 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.2) 100%)' }} />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
         <div className="campaign-content absolute bottom-[18px] left-5 right-5 max-w-[520px]">
-          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className={`hero-cta group flex h-[44px] w-[240px] items-center justify-between border border-white bg-transparent px-4 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-white hover:text-[#151515] ${activeIndex < 2 ? 'text-[#171717]' : 'text-white'}`}>Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" /></button>
+          <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className={`hero-cta group flex h-[44px] w-[240px] items-center justify-between border border-white bg-transparent px-4 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-white hover:text-[#151515] ${activeIndex < 2 ? 'text-[#171717]' : 'text-white'}`}>Ver colección <ArrowRight size={20} strokeWidth={1.7} className="text-white transition-transform group-hover:translate-x-1" /></button>
         </div>
       </div>
       <div id="benefits" className="relative z-10 grid grid-cols-4 border-t border-[#dedad6] bg-white/95 backdrop-blur-md">
@@ -818,9 +819,9 @@ function ProductsPage() {
   const { cartItems, toast, addToCart, removeFromCart, notify } = useShop();
   const [menuOpen, setMenuOpen] = useState(false);
   const initialCategory = new URLSearchParams(window.location.search).get('category');
-  const initialBrand = new URLSearchParams(window.location.search).get('brand');
+   const initialBrand = new URLSearchParams(window.location.search).get('brand');
   const [category, setCategory] = useState(() => ['Todas', 'Poleras', 'Joggers', 'Compresión', 'Hoodies', 'Shorts'].includes(initialCategory ?? '') ? initialCategory! : 'Poleras');
-  const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'ALTITUDE'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
+   const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(() => Boolean(initialBrand));
   const [searchOpen, setSearchOpen] = useState(false);
@@ -842,7 +843,7 @@ function ProductsPage() {
     { label: 'Shorts', value: 'Shorts' },
     { label: 'Sudaderas con capucha y sudaderas', value: 'Hoodies' },
   ];
-  const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'ALTITUDE'];
+   const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'];
   const sortOptions = [
     { value: 'newest', label: 'Novedades' },
     { value: 'best', label: 'Más vendidos' },
@@ -857,7 +858,7 @@ function ProductsPage() {
   const filteredProducts = useMemo(() => {
     const result = products.filter((product) => {
       const matchesCategory = category === 'Todas' || product.category === category;
-      const matchesBrand = brand === 'Todas' || product.brand === brand;
+       const matchesBrand = brand === 'Todas' || product.brand === brand || (brand === 'Naruto' && isNarutoProduct(product));
       return matchesCategory && matchesBrand;
     });
     return result.sort((a, b) => {
