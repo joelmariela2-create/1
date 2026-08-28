@@ -817,6 +817,9 @@ function NarutoDropCarousel() {
             </div>
           ))}
         </div>
+        <Link href="/products?brand=YoungLA" data-testid="button-collection-youngla-drop" className="hero-cta group absolute bottom-4 left-4 z-10 flex h-[44px] w-[240px] items-center justify-between border border-white bg-transparent px-4 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#151515]">
+          Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
+        </Link>
       </div>
       <div className="mt-3 flex items-center justify-center gap-2" role="tablist" aria-label="Seleccionar foto del nuevo drop Naruto">
         {narutoDropCarouselImages.map((image, index) => (
