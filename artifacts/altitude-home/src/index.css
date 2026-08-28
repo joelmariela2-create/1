@@ -1112,7 +1112,11 @@ body {
 }
 
 .announcement-strip span span {
-  color: var(--altitude-gold) !important;
+  color: #252525 !important;
+}
+
+.announcement-strip span .announcement-separator {
+  color: #ed1c24 !important;
 }
 
 .header-logo-mark {
