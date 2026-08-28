@@ -530,7 +530,7 @@ button, a {
   }
   .detail-gallery {
     height: auto;
-    padding-right: 25vw;
+    padding-right: 0;
     scroll-behavior: auto;
   }
   .detail-gallery-slide {
