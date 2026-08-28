@@ -148,7 +148,7 @@ const breatheCompressionGallery = [
 ];
 
 const younglaOnePunchGallery = [
-  '/youngla-one-punch-buzo.jpg',
+  '/youngla-one-punch-buzo-detail.jpg',
 ];
 
 const younglaSasukeGallery = [
@@ -1069,6 +1069,7 @@ function ProductDetailPage() {
   const product = products.find((item) => item.id === params.id);
   const detail = product ? getProductDetails(product) : undefined;
   const galleryImages = product ? getProductGallery(product) : [];
+  const hasMultipleGalleryImages = galleryImages.length > 1;
   const isOnePunchMan = product?.id === 'youngla-one-punch-man';
   const isSasukeBuzo = product?.id === 'youngla-sasuke-buzo';
   const isKuramaBuzo = product?.id === 'youngla-kurama-buzo';
@@ -1172,7 +1173,7 @@ function ProductDetailPage() {
           : !product || !detail ? <section className="flex min-h-[590px] flex-col items-center justify-center px-5 text-center"><p className="section-label text-[#d93731]">404 / selección no encontrada</p><h1 data-testid="text-product-not-found" className="editorial-title mt-4 text-[clamp(2.8rem,9vw,6rem)] font-bold uppercase leading-[.84]">Este drop<br /><span className="text-[#d93731]">ya voló.</span></h1><p className="mt-5 max-w-[310px] text-[12px] leading-[1.5] text-[#716b65]">No encontramos ese producto en el catálogo actual. Explora la selección completa para encontrar tu próximo ritmo.</p><Link href="/products" data-testid="link-not-found-products" className="mt-7 flex h-12 items-center gap-3 bg-[#171717] px-5 text-[10px] font-bold uppercase tracking-[.12em] text-[#f6f4f0] transition-colors hover:bg-[#d93731]"><ArrowLeft size={16} /> Volver a la tienda</Link></section>
           : <section className="detail-content px-5 py-6 md:px-10 md:py-10">
             <div className="grid gap-0 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
-                <div className="detail-photo-wrap detail-gallery-wrap relative overflow-hidden bg-[#e7e3dd]" role="button" tabIndex={0} aria-label={`Ampliar foto de ${product.name}; desliza para ver más imágenes`} onClick={handlePhotoClick} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }} onTouchStart={handlePhotoTouchStart} onTouchEnd={handlePhotoTouchEnd}>
+                <div className={`detail-photo-wrap detail-gallery-wrap relative overflow-hidden bg-[#e7e3dd] ${hasMultipleGalleryImages ? 'has-gallery' : 'is-single-gallery'}`} role="button" tabIndex={0} aria-label={`Ampliar foto de ${product.name}${hasMultipleGalleryImages ? '; desliza para ver más imágenes' : ''}`} onClick={handlePhotoClick} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }} onTouchStart={handlePhotoTouchStart} onTouchEnd={handlePhotoTouchEnd}>
                  <div ref={galleryRef} className="detail-gallery scrollbar-hide" onScroll={(event) => {
                    const gallery = event.currentTarget;
                    const firstSlide = gallery.querySelector<HTMLElement>('.detail-gallery-slide');
@@ -1181,15 +1182,15 @@ function ProductDetailPage() {
                  }}>
                    {galleryImages.map((image, index) => (
                      <div key={image} className="detail-gallery-slide">
-                       <img data-testid={index === 0 ? `img-product-detail-${product.id}` : undefined} src={image} alt={`${product.name}, vista ${index + 1}`} draggable={false} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === 0 ? 'high' : 'low'} className="detail-photo h-full w-full object-cover" />
+                        <img data-testid={index === 0 ? `img-product-detail-${product.id}` : undefined} src={image} alt={`${product.name}, vista ${index + 1}`} draggable={false} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === 0 ? 'high' : 'low'} className={`detail-photo h-full w-full ${hasMultipleGalleryImages ? 'object-cover' : 'object-contain'}`} />
                      </div>
                    ))}
                  </div>
-                 {activeGalleryIndex > 0 && <button type="button" aria-label="Imagen anterior" onClick={(event) => { event.stopPropagation(); scrollGallery(-1); }} className="gallery-arrow absolute left-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:flex"><ChevronLeft size={20} /></button>}
-                 {activeGalleryIndex < galleryImages.length - 1 && <button type="button" aria-label="Imagen siguiente" onClick={(event) => { event.stopPropagation(); scrollGallery(1); }} className="gallery-arrow absolute right-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:flex"><ChevronRight size={20} /></button>}
-                 <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-[#171717]/65 px-2.5 py-1.5" aria-label={`Imagen ${activeGalleryIndex + 1} de ${galleryImages.length}`}>
-                   {galleryImages.map((image, index) => <span key={image} className={`h-1.5 w-1.5 rounded-full transition-all ${activeGalleryIndex === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}
-                 </div>
+                  {hasMultipleGalleryImages && activeGalleryIndex > 0 && <button type="button" aria-label="Imagen anterior" onClick={(event) => { event.stopPropagation(); scrollGallery(-1); }} className="gallery-arrow absolute left-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:flex"><ChevronLeft size={20} /></button>}
+                  {hasMultipleGalleryImages && activeGalleryIndex < galleryImages.length - 1 && <button type="button" aria-label="Imagen siguiente" onClick={(event) => { event.stopPropagation(); scrollGallery(1); }} className="gallery-arrow absolute right-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:flex"><ChevronRight size={20} /></button>}
+                  {hasMultipleGalleryImages && <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-[#171717]/65 px-2.5 py-1.5" aria-label={`Imagen ${activeGalleryIndex + 1} de ${galleryImages.length}`}>
+                    {galleryImages.map((image, index) => <span key={image} className={`h-1.5 w-1.5 rounded-full transition-all ${activeGalleryIndex === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}
+                  </div>}
               </div>
                <div className="detail-info min-w-0 md:sticky md:top-5">
                  <h1 data-testid="text-detail-name" className="editorial-title mt-3 max-w-[560px] font-bold uppercase tracking-[-.065em] text-[26px]">{product.name}</h1>
