@@ -148,7 +148,7 @@ const breatheCompressionGallery = [
 ];
 
 const younglaOnePunchGallery = [
-  '/youngla-one-punch-buzo-detail.jpg',
+  '/youngla-one-punch-buzo.jpg',
 ];
 
 const younglaSasukeGallery = [
@@ -803,7 +803,7 @@ function ProductsPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const initialCategory = new URLSearchParams(window.location.search).get('category');
   const initialBrand = new URLSearchParams(window.location.search).get('brand');
-  const [category, setCategory] = useState(() => ['Todas', 'Compresión', 'Hoodies', 'Joggers', 'Shorts', 'Poleras'].includes(initialCategory ?? '') ? initialCategory! : 'Todas');
+  const [category, setCategory] = useState(() => ['Todas', 'Poleras', 'Joggers', 'Compresión', 'Hoodies', 'Shorts'].includes(initialCategory ?? '') ? initialCategory! : 'Poleras');
   const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'ALTITUDE'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(() => Boolean(initialBrand));
@@ -813,18 +813,18 @@ function ProductsPage() {
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState(false);
-  const categories = ['Todas', 'Compresión', 'Hoodies', 'Joggers', 'Shorts', 'Poleras'];
+  const categories = ['Todas', 'Poleras', 'Joggers', 'Compresión', 'Hoodies', 'Shorts'];
   const searchCategories = [
     { label: 'Todos los productos', value: 'Todas' },
     { label: 'Camisetas y tops', value: 'Poleras' },
-    { label: 'Shorts', value: 'Shorts' },
-    { label: 'Sudaderas con capucha y sudaderas', value: 'Hoodies' },
     { label: 'Joggers y pantalones deportivos', value: 'Joggers' },
     { label: 'Pantalones', value: 'Joggers' },
+    { label: 'Chándales', value: 'Joggers' },
     { label: 'Camisetas sin mangas', value: 'Compresión' },
     { label: 'Conjuntos deportivos', value: 'Compresión' },
     { label: 'Camisetas de manga larga', value: 'Compresión' },
-    { label: 'Chándales', value: 'Joggers' },
+    { label: 'Shorts', value: 'Shorts' },
+    { label: 'Sudaderas con capucha y sudaderas', value: 'Hoodies' },
   ];
   const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'ALTITUDE'];
   const sortOptions = [
@@ -926,7 +926,7 @@ function ProductsPage() {
           <div className="mb-5 flex items-end justify-between">
             <div>
               <p className="section-label text-[#8b857e]">Selección ALTITUDE</p>
-              <h2 data-testid="text-results-heading" className="editorial-title mt-1 text-[22px] font-bold uppercase tracking-[-.04em]">{brand === 'Todas' ? 'Todos los productos' : brand}</h2>
+               <h2 data-testid="text-results-heading" className="editorial-title mt-1 text-[22px] font-bold uppercase tracking-[-.04em]">{category !== 'Todas' ? category : brand === 'Todas' ? 'Todos los productos' : brand}</h2>
             </div>
             <span data-testid="text-results-count" className="font-mono text-[10px] text-[#8b857e]">{isLoading ? '—' : `${filteredProducts.length} resultados`}</span>
           </div>
@@ -1070,6 +1070,7 @@ function ProductDetailPage() {
   const detail = product ? getProductDetails(product) : undefined;
   const galleryImages = product ? getProductGallery(product) : [];
   const hasMultipleGalleryImages = galleryImages.length > 1;
+  const shouldFillSingleGallery = product?.id === 'youngla-one-punch-man';
   const isOnePunchMan = product?.id === 'youngla-one-punch-man';
   const isSasukeBuzo = product?.id === 'youngla-sasuke-buzo';
   const isKuramaBuzo = product?.id === 'youngla-kurama-buzo';
@@ -1182,7 +1183,7 @@ function ProductDetailPage() {
                  }}>
                    {galleryImages.map((image, index) => (
                      <div key={image} className="detail-gallery-slide">
-                        <img data-testid={index === 0 ? `img-product-detail-${product.id}` : undefined} src={image} alt={`${product.name}, vista ${index + 1}`} draggable={false} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === 0 ? 'high' : 'low'} className={`detail-photo h-full w-full ${hasMultipleGalleryImages ? 'object-cover' : 'object-contain'}`} />
+                        <img data-testid={index === 0 ? `img-product-detail-${product.id}` : undefined} src={image} alt={`${product.name}, vista ${index + 1}`} draggable={false} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === 0 ? 'high' : 'low'} className={`detail-photo h-full w-full ${hasMultipleGalleryImages || shouldFillSingleGallery ? 'object-cover' : 'object-contain'}`} />
                      </div>
                    ))}
                  </div>
