@@ -1570,3 +1570,82 @@ body {
 .vip-page .vip-benefit-card:hover {
   background: #f6f4f0 !important;
 }
+
+/* CONTRASTE — señales más claras para lectura, separación y navegación. */
+.page-shell:not(.social-page) .announcement-strip,
+.products-page .announcement-strip,
+.detail-page .announcement-strip,
+.checkout-page .announcement-strip {
+  background: #f4f2ef !important;
+  border-color: #c9c1b8 !important;
+  color: #4f4a45 !important;
+}
+
+.page-shell:not(.social-page) header,
+.page-shell:not(.social-page) .desktop-nav,
+.products-page header,
+.products-page .desktop-nav,
+.detail-page header,
+.detail-page .desktop-nav,
+.checkout-page header,
+.page-shell:not(.social-page) .bottom-nav,
+.products-page .bottom-nav,
+.detail-page .bottom-nav {
+  border-color: #c9c1b8 !important;
+}
+
+.collection-page > div:first-child .text-\[\#6b6660\],
+.home-main #new-releases .text-\[\#7c7772\],
+.home-main #showroom .text-\[\#7c7772\],
+.home-main #showroom .text-\[\#6b6660\],
+.page-shell > footer .text-\[\#8b857f\],
+.page-shell > footer .text-\[\#766f69\],
+.home-main #benefits .hero-benefit span,
+.products-page .products-content .text-\[\#716b65\],
+.products-page .products-content .text-\[\#77716c\],
+.products-page .products-content .text-\[\#8b857e\],
+.detail-page .detail-content .text-\[\#716b65\],
+.checkout-page .text-\[\#716b65\],
+.checkout-page .text-\[\#8b857e\] {
+  color: #5f5a55 !important;
+}
+
+.page-shell:not(.social-page) header,
+.page-shell:not(.social-page) .desktop-nav,
+.page-shell:not(.social-page) .bottom-nav,
+.collection-page .campaign-tile,
+.home-main #new-releases,
+.home-main #showroom,
+.page-shell > footer,
+.products-page .product-card-image,
+.products-page .product-skeleton,
+.detail-photo-wrap,
+.checkout-page form > div,
+.checkout-page input,
+.checkout-page select,
+.drawer-panel,
+.products-page aside[role="dialog"],
+.detail-page aside[role="dialog"] {
+  border-color: #c9c1b8 !important;
+}
+
+.products-page .products-content button,
+.products-page .products-content select,
+.products-page .products-content input,
+.checkout-page input,
+.checkout-page select {
+  border-color: #b9afa5 !important;
+}
+
+.collection-page .campaign-tile:has(img[src*="youngla"]) [class~="bottom-4"] span {
+  border-color: rgba(255, 255, 255, .78) !important;
+}
+
+.collection-page .campaign-tile:has(img[src*="youngla"]) [class~="bottom-4"] span:first-child {
+  background: #fff !important;
+}
+
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid #d93731;
+  outline-offset: 3px;
+}
