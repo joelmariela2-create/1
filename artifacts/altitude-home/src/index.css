@@ -1386,6 +1386,16 @@ body {
   color: #171717 !important;
 }
 
+.collection-page .campaign-tile:has(img[src*="youngla"]) h2,
+.collection-page .campaign-tile:has(img[src*="youngla"]) p,
+.collection-page .campaign-tile:has(img[src*="youngla"]) button {
+  color: #fff !important;
+}
+
+.collection-page .campaign-tile:has(img[src*="youngla"]) button {
+  border-color: #fff !important;
+}
+
 .home-main #benefits .hero-benefit span {
   color: #8b857f !important;
 }
