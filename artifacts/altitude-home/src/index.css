@@ -1455,16 +1455,6 @@ body {
   color: #716b65 !important;
 }
 
-.products-page .products-content .category-filter-active {
-  background: #fff !important;
-  border-color: #b58b42 !important;
-  color: #b58b42 !important;
-}
-
-.products-page .bottom-nav button svg {
-  color: #171717 !important;
-}
-
 .products-page .product-card-image,
 .products-page .product-skeleton,
 .detail-page .product-skeleton,
