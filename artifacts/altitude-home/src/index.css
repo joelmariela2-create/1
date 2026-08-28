@@ -1106,9 +1106,9 @@ body {
 }
 
 .announcement-strip {
-  background: #0b0b0b !important;
-  border-bottom: 1px solid rgba(213, 173, 74, .18);
-  color: rgba(244, 241, 236, .68) !important;
+  background: #fff !important;
+  border-bottom: 1px solid #fff;
+  color: #252525 !important;
 }
 
 .announcement-strip span span {
@@ -1644,9 +1644,9 @@ body {
 .products-page .announcement-strip,
 .detail-page .announcement-strip,
 .checkout-page .announcement-strip {
-  background: #f4f2ef !important;
-  border-color: #c9c1b8 !important;
-  color: #4f4a45 !important;
+  background: #fff !important;
+  border-color: #fff !important;
+  color: #252525 !important;
 }
 
 .page-shell:not(.social-page) header,
