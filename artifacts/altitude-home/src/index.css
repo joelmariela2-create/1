@@ -94,7 +94,7 @@ button, a {
   overscroll-behavior-x: contain;
   scroll-behavior: auto;
   scroll-snap-type: x proximity;
-  touch-action: pan-y;
+  touch-action: auto;
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
