@@ -493,7 +493,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
   const [, setLocation] = useLocation();
   return (
     <>
-      <div className="announcement-strip flex h-7 items-center overflow-hidden bg-[#eeece9] text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
+      <div className="announcement-strip flex h-7 items-center overflow-hidden bg-white text-[9px] font-semibold uppercase tracking-[.16em] text-[#d93731]" aria-label="Información de envíos">
         <div className="announcement-track flex min-w-max items-center">
            <span className="px-4">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS 🇧🇴 <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
            <span className="px-4" aria-hidden="true">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS 🇧🇴 <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
