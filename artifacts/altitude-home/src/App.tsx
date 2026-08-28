@@ -528,6 +528,7 @@ function HomeSearchOverlay({ open, onClose }: { open: boolean; onClose: () => vo
   const [, setLocation] = useLocation();
   const categories = [
     { label: 'All Products', value: 'Todas' },
+    { label: 'Naruto', value: 'Naruto' },
     { label: 'T-Shirts & Tops', value: 'Poleras' },
     { label: 'Shorts', value: 'Shorts' },
     { label: 'Hoodies & Sweatshirts', value: 'Hoodies' },
@@ -572,7 +573,7 @@ function HomeSearchOverlay({ open, onClose }: { open: boolean; onClose: () => vo
             <button
               key={`${category.label}-${index}`}
               type="button"
-              onClick={() => { onClose(); setLocation(`/products?category=${encodeURIComponent(category.value)}`); }}
+              onClick={() => { onClose(); setLocation(category.value === 'Naruto' ? '/products?brand=Naruto' : `/products?category=${encodeURIComponent(category.value)}`); }}
               className="flex min-h-[60px] w-full items-center justify-between border-b border-[#eeeeee] px-1 text-left text-[14px] transition-colors hover:text-[#d93731]"
             >
               <span>{category.label}</span>
@@ -770,7 +771,7 @@ function NarutoDropCarousel() {
             </div>
           ))}
         </div>
-        <Link href="/products?brand=YoungLA" data-testid="button-collection-youngla-drop" className="hero-cta group absolute bottom-4 left-4 z-10 flex h-[44px] w-[240px] items-center justify-between border border-white bg-transparent px-4 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#151515]">
+        <Link href="/products?brand=Naruto" data-testid="button-collection-naruto-drop" className="hero-cta group absolute bottom-4 left-4 z-10 flex h-[44px] w-[240px] items-center justify-between border border-white bg-transparent px-4 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#151515]">
           Ver colección <ArrowRight size={20} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
@@ -804,8 +805,8 @@ function HomeCartDrawer({ open, onClose }: { open: boolean; onClose: () => void 
 function Drawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [location, setLocation] = useLocation();
   if (!open) return null;
-  const links = [['Redes sociales', 'social'], ['Colección', 'collection'], ['Próximos lanzamientos', 'new-releases'], ['Nuevo drop Naruto', 'youngla']];
-  return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="drawer-panel relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 text-[#171717] shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px] text-[#171717]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú" className="text-[#171717]"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); if (id === 'products') setLocation('/products'); else if (id === 'collection') setLocation('/collection'); else if (id === 'social') setLocation('/social'); else if (location !== '/') { setLocation('/'); window.setTimeout(() => scrollToSection(id), 80); } else scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em] text-[#171717]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
+  const links = [['Redes sociales', 'social'], ['Colección', 'collection'], ['Próximos lanzamientos', 'new-releases'], ['Nuevo drop Naruto', 'naruto']];
+  return <div className="fixed inset-0 z-50"><button aria-label="Cerrar menú" onClick={onClose} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" /><aside className="drawer-panel relative h-full w-[82%] max-w-[350px] bg-white px-6 py-6 text-[#171717] shadow-2xl"><div className="flex items-center justify-between border-b border-[#e6e2de] pb-5"><span className="altitude-wordmark text-[25px] text-[#171717]">ALTITUDE</span><button onClick={onClose} aria-label="Cerrar menú" className="text-[#171717]"><X size={22} strokeWidth={1.6} /></button></div><p className="section-label mt-9 text-[#8b857e]">Explorar</p><nav className="mt-4 flex flex-col">{links.map(([label, id]) => <button key={id} onClick={() => { onClose(); if (id === 'products') setLocation('/products'); else if (id === 'collection') setLocation('/collection'); else if (id === 'social') setLocation('/social'); else if (id === 'naruto') setLocation('/products?brand=Naruto'); else if (location !== '/') { setLocation('/'); window.setTimeout(() => scrollToSection(id), 80); } else scrollToSection(id); }} className="flex items-center justify-between border-b border-[#efebe7] py-4 text-left text-[13px] font-semibold uppercase tracking-[.03em] text-[#171717]">{label}<ChevronRight size={16} strokeWidth={1.4} className="text-[#ca2f2b]" /></button>)}</nav></aside></div>;
 }
 
 function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; onShowroom?: () => void; active?: string }) {
@@ -820,7 +821,7 @@ function ProductsPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const initialCategory = new URLSearchParams(window.location.search).get('category');
    const initialBrand = new URLSearchParams(window.location.search).get('brand');
-  const [category, setCategory] = useState(() => ['Todas', 'Poleras', 'Joggers', 'Compresión', 'Hoodies', 'Shorts'].includes(initialCategory ?? '') ? initialCategory! : 'Poleras');
+   const [category, setCategory] = useState(() => ['Todas', 'Poleras', 'Joggers', 'Compresión', 'Hoodies', 'Shorts'].includes(initialCategory ?? '') ? initialCategory! : initialBrand === 'Naruto' ? 'Todas' : 'Poleras');
    const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(() => Boolean(initialBrand));
@@ -831,18 +832,19 @@ function ProductsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState(false);
   const categories = ['Todas', 'Poleras', 'Joggers', 'Compresión', 'Hoodies', 'Shorts'];
-  const searchCategories = [
-    { label: 'Todos los productos', value: 'Todas' },
-    { label: 'Camisetas y tops', value: 'Poleras' },
-    { label: 'Joggers y pantalones deportivos', value: 'Joggers' },
-    { label: 'Pantalones', value: 'Joggers' },
-    { label: 'Chándales', value: 'Joggers' },
-    { label: 'Camisetas sin mangas', value: 'Compresión' },
-    { label: 'Conjuntos deportivos', value: 'Compresión' },
-    { label: 'Camisetas de manga larga', value: 'Compresión' },
-    { label: 'Shorts', value: 'Shorts' },
-    { label: 'Sudaderas con capucha y sudaderas', value: 'Hoodies' },
-  ];
+   const searchCategories: Array<{ label: string; value: string; filter: 'category' | 'brand' }> = [
+     { label: 'Todos los productos', value: 'Todas', filter: 'category' },
+     { label: 'Naruto', value: 'Naruto', filter: 'brand' },
+     { label: 'Camisetas y tops', value: 'Poleras', filter: 'category' },
+     { label: 'Joggers y pantalones deportivos', value: 'Joggers', filter: 'category' },
+     { label: 'Pantalones', value: 'Joggers', filter: 'category' },
+     { label: 'Chándales', value: 'Joggers', filter: 'category' },
+     { label: 'Camisetas sin mangas', value: 'Compresión', filter: 'category' },
+     { label: 'Conjuntos deportivos', value: 'Compresión', filter: 'category' },
+     { label: 'Camisetas de manga larga', value: 'Compresión', filter: 'category' },
+     { label: 'Shorts', value: 'Shorts', filter: 'category' },
+     { label: 'Sudaderas con capucha y sudaderas', value: 'Hoodies', filter: 'category' },
+   ];
    const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'];
   const sortOptions = [
     { value: 'newest', label: 'Novedades' },
@@ -909,7 +911,7 @@ function ProductsPage() {
               <button type="button" onClick={() => setSearchOpen(false)} aria-label="Cerrar categorías" className="flex h-9 w-9 items-center justify-center border border-[#d8d3ce]"><X size={18} strokeWidth={1.5} /></button>
             </div>
             <nav className="mt-2 divide-y divide-[#e6e2de]">
-              {searchCategories.map((item) => <button key={item.label} type="button" onClick={() => { setCategory(item.value); setSearchOpen(false); }} className="flex w-full items-center justify-between py-5 text-left text-[13px] font-medium text-[#252525] transition-colors hover:text-[#d93731]"><span>{item.label}</span><ChevronRight size={17} strokeWidth={1.5} /></button>)}
+               {searchCategories.map((item) => <button key={item.label} type="button" onClick={() => { if (item.filter === 'brand') { setBrand(item.value); setCategory('Todas'); } else setCategory(item.value); setSearchOpen(false); }} className="flex w-full items-center justify-between py-5 text-left text-[13px] font-medium text-[#252525] transition-colors hover:text-[#d93731]"><span>{item.label}</span><ChevronRight size={17} strokeWidth={1.5} /></button>)}
             </nav>
           </aside>
         </div>}
@@ -932,7 +934,7 @@ function ProductsPage() {
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div className="flex flex-wrap gap-2">
                 <span className="mr-1 self-center text-[9px] font-bold uppercase tracking-[.12em] text-[#8b857e]">Marca</span>
-                {brands.map((item) => <button key={item} data-testid={`button-brand-${item.toLowerCase().replaceAll(' ', '-')}`} onClick={() => setBrand(item)} className={`border px-3 py-2 text-[9px] font-semibold transition-colors ${brand === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] text-[#69635d] hover:border-[#171717]'}`}>{item}</button>)}
+                {brands.map((item) => <button key={item} data-testid={`button-brand-${item.toLowerCase().replaceAll(' ', '-')}`} onClick={() => { setBrand(item); if (item === 'Naruto') setCategory('Todas'); }} className={`border px-3 py-2 text-[9px] font-semibold transition-colors ${brand === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] text-[#69635d] hover:border-[#171717]'}`}>{item}</button>)}
               </div>
               {(category !== 'Todas' || brand !== 'Todas' || sort !== 'newest') && <button data-testid="button-clear-filters" onClick={clearFilters} className="flex items-center gap-2 self-start text-[9px] font-bold uppercase tracking-[.1em] text-[#d93731] hover:text-[#171717] md:self-center">Limpiar filtros <X size={13} /></button>}
             </div>
