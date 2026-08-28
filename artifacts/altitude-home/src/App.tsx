@@ -776,13 +776,6 @@ function NarutoDropCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActiveIndex((index) => (index + 1) % narutoDropCarouselImages.length);
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-
   const goToSlide = (index: number) => {
     setActiveIndex((index + narutoDropCarouselImages.length) % narutoDropCarouselImages.length);
   };
@@ -811,11 +804,17 @@ function NarutoDropCarousel() {
       <div className="relative overflow-hidden bg-[#171717]" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
           {narutoDropCarouselImages.map((image, index) => (
-            <div key={image} className="aspect-[16/9] w-full shrink-0">
+            <div key={image} className="h-[min(118vw,620px)] w-full shrink-0 md:h-[560px]">
               <img src={image} alt={`Nuevo drop Naruto, foto ${index + 1} de ${narutoDropCarouselImages.length}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" className="block h-full w-full object-cover" />
             </div>
           ))}
         </div>
+        <button type="button" aria-label="Foto anterior del nuevo drop Naruto" onClick={() => goToSlide(activeIndex - 1)} className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] shadow-sm transition-colors hover:bg-[#ca2f2b] hover:text-white">
+          <ChevronLeft size={19} strokeWidth={1.6} />
+        </button>
+        <button type="button" aria-label="Foto siguiente del nuevo drop Naruto" onClick={() => goToSlide(activeIndex + 1)} className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] shadow-sm transition-colors hover:bg-[#ca2f2b] hover:text-white">
+          <ChevronRight size={19} strokeWidth={1.6} />
+        </button>
       </div>
       <div className="mt-3 flex items-center justify-center gap-2" role="tablist" aria-label="Seleccionar foto del nuevo drop Naruto">
         {narutoDropCarouselImages.map((image, index) => (
