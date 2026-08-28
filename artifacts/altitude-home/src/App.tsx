@@ -57,8 +57,9 @@ type Product = {
 };
 
 const products: Product[] = [
-  { id: 'youngla-one-punch-man', name: 'Canguro One Punch Man', brand: 'YoungLA', price: formatBs(1000), priceValue: 1000, category: 'Hoodies', status: 'Nuevo', image: '/youngla-one-punch-man-front.jpg' },
+  { id: 'youngla-one-punch-man', name: 'Buzo One Punch Man', brand: 'YoungLA', price: formatBs(990), priceValue: 990, category: 'Joggers', status: 'Nuevo', image: '/youngla-one-punch-buzo.jpg' },
   { id: 'youngla-oversize-tee', name: 'Polera Oversize', brand: 'YoungLA', price: formatBs(550), priceValue: 550, category: 'Poleras', status: 'Nuevo', image: '/youngla-oversize-tee.jpg' },
+  { id: 'youngla-one-punch-tee', name: 'Polera Oversize One Punch Man', brand: 'YoungLA', price: formatBs(650), priceValue: 650, category: 'Poleras', status: 'Nuevo', image: '/youngla-one-punch-tee.jpg' },
   { id: 'breathe-sculpt-longline', name: 'Polera Compresión Core — Negra', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Últimas unidades', image: '/breathe-compression-black.webp' },
   { id: 'breathe-compression-graphite', name: 'Polera Compresión Core — Grafito', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-graphite.webp' },
   { id: 'breathe-compression-white', name: 'Polera Compresión Core — Blanca', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-white.webp' },
@@ -75,8 +76,9 @@ const products: Product[] = [
 ];
 
 const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' | 'fit' | 'features' | 'sizes'>> = {
-  'youngla-one-punch-man': { material: 'Algodón de alto gramaje', fabricWeight: '380 GSM · pesado', fit: 'Oversized fit', sizes: ['M'], features: ['Capucha amplia', 'Bolsillo canguro frontal', 'Gráficos One Punch Man'] },
+  'youngla-one-punch-man': { material: 'Algodón de alto gramaje', fabricWeight: '380 GSM · pesado', fit: 'Relaxed fit', sizes: ['M', 'L', 'XL'], features: ['Cintura elástica ajustable', 'Bolsillos laterales', 'Gráfico One Punch Man'] },
   'youngla-oversize-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L', 'XXXL'], features: ['Corte amplio', 'Manga corta', 'Gráfico YoungLA frontal'] },
+  'youngla-one-punch-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M'], features: ['Corte amplio', 'Manga corta', 'Gráfico One Punch Man en espalda'] },
   'altitude-core-tee': { material: 'Algodón peinado', fabricWeight: '220 GSM', fit: 'Regular fit', sizes: ['XS', 'S', 'M', 'L', 'XL'], features: ['Costuras reforzadas en hombros', 'Cuello acanalado de recuperación', 'Etiqueta tejida ALTITUDE'] },
   'youngla-everyday-heavy': { material: 'Jersey de algodón', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Hombro caído', 'Dobladillo pesado', 'Lavado suave de alto contraste'] },
   'gymshark-pace-short': { material: 'Nylon técnico', fabricWeight: '140 GSM · ligero', fit: 'Athletic fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Secado rápido', 'Bolsillo lateral con cierre', 'Cordón interno ajustable'] },
@@ -104,13 +106,15 @@ const breatheCompressionGallery = [
 ];
 
 const younglaOnePunchGallery = [
-  '/youngla-one-punch-man-front.jpg',
-  '/youngla-one-punch-man-back.jpg',
-  '/youngla-one-punch-man-product.jpg',
+  '/youngla-one-punch-buzo.jpg',
 ];
 
 const younglaOversizeGallery = [
   '/youngla-oversize-tee.jpg',
+];
+
+const younglaOnePunchTeeGallery = [
+  '/youngla-one-punch-tee.jpg',
 ];
 
 function getProductGallery(product: Product) {
@@ -120,6 +124,10 @@ function getProductGallery(product: Product) {
 
   if (product.id === 'youngla-oversize-tee') {
     return younglaOversizeGallery;
+  }
+
+  if (product.id === 'youngla-one-punch-tee') {
+    return younglaOnePunchTeeGallery;
   }
 
   if (product.brand === 'Breathe Divinity' && product.category === 'Compresión') {
@@ -565,11 +573,12 @@ function ProductsPage() {
   const [location, setLocation] = useLocation();
   const { cartItems, toast, addToCart, removeFromCart, notify } = useShop();
   const [menuOpen, setMenuOpen] = useState(false);
-  const initialCategory = new URLSearchParams(location.split('?')[1] ?? '').get('category');
+  const initialCategory = new URLSearchParams(window.location.search).get('category');
+  const initialBrand = new URLSearchParams(window.location.search).get('brand');
   const [category, setCategory] = useState(() => ['Todas', 'Compresión', 'Hoodies', 'Joggers', 'Shorts', 'Poleras'].includes(initialCategory ?? '') ? initialCategory! : 'Todas');
-  const [brand, setBrand] = useState('Todas');
+  const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'ALTITUDE'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
   const [sort, setSort] = useState('newest');
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(() => Boolean(initialBrand));
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [orderFormOpen, setOrderFormOpen] = useState(false);
@@ -689,7 +698,7 @@ function ProductsPage() {
           <div className="mb-5 flex items-end justify-between">
             <div>
               <p className="section-label text-[#8b857e]">Selección ALTITUDE</p>
-              <h2 data-testid="text-results-heading" className="editorial-title mt-1 text-[22px] font-bold uppercase tracking-[-.04em]">Todos los productos</h2>
+              <h2 data-testid="text-results-heading" className="editorial-title mt-1 text-[22px] font-bold uppercase tracking-[-.04em]">{brand === 'Todas' ? 'Todos los productos' : brand}</h2>
             </div>
             <span data-testid="text-results-count" className="font-mono text-[10px] text-[#8b857e]">{isLoading ? '—' : `${filteredProducts.length} resultados`}</span>
           </div>
@@ -726,7 +735,7 @@ function Home() {
       <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onSearch={() => setSearchOpen(true)} onCart={() => setCartOpen(true)} />
       <HomeSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
       <main className="home-main">
-        <CampaignHero onShop={(item) => { setLocation('/products'); notify(`${item.label}: colección seleccionada`); }} />
+        <CampaignHero onShop={(item) => { setLocation(item.id === 'youngla-featured' ? '/products?brand=YoungLA' : '/products'); notify(`${item.label}: colección seleccionada`); }} />
         <ProductRail onAdd={(product) => { addToCart(product); setCartOpen(true); }} />
         <section id="showroom" className="mx-5 mb-5 border-t border-[#e1ddda] py-5 md:mx-8">
           <div className="mb-4 flex items-start justify-between gap-4">
@@ -834,7 +843,8 @@ function ProductDetailPage() {
   const galleryImages = product ? getProductGallery(product) : [];
   const isOnePunchMan = product?.id === 'youngla-one-punch-man';
   const isOversizeTee = product?.id === 'youngla-oversize-tee';
-  const isCustomYounglaProduct = isOnePunchMan || isOversizeTee;
+  const isOnePunchTee = product?.id === 'youngla-one-punch-tee';
+  const isCustomYounglaProduct = isOnePunchMan || isOversizeTee || isOnePunchTee;
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
 
   useEffect(() => {
@@ -963,14 +973,14 @@ function ProductDetailPage() {
                       <p><strong data-testid="text-detail-material" className="font-bold uppercase tracking-[.08em] text-[#171717]">MATERIAL:</strong> {detail.material}</p>
                       <p><strong data-testid="text-detail-weight" className="font-bold uppercase tracking-[.08em] text-[#171717]">FABRIC WEIGHT:</strong> {detail.fabricWeight}</p>
                       <p><strong data-testid="text-detail-fit" className="font-bold uppercase tracking-[.08em] text-[#171717]">FIT:</strong> {detail.fit}</p>
-                       <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DESIGN:</strong> {isOnePunchMan ? 'Canguro negro de la colección YoungLA x One Punch Man, con gráficos de Saitama en espalda, manga y capucha.' : isOversizeTee ? 'Polera negra YoungLA de corte oversize, con gráfico frontal de gran formato y mangas amplias.' : 'This compression tee hugs close with a structured, armored-style pattern. It’s lightweight, supportive, and moves with you. Whether you’re hitting chest day or just trying to look mysterious at the gym. The crisp Batman emblem seals the deal being sleek and tough.'}</p>
-                       <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">PRODUCTO:</strong> {isOnePunchMan ? 'Disponible únicamente en talla M.' : isOversizeTee ? 'Tallas disponibles: M, L y XXXL.' : "Andoni in the first photo is wearing a size XL. Weight: 215lb Height: 6'1."}</p>
+                        <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DISEÑO:</strong> {isOnePunchMan ? 'Buzo negro de la colección YoungLA x One Punch Man, con gráfico de Saitama y detalle One Punch Man en la pierna.' : isOversizeTee ? 'Polera negra YoungLA de corte oversize, con gráfico frontal de gran formato y mangas amplias.' : isOnePunchTee ? 'Polera negra de corte oversize de la colección YoungLA x One Punch Man, con gráfico de Saitama en la espalda.' : 'Esta prenda de compresión acompaña el movimiento con un ajuste firme y ligero.'}</p>
+                        <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">PRODUCTO:</strong> {isOnePunchMan ? 'Tallas disponibles: M, L y XL.' : isOversizeTee ? 'Tallas disponibles: M, L y XXXL.' : isOnePunchTee ? 'Disponible únicamente en talla M.' : 'Consulta disponibilidad de tallas por WhatsApp.'}</p>
                        {!isCustomYounglaProduct && <p className="border-l-2 border-[#d93731] pl-4 text-[10px] leading-[1.6] text-[#716b65]">THE DARK KNIGHT TRILOGY and all related characters and elements © &amp; ™ DC and Warner Bros. Entertainment Inc. WB SHIELD: © &amp; ™ WBEI. (s26)</p>}
                    </div>
                     <div id="size-chart" className="mt-8 scroll-mt-24">
                       <h2 className="editorial-title text-[19px] font-bold uppercase">{isCustomYounglaProduct ? 'Tallas disponibles' : '4259 Size Chart'} {!isCustomYounglaProduct && <span className="font-sans text-[10px] font-medium normal-case tracking-normal text-[#8b857e]">(inches)</span>}</h2>
                       <div className="mt-4 overflow-x-auto border border-[#d9d3cc]">
-                        {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">{isOnePunchMan ? 'Única talla disponible' : 'Selecciona tu talla'}</span><strong className="text-[18px] text-[#d93731]">{isOnePunchMan ? 'M' : 'M · L · XXXL'}</strong></div> : <>
+                         {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Tallas disponibles</span><strong className="text-[18px] text-[#d93731]">{isOnePunchMan ? 'M · L · XL' : 'M · L · XXXL'}</strong></div> : <>
                        <table className="w-full min-w-[520px] border-collapse text-left text-[11px]">
                          <caption className="sr-only">4259 Size Chart in inches</caption>
                          <thead className="bg-[#171717] text-white"><tr><th scope="col" className="px-3 py-3 font-bold uppercase tracking-[.1em]">Size</th><th scope="col" className="px-3 py-3 font-bold">S</th><th scope="col" className="px-3 py-3 font-bold">M</th><th scope="col" className="px-3 py-3 font-bold">L</th><th scope="col" className="px-3 py-3 font-bold">XL</th><th scope="col" className="px-3 py-3 font-bold">XXL</th></tr></thead>

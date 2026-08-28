@@ -987,6 +987,11 @@ body {
   border-color: #333 !important;
 }
 
+/* Las pestañas activas conservan texto blanco sobre el fondo negro de selección. */
+.products-page .products-content button[class*="bg-[#171717]"] {
+  color: #fff !important;
+}
+
 .drawer-panel,
 .products-page aside[role="dialog"],
 .detail-page aside[role="dialog"],
