@@ -62,6 +62,7 @@ const products: Product[] = [
   { id: 'youngla-one-punch-tee', name: 'Polera Oversize One Punch Man', brand: 'YoungLA', price: formatBs(650), priceValue: 650, category: 'Poleras', status: 'Nuevo', image: '/youngla-one-punch-tee.jpg' },
   { id: 'youngla-naruto-tee', name: 'Polera Oversize Naruto', brand: 'YoungLA', price: formatBs(800), priceValue: 800, category: 'Poleras', status: 'Nuevo', image: '/youngla-naruto-tee-worn.jpg' },
   { id: 'youngla-naruto-shorts', name: 'Shorts Naruto', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Shorts', status: 'Nuevo', image: '/youngla-naruto-shorts-worn.jpg' },
+  { id: 'youngla-itachi-shorts', name: 'Short Itachi', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Shorts', status: 'Nuevo', image: '/youngla-itachi-shorts-worn.jpg' },
   { id: 'breathe-sculpt-longline', name: 'Polera Compresión Core — Negra', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Últimas unidades', image: '/breathe-compression-black.webp' },
   { id: 'breathe-compression-graphite', name: 'Polera Compresión Core — Grafito', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-graphite.webp' },
   { id: 'breathe-compression-white', name: 'Polera Compresión Core — Blanca', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-white.webp' },
@@ -83,6 +84,7 @@ const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' |
   'youngla-one-punch-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M'], features: ['Corte amplio', 'Manga corta', 'Gráfico One Punch Man en espalda'] },
   'youngla-naruto-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L'], features: ['Corte amplio', 'Manga corta', 'Gráfico Akatsuki frontal y posterior'] },
   'youngla-naruto-shorts': { material: 'Algodón suave', fabricWeight: '280 GSM', fit: 'Relaxed fit', sizes: ['M'], features: ['Cintura elástica ajustable', 'Bolsillos laterales', 'Gráficos Naruto y nubes Akatsuki'] },
+  'youngla-itachi-shorts': { material: 'Algodón suave', fabricWeight: '280 GSM', fit: 'Relaxed fit', sizes: ['M'], features: ['Cintura elástica ajustable', 'Bolsillos laterales', 'Gráfico de Itachi y Akatsuki'] },
   'altitude-core-tee': { material: 'Algodón peinado', fabricWeight: '220 GSM', fit: 'Regular fit', sizes: ['XS', 'S', 'M', 'L', 'XL'], features: ['Costuras reforzadas en hombros', 'Cuello acanalado de recuperación', 'Etiqueta tejida ALTITUDE'] },
   'youngla-everyday-heavy': { material: 'Jersey de algodón', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Hombro caído', 'Dobladillo pesado', 'Lavado suave de alto contraste'] },
   'gymshark-pace-short': { material: 'Nylon técnico', fabricWeight: '140 GSM · ligero', fit: 'Athletic fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Secado rápido', 'Bolsillo lateral con cierre', 'Cordón interno ajustable'] },
@@ -131,6 +133,11 @@ const younglaNarutoShortsGallery = [
   '/youngla-naruto-shorts-worn.jpg',
 ];
 
+const younglaItachiShortsGallery = [
+  '/youngla-itachi-shorts-product.jpg',
+  '/youngla-itachi-shorts-worn.jpg',
+];
+
 function getProductGallery(product: Product) {
   if (product.id === 'youngla-one-punch-man') {
     return younglaOnePunchGallery;
@@ -150,6 +157,10 @@ function getProductGallery(product: Product) {
 
   if (product.id === 'youngla-naruto-shorts') {
     return younglaNarutoShortsGallery;
+  }
+
+  if (product.id === 'youngla-itachi-shorts') {
+    return younglaItachiShortsGallery;
   }
 
   if (product.brand === 'Breathe Divinity' && product.category === 'Compresión') {
@@ -830,7 +841,7 @@ function CollectionPage() {
                     <p className={`mb-2 text-[10px] font-bold uppercase tracking-[.22em] ${campaign.id === 'youngla-new-drop' || campaign.id === 'breathe-divinity-featured' ? 'text-white' : 'text-[#5f5a55]'}`}>{campaign.label}</p>
                     <h2 className={`campaign-tile-title max-w-[210px] text-[clamp(1.9rem,8vw,3.5rem)] ${campaign.id === 'youngla-new-drop' || campaign.id === 'gymshark-new-arrivals' ? 'font-extrabold' : 'font-black'} uppercase leading-[.88] tracking-[-.065em] ${campaign.id === 'youngla-new-drop' ? 'text-white' : campaign.id === 'breathe-divinity-featured' ? 'text-[#171717]' : ''}`}>{campaign.title}</h2>
                 </div>
-                  <button data-testid={`button-collection-${campaign.id}`} onClick={() => { setLocation('/products'); notify(`${campaign.label}: colección seleccionada`); }} className={`hero-cta group mt-5 flex h-[44px] min-w-[158px] items-center justify-between gap-5 border px-4 text-[9px] font-bold uppercase tracking-[.1em] ${campaign.id === 'youngla-new-drop' ? 'border-white text-white -translate-x-2 translate-y-4' : campaign.id === 'breathe-divinity-featured' ? 'border-[#171717] text-[#171717] -translate-x-2 translate-y-4' : 'border-[#171717] text-[#171717]'} shadow-sm transition-colors hover:bg-[#d93731] hover:text-white ${campaign.id === 'gymshark-new-arrivals' ? 'translate-y-10' : ''}`}>Ver colección <ArrowRight size={17} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" /></button>
+                 <button data-testid={`button-collection-${campaign.id}`} onClick={() => { setLocation(campaign.id === 'youngla-new-drop' ? '/products?brand=YoungLA' : '/products'); notify(`${campaign.label}: colección seleccionada`); }} className={`hero-cta group mt-5 flex h-[44px] min-w-[158px] items-center justify-between gap-5 border px-4 text-[9px] font-bold uppercase tracking-[.1em] ${campaign.id === 'youngla-new-drop' ? 'border-white text-white -translate-x-2 translate-y-4' : campaign.id === 'breathe-divinity-featured' ? 'border-[#171717] text-[#171717] -translate-x-2 translate-y-4' : 'border-[#171717] text-[#171717]'} shadow-sm transition-colors hover:bg-[#d93731] hover:text-white ${campaign.id === 'gymshark-new-arrivals' ? 'translate-y-10' : ''}`}>Ver colección <ArrowRight size={17} strokeWidth={1.7} className="transition-transform group-hover:translate-x-1" /></button>
               </div>
               <div className="absolute bottom-4 left-6 z-10 flex items-center gap-1.5 md:left-12"><span className="h-1.5 w-1.5 rounded-full bg-[#171717]" /><span className="h-1.5 w-1.5 rounded-full border border-[#171717]" /><span className="h-1.5 w-1.5 rounded-full border border-[#171717]" /></div>
             </article>
@@ -868,7 +879,8 @@ function ProductDetailPage() {
   const isOnePunchTee = product?.id === 'youngla-one-punch-tee';
   const isNarutoTee = product?.id === 'youngla-naruto-tee';
   const isNarutoShorts = product?.id === 'youngla-naruto-shorts';
-  const isCustomYounglaProduct = isOnePunchMan || isOversizeTee || isOnePunchTee || isNarutoTee || isNarutoShorts;
+  const isItachiShorts = product?.id === 'youngla-itachi-shorts';
+  const isCustomYounglaProduct = isOnePunchMan || isOversizeTee || isOnePunchTee || isNarutoTee || isNarutoShorts || isItachiShorts;
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
 
   useEffect(() => {
@@ -997,14 +1009,14 @@ function ProductDetailPage() {
                       <p><strong data-testid="text-detail-material" className="font-bold uppercase tracking-[.08em] text-[#171717]">MATERIAL:</strong> {detail.material}</p>
                       <p><strong data-testid="text-detail-weight" className="font-bold uppercase tracking-[.08em] text-[#171717]">FABRIC WEIGHT:</strong> {detail.fabricWeight}</p>
                       <p><strong data-testid="text-detail-fit" className="font-bold uppercase tracking-[.08em] text-[#171717]">FIT:</strong> {detail.fit}</p>
-                         <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DISEÑO:</strong> {isOnePunchMan ? 'Buzo negro de la colección YoungLA x One Punch Man, con gráfico de Saitama y detalle One Punch Man en la pierna.' : isNarutoShorts ? 'Shorts negros YoungLA x Naruto, con gráficos Akatsuki y nubes rojas en ambas piernas.' : isNarutoTee ? 'Polera negra de corte oversize YoungLA x Naruto, con gráfico Akatsuki de gran formato al frente y detalle posterior.' : isOversizeTee ? 'Polera negra YoungLA de corte oversize, con gráfico frontal de gran formato y mangas amplias.' : isOnePunchTee ? 'Polera negra de corte oversize de la colección YoungLA x One Punch Man, con gráfico de Saitama en la espalda.' : 'Esta prenda de compresión acompaña el movimiento con un ajuste firme y ligero.'}</p>
-                         <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">PRODUCTO:</strong> {isOnePunchMan ? 'Tallas disponibles: M, L y XL.' : isNarutoShorts ? 'Disponible en talla M.' : isNarutoTee ? 'Tallas disponibles: M y L.' : isOversizeTee ? 'Tallas disponibles: M, L y XXXL.' : isOnePunchTee ? 'Disponible únicamente en talla M.' : 'Consulta disponibilidad de tallas por WhatsApp.'}</p>
+                          <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DISEÑO:</strong> {isOnePunchMan ? 'Buzo negro de la colección YoungLA x One Punch Man, con gráfico de Saitama y detalle One Punch Man en la pierna.' : isItachiShorts ? 'Shorts negros YoungLA x Naruto, con gráfico de Itachi y detalle Akatsuki en el frente y la parte posterior.' : isNarutoShorts ? 'Shorts negros YoungLA x Naruto, con gráficos Akatsuki y nubes rojas en ambas piernas.' : isNarutoTee ? 'Polera clara de corte oversize YoungLA x Naruto, con gráfica frontal de Gaara y logotipo Naruto Shippuden en la espalda.' : isOversizeTee ? 'Polera negra YoungLA de corte oversize, con gráfico frontal de gran formato y mangas amplias.' : isOnePunchTee ? 'Polera negra de corte oversize de la colección YoungLA x One Punch Man, con gráfico de Saitama en la espalda.' : 'Esta prenda de compresión acompaña el movimiento con un ajuste firme y ligero.'}</p>
+                         <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">PRODUCTO:</strong> {isOnePunchMan ? 'Tallas disponibles: M, L y XL.' : isItachiShorts || isNarutoShorts ? 'Disponible en talla M.' : isNarutoTee ? 'Tallas disponibles: M y L.' : isOversizeTee ? 'Tallas disponibles: M, L y XXXL.' : isOnePunchTee ? 'Disponible únicamente en talla M.' : 'Consulta disponibilidad de tallas por WhatsApp.'}</p>
                        {!isCustomYounglaProduct && <p className="border-l-2 border-[#d93731] pl-4 text-[10px] leading-[1.6] text-[#716b65]">THE DARK KNIGHT TRILOGY and all related characters and elements © &amp; ™ DC and Warner Bros. Entertainment Inc. WB SHIELD: © &amp; ™ WBEI. (s26)</p>}
                    </div>
                     <div id="size-chart" className="mt-8 scroll-mt-24">
                       <h2 className="editorial-title text-[19px] font-bold uppercase">{isCustomYounglaProduct ? 'Tallas disponibles' : '4259 Size Chart'} {!isCustomYounglaProduct && <span className="font-sans text-[10px] font-medium normal-case tracking-normal text-[#8b857e]">(inches)</span>}</h2>
                       <div className="mt-4 overflow-x-auto border border-[#d9d3cc]">
-                         {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Tallas disponibles</span><strong className="text-[18px] text-[#d93731]">{isOnePunchMan ? 'M · L · XL' : isNarutoShorts ? 'M' : isNarutoTee ? 'M · L' : 'M · L · XXXL'}</strong></div> : <>
+                         {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Tallas disponibles</span><strong className="text-[18px] text-[#d93731]">{isOnePunchMan ? 'M · L · XL' : isItachiShorts || isNarutoShorts ? 'M' : isNarutoTee ? 'M · L' : 'M · L · XXXL'}</strong></div> : <>
                        <table className="w-full min-w-[520px] border-collapse text-left text-[11px]">
                          <caption className="sr-only">4259 Size Chart in inches</caption>
                          <thead className="bg-[#171717] text-white"><tr><th scope="col" className="px-3 py-3 font-bold uppercase tracking-[.1em]">Size</th><th scope="col" className="px-3 py-3 font-bold">S</th><th scope="col" className="px-3 py-3 font-bold">M</th><th scope="col" className="px-3 py-3 font-bold">L</th><th scope="col" className="px-3 py-3 font-bold">XL</th><th scope="col" className="px-3 py-3 font-bold">XXL</th></tr></thead>
