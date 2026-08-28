@@ -805,7 +805,7 @@ function NarutoDropCarousel() {
         <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
           {narutoDropCarouselImages.map((image, index) => (
             <div key={image} className="h-[min(118vw,620px)] w-full shrink-0 md:h-[560px]">
-              <img src={image} alt={`Nuevo drop Naruto, foto ${index + 1} de ${narutoDropCarouselImages.length}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-contain" />
+              <img src={image} alt={`Nuevo drop Naruto, foto ${index + 1} de ${narutoDropCarouselImages.length}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" draggable={false} className="block h-full w-full select-none object-contain object-center" style={{ objectFit: 'contain', objectPosition: 'center', transform: 'none' }} />
             </div>
           ))}
         </div>
