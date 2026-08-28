@@ -66,8 +66,8 @@ const products: Product[] = [
   { id: 'youngla-sasuke-solera', name: 'Solera Sasuke Naruto', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-sasuke-solera-product.jpg' },
   { id: 'youngla-itachi-solera', name: 'Solera Itachi Naruto', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-itachi-solera-product.jpg' },
   { id: 'youngla-oversize-tee', name: 'Polera Oversize', brand: 'YoungLA', price: formatBs(550), priceValue: 550, category: 'Poleras', status: 'Nuevo', image: '/youngla-oversize-tee.jpg' },
-  { id: 'youngla-tom-and-jerry-tee', name: 'Polera Tom y Jerry Oversize', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-tom-and-jerry-tee-product.png' },
-  { id: 'youngla-tom-and-jerry-yla-tee', name: 'Polera Oversize Tom y Jerry YLA', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-tom-and-jerry-yla-tee-front.png' },
+  { id: 'youngla-tom-and-jerry-tee', name: 'Polera Tom y Jerry Oversize', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-tom-and-jerry-oversize-product.png' },
+  { id: 'youngla-tom-and-jerry-yla-tee', name: 'Polera Oversize Tom y Jerry — Crema', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-tom-and-jerry-cream-front.jpg' },
   { id: 'youngla-golds-gym-black-tee', name: "Polera Gold's Gym Oversize — Negra", brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-golds-gym-tee-black.jpg' },
   { id: 'youngla-golds-gym-cream-tee', name: "Polera Gold's Gym Oversize — Crema", brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-golds-gym-tee-cream.jpg' },
   { id: 'youngla-one-punch-tee', name: 'Polera Oversize One Punch Man', brand: 'YoungLA', price: formatBs(650), priceValue: 650, category: 'Poleras', status: 'Nuevo', image: '/youngla-one-punch-tee.jpg' },
@@ -109,7 +109,7 @@ const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' |
   'youngla-itachi-solera': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Relaxed fit', sizes: ['M', 'L', 'XL', 'XXL'], features: ['Corte sin mangas', 'Gráfica Itachi y Akatsuki frontal', 'Gráfica posterior Naruto Shippuden'] },
   'youngla-oversize-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L', 'XXXL'], features: ['Corte amplio', 'Manga corta', 'Gráfico YoungLA frontal'] },
   'youngla-tom-and-jerry-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['L'], features: ['Corte amplio', 'Manga corta', 'Gráfico Tom y Jerry'] },
-  'youngla-tom-and-jerry-yla-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L'], features: ['Corte amplio', 'Manga corta', 'Gráfica Tom y Jerry YLA'] },
+  'youngla-tom-and-jerry-yla-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M'], features: ['Corte amplio', 'Manga corta', 'Gráfica Tom y Jerry YLA'] },
   'youngla-golds-gym-black-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L'], features: ['Corte amplio', 'Manga corta', "Gráfica Gold's Gym"] },
   'youngla-golds-gym-cream-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L'], features: ['Corte amplio', 'Manga corta', "Gráfica Gold's Gym"] },
   'youngla-one-punch-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M'], features: ['Corte amplio', 'Manga corta', 'Gráfico One Punch Man en espalda'] },
@@ -195,14 +195,14 @@ const younglaOversizeGallery = [
 ];
 
 const younglaTomAndJerryGallery = [
-  '/youngla-tom-and-jerry-tee-product.png',
-  '/youngla-tom-and-jerry-tee-worn.jpg',
+  '/youngla-tom-and-jerry-oversize-product.png',
+  '/youngla-tom-and-jerry-oversize-worn.jpg',
 ];
 
 const younglaTomAndJerryYlaGallery = [
-  '/youngla-tom-and-jerry-yla-tee-front.png',
-  '/youngla-tom-and-jerry-yla-tee-back.png',
-  '/youngla-tom-and-jerry-yla-tee-worn.jpg',
+  '/youngla-tom-and-jerry-cream-front.jpg',
+  '/youngla-tom-and-jerry-cream-complete.jpg',
+  '/youngla-tom-and-jerry-cream-back.jpg',
 ];
 
 const younglaGoldsGymBlackGallery = [
@@ -681,7 +681,7 @@ function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Pr
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <img src={product.image} alt={product.name} draggable={false} loading={productIndex < 2 ? 'eager' : 'lazy'} decoding="async" fetchPriority={productIndex === 0 ? 'high' : 'low'} className="h-full w-full object-cover object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105" />
+        <img src={product.image} alt={product.name} draggable={false} loading={productIndex < 2 ? 'eager' : 'lazy'} decoding="async" fetchPriority={productIndex === 0 ? 'high' : 'low'} className={`h-full w-full ${product.id.includes('tom-and-jerry') ? 'object-contain' : 'object-cover'} object-center grayscale-[.08] transition-transform duration-500 group-hover:scale-105`} />
         {zoomEnabled && productIndex > 0 && <button type="button" aria-label="Producto anterior" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex - 1); }} className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronLeft size={15} /></button>}
         {zoomEnabled && productIndex < products.length - 1 && <button type="button" aria-label="Producto siguiente" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex + 1); }} className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronRight size={15} /></button>}
       </div>
@@ -695,7 +695,7 @@ function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Pr
 }
 
 function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
-  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">ALTITUDE</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div className="swipe-rail scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">{homePoleraProducts.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
+  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">ALTITUDE</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div className="swipe-rail scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible">{homePoleraProducts.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className={`group relative aspect-[.78] overflow-hidden ${product.id.includes('tom-and-jerry') ? 'bg-white' : 'bg-[#eeecea]'}`}><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
 const narutoDropCarouselImages = [
@@ -953,8 +953,8 @@ function ProductsPage() {
              : isLoading ? <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5">{Array.from({ length: 8 }, (_, index) => <div key={index} className="animate-pulse"><div className="product-skeleton aspect-[.66]" /><div className="mt-3 h-2.5 w-1/3 bg-[#e8e4de]" /><div className="mt-2 h-3.5 w-4/5 bg-[#e8e4de]" /><div className="mt-2 h-2.5 w-1/4 bg-[#e8e4de]" /></div>)}</div>
             : filteredProducts.length === 0 ? <div data-testid="empty-product-results" className="flex min-h-[290px] flex-col items-center justify-center border border-dashed border-[#cfc9c2] bg-[#fbfaf8] px-5 text-center"><span className="flex h-12 w-12 items-center justify-center border border-[#d8d2cb] text-[#d93731]"><Search size={20} strokeWidth={1.4} /></span><h3 className="mt-5 text-[14px] font-bold uppercase tracking-[-.02em]">No encontramos ese drop</h3><p className="mt-2 max-w-[290px] text-[11px] leading-[1.5] text-[#716b65]">Prueba con otra palabra o vuelve a ver toda la selección.</p><button data-testid="button-empty-clear-filters" onClick={clearFilters} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Ver todos los productos</button></div>
               : <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} role="link" tabIndex={0} onClick={(event) => { if ((event.target as HTMLElement).closest('a,button')) return; setLocation(`/products/${product.id}`); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLocation(`/products/${product.id}`); } }} className="product-card group flex min-w-0 cursor-pointer flex-col">
-               <div className="product-card-image relative aspect-[.66] overflow-hidden">
-                  <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} decoding="async" className="h-full w-full object-cover object-center" /></Link>
+                <div className={`product-card-image relative aspect-[.66] overflow-hidden ${product.id.includes('tom-and-jerry') ? 'bg-white' : ''}`}>
+                   <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} decoding="async" className={`h-full w-full ${product.id.includes('tom-and-jerry') ? 'object-contain' : 'object-cover'} object-center`} /></Link>
                    <button data-testid={`button-cart-product-${product.id}`} onClick={() => { addToCart(product); setCartOpen(true); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-cart absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-[#171717] hover:text-white"><ShoppingCart size={15} strokeWidth={1.6} /></button>
               </div>
                   <div className="flex flex-1 flex-col pt-2"><h3 data-testid={`text-product-name-${product.id}`} className="text-[14px] font-medium leading-[1.3] text-[#171717]"><Link href={`/products/${product.id}`} data-testid={`link-product-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-semibold leading-[1.4] text-[#d93731]">{product.brand}</p><p data-testid={`text-product-price-${product.id}`} className="mt-1 text-[15px] font-bold leading-none text-[#171717]">{product.price}</p></div>
@@ -1195,15 +1195,15 @@ function ProductDetailPage() {
           : <section className="detail-content px-5 py-6 md:px-10 md:py-10">
             <div className="grid gap-0 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
                 <div className={`detail-photo-wrap detail-gallery-wrap relative overflow-hidden bg-[#e7e3dd] ${hasMultipleGalleryImages ? 'has-gallery' : 'is-single-gallery'}`} role="button" tabIndex={0} aria-label={`Ampliar foto de ${product.name}${hasMultipleGalleryImages ? '; desliza para ver más imágenes' : ''}`} onClick={handlePhotoClick} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }} onTouchStart={handlePhotoTouchStart} onTouchEnd={handlePhotoTouchEnd}>
-                 <div ref={galleryRef} className="detail-gallery scrollbar-hide" onScroll={(event) => {
+                  <div ref={galleryRef} className="detail-gallery scrollbar-hide" onScroll={(event) => {
                    const gallery = event.currentTarget;
                    const firstSlide = gallery.querySelector<HTMLElement>('.detail-gallery-slide');
                    const slideWidth = firstSlide?.getBoundingClientRect().width ?? gallery.clientWidth;
                    setActiveGalleryIndex(Math.round(gallery.scrollLeft / (slideWidth + 2)));
                  }}>
                    {galleryImages.map((image, index) => (
-                     <div key={image} className="detail-gallery-slide">
-                        <img data-testid={index === 0 ? `img-product-detail-${product.id}` : undefined} src={image} alt={`${product.name}, vista ${index + 1}`} draggable={false} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === 0 ? 'high' : 'low'} className={`detail-photo h-full w-full ${hasMultipleGalleryImages || shouldFillSingleGallery ? 'object-cover' : 'object-contain'}`} />
+                      <div key={image} className={`detail-gallery-slide ${isTomAndJerryTee || isTomAndJerryYlaTee ? 'bg-white' : ''}`}>
+                         <img data-testid={index === 0 ? `img-product-detail-${product.id}` : undefined} src={image} alt={`${product.name}, vista ${index + 1}`} draggable={false} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === 0 ? 'high' : 'low'} className={`detail-photo h-full w-full ${hasMultipleGalleryImages && !isTomAndJerryTee && !isTomAndJerryYlaTee || shouldFillSingleGallery ? 'object-cover' : 'object-contain'}`} />
                      </div>
                    ))}
                  </div>
