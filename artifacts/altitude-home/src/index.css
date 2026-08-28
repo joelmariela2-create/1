@@ -1502,13 +1502,18 @@ body {
   border-color: #e6e2de !important;
 }
 
-.products-page .product-cart,
 .detail-page .detail-info button[class*="bg-white"],
 .detail-page .detail-info button[class*="bg-[#f6f4f0]"],
 .detail-page .detail-photo-wrap .bg-\[\#f6f4f0\] {
   background: #fff !important;
   color: #171717 !important;
   border-color: #d9d3cc !important;
+}
+
+.products-page .product-cart {
+  background: #171717 !important;
+  color: #fff !important;
+  border-color: #171717 !important;
 }
 
 .products-page .filter-drawer,
