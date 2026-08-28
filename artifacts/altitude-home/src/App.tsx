@@ -693,78 +693,7 @@ function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Pr
 }
 
 function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
-  const railRef = useRef<HTMLDivElement | null>(null);
-  const inertiaFrame = useRef<number | null>(null);
-  const touchState = useRef({ startX: 0, startY: 0, lastX: 0, lastTime: 0, velocity: 0, axis: 'undecided' as 'undecided' | 'horizontal' | 'vertical' });
-  const [inertiaActive, setInertiaActive] = useState(false);
-
-  const stopInertia = () => {
-    if (inertiaFrame.current !== null) {
-      window.cancelAnimationFrame(inertiaFrame.current);
-      inertiaFrame.current = null;
-    }
-    setInertiaActive(false);
-  };
-
-  const handleRailTouchStart = (event: TouchEvent<HTMLDivElement>) => {
-    stopInertia();
-    const touch = event.touches[0];
-    if (!touch) return;
-    touchState.current = { startX: touch.clientX, startY: touch.clientY, lastX: touch.clientX, lastTime: performance.now(), velocity: 0, axis: 'undecided' };
-  };
-
-  const handleRailTouchMove = (event: TouchEvent<HTMLDivElement>) => {
-    const touch = event.touches[0];
-    if (!touch || !railRef.current) return;
-    const x = touch.clientX;
-    const now = performance.now();
-    const delta = x - touchState.current.lastX;
-    const totalY = touch.clientY - touchState.current.startY;
-    if (touchState.current.axis === 'undecided' && Math.max(Math.abs(x - touchState.current.startX), Math.abs(totalY)) > 7) {
-      touchState.current.axis = Math.abs(x - touchState.current.startX) >= Math.abs(totalY) ? 'horizontal' : 'vertical';
-    }
-    if (touchState.current.axis !== 'horizontal') return;
-    event.preventDefault();
-    const elapsed = Math.max(8, now - touchState.current.lastTime);
-    railRef.current.scrollLeft -= delta;
-    touchState.current.velocity = delta / elapsed;
-    touchState.current.lastX = x;
-    touchState.current.lastTime = now;
-  };
-
-  const handleRailTouchEnd = () => {
-    const timeSinceLastMove = performance.now() - touchState.current.lastTime;
-    // If the finger has already stopped before leaving the screen, discard
-    // the old velocity so the rail stops with the finger instead of jumping.
-    const initialVelocity = timeSinceLastMove > 120 ? 0 : touchState.current.velocity;
-    if (touchState.current.axis !== 'horizontal' || Math.abs(initialVelocity) < 0.005 || !railRef.current) return;
-    setInertiaActive(true);
-    const startedAt = performance.now();
-    let previousTime = startedAt;
-    const duration = 2000;
-    const animate = (now: number) => {
-      const elapsed = now - startedAt;
-      const progress = Math.min(1, elapsed / duration);
-      const frameTime = now - previousTime;
-      const remainingSpeed = (1 - progress) ** 2;
-      railRef.current?.scrollBy({ left: -initialVelocity * frameTime * remainingSpeed, behavior: 'auto' });
-      previousTime = now;
-      if (progress < 1) inertiaFrame.current = window.requestAnimationFrame(animate);
-      else {
-        inertiaFrame.current = null;
-        setInertiaActive(false);
-      }
-    };
-    inertiaFrame.current = window.requestAnimationFrame(animate);
-  };
-
-  const handleRailTouchCancel = () => {
-    touchState.current.axis = 'undecided';
-    touchState.current.velocity = 0;
-    stopInertia();
-  };
-
-  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">ALTITUDE</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div ref={railRef} className={`swipe-rail scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0 ${inertiaActive ? 'inertial-active' : ''}`} onTouchStart={handleRailTouchStart} onTouchMove={handleRailTouchMove} onTouchEnd={handleRailTouchEnd} onTouchCancel={handleRailTouchCancel}>{homePoleraProducts.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
+  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">ALTITUDE</h2></div><Link href="/products" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div className="swipe-rail scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">{homePoleraProducts.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className="group relative aspect-[.78] overflow-hidden bg-[#eeecea]"><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
 const narutoDropCarouselImages = [
