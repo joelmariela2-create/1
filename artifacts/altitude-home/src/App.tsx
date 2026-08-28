@@ -770,6 +770,10 @@ const narutoDropCarouselImages = [
   '/naruto-drop-1.jpg',
   '/naruto-drop-2.jpg',
   '/naruto-drop-3.jpg',
+  '/naruto-drop-4.jpg',
+  '/naruto-drop-5.jpg',
+  '/naruto-drop-6.jpg',
+  '/naruto-drop-7.jpg',
 ];
 
 function NarutoDropCarousel() {
