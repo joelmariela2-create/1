@@ -408,7 +408,7 @@ button, a {
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
-  touch-action: pan-x;
+  touch-action: auto;
   -webkit-overflow-scrolling: touch;
 }
 .detail-gallery-slide {
