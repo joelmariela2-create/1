@@ -62,6 +62,7 @@ const products: Product[] = [
   { id: 'youngla-kurama-buzo', name: 'Buzo Kurama', brand: 'YoungLA', price: formatBs(1350), priceValue: 1350, category: 'Joggers', status: 'Nuevo', image: '/youngla-kurama-buzo-worn.jpg' },
   { id: 'youngla-naruto-clouds-buzo', name: 'Buzo Naruto Nubes', brand: 'YoungLA', price: formatBs(1350), priceValue: 1350, category: 'Joggers', status: 'Nuevo', image: '/youngla-naruto-clouds-buzo-worn.jpg' },
   { id: 'youngla-naruto-negro-buzo', name: 'Buzo Naruto Negro', brand: 'YoungLA', price: formatBs(1350), priceValue: 1350, category: 'Joggers', status: 'Nuevo', image: '/youngla-naruto-negro-buzo-product.jpg' },
+  { id: 'youngla-sasuke-solera', name: 'Solera Sasuke Naruto', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-sasuke-solera-product.jpg' },
   { id: 'youngla-oversize-tee', name: 'Polera Oversize', brand: 'YoungLA', price: formatBs(550), priceValue: 550, category: 'Poleras', status: 'Nuevo', image: '/youngla-oversize-tee.jpg' },
   { id: 'youngla-one-punch-tee', name: 'Polera Oversize One Punch Man', brand: 'YoungLA', price: formatBs(650), priceValue: 650, category: 'Poleras', status: 'Nuevo', image: '/youngla-one-punch-tee.jpg' },
   { id: 'youngla-naruto-tee', name: 'Polera Oversize Naruto', brand: 'YoungLA', price: formatBs(800), priceValue: 800, category: 'Poleras', status: 'Nuevo', image: '/youngla-naruto-tee-worn.jpg' },
@@ -90,6 +91,7 @@ const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' |
   'youngla-kurama-buzo': { material: 'Algodón suave', fabricWeight: '380 GSM · pesado', fit: 'Relaxed fit', sizes: ['M'], features: ['Cintura elástica ajustable', 'Bolsillos laterales', 'Gráfica de Kurama y nubes Akatsuki'] },
   'youngla-naruto-clouds-buzo': { material: 'Algodón suave', fabricWeight: '380 GSM · pesado', fit: 'Relaxed fit', sizes: ['M', 'L'], features: ['Cintura elástica ajustable', 'Bolsillos laterales', 'Diseño de nubes Naruto en relieve'] },
   'youngla-naruto-negro-buzo': { material: 'Algodón suave', fabricWeight: '380 GSM · pesado', fit: 'Relaxed fit', sizes: ['M', 'L'], features: ['Cintura elástica ajustable', 'Bolsillos laterales', 'Diseño Naruto en relieve tono sobre tono'] },
+  'youngla-sasuke-solera': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Relaxed fit', sizes: ['M', 'L'], features: ['Corte sin mangas', 'Gráfica Sasuke frontal y posterior', 'Detalles inspirados en Naruto Shippuden'] },
   'youngla-oversize-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L', 'XXXL'], features: ['Corte amplio', 'Manga corta', 'Gráfico YoungLA frontal'] },
   'youngla-one-punch-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M'], features: ['Corte amplio', 'Manga corta', 'Gráfico One Punch Man en espalda'] },
   'youngla-naruto-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L'], features: ['Corte amplio', 'Manga corta', 'Gráfico Akatsuki frontal y posterior'] },
@@ -148,6 +150,12 @@ const younglaNarutoNegroGallery = [
   '/youngla-naruto-negro-buzo-worn.jpg',
 ];
 
+const younglaSasukeSoleraGallery = [
+  '/youngla-sasuke-solera-product.jpg',
+  '/youngla-sasuke-solera-worn-front.jpg',
+  '/youngla-sasuke-solera-worn-back.jpg',
+];
+
 const younglaOversizeGallery = [
   '/youngla-oversize-tee.jpg',
 ];
@@ -201,6 +209,10 @@ function getProductGallery(product: Product) {
 
   if (product.id === 'youngla-naruto-negro-buzo') {
     return younglaNarutoNegroGallery;
+  }
+
+  if (product.id === 'youngla-sasuke-solera') {
+    return younglaSasukeSoleraGallery;
   }
 
   if (product.id === 'youngla-oversize-tee') {
@@ -947,6 +959,7 @@ function ProductDetailPage() {
   const isKuramaBuzo = product?.id === 'youngla-kurama-buzo';
   const isNarutoCloudsBuzo = product?.id === 'youngla-naruto-clouds-buzo';
   const isNarutoNegroBuzo = product?.id === 'youngla-naruto-negro-buzo';
+  const isSasukeSolera = product?.id === 'youngla-sasuke-solera';
   const isOversizeTee = product?.id === 'youngla-oversize-tee';
   const isOnePunchTee = product?.id === 'youngla-one-punch-tee';
   const isNarutoTee = product?.id === 'youngla-naruto-tee';
@@ -954,7 +967,7 @@ function ProductDetailPage() {
   const isNarutoAkatsukiTee = product?.id === 'youngla-naruto-akatsuki-tee';
   const isNarutoShorts = product?.id === 'youngla-naruto-shorts';
   const isItachiShorts = product?.id === 'youngla-itachi-shorts';
-  const isCustomYounglaProduct = isOnePunchMan || isSasukeBuzo || isKuramaBuzo || isNarutoCloudsBuzo || isNarutoNegroBuzo || isOversizeTee || isOnePunchTee || isNarutoTee || isItachiTee || isNarutoAkatsukiTee || isNarutoShorts || isItachiShorts;
+  const isCustomYounglaProduct = isOnePunchMan || isSasukeBuzo || isKuramaBuzo || isNarutoCloudsBuzo || isNarutoNegroBuzo || isSasukeSolera || isOversizeTee || isOnePunchTee || isNarutoTee || isItachiTee || isNarutoAkatsukiTee || isNarutoShorts || isItachiShorts;
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
 
   useEffect(() => {
@@ -1083,14 +1096,14 @@ function ProductDetailPage() {
                       <p><strong data-testid="text-detail-material" className="font-bold uppercase tracking-[.08em] text-[#171717]">MATERIAL:</strong> {detail.material}</p>
                       <p><strong data-testid="text-detail-weight" className="font-bold uppercase tracking-[.08em] text-[#171717]">FABRIC WEIGHT:</strong> {detail.fabricWeight}</p>
                       <p><strong data-testid="text-detail-fit" className="font-bold uppercase tracking-[.08em] text-[#171717]">FIT:</strong> {detail.fit}</p>
-                           <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DISEÑO:</strong> {isOnePunchMan ? 'Buzo negro de la colección YoungLA x One Punch Man, con gráfico de Saitama y detalle One Punch Man en la pierna.' : isSasukeBuzo ? 'Buzo negro YoungLA x Naruto, con gráfica de Sasuke en la pierna y detalles morados de inspiración Naruto.' : isKuramaBuzo ? 'Buzo negro YoungLA x Naruto, con gráfica de Kurama y detalles de nubes Akatsuki en tonos oscuros.' : isNarutoCloudsBuzo ? 'Buzo rojo YoungLA x Naruto, con textura y diseño de nubes Akatsuki en toda la prenda.' : isNarutoNegroBuzo ? 'Buzo negro YoungLA x Naruto, con diseño de nubes Akatsuki en relieve tono sobre tono y detalle metálico en el frente.' : isItachiShorts ? 'Shorts negros YoungLA x Naruto, con gráfico de Itachi y detalle Akatsuki en el frente y la parte posterior.' : isNarutoShorts ? 'Shorts negros YoungLA x Naruto, con gráficos Akatsuki y nubes rojas en ambas piernas.' : isNarutoTee ? 'Polera clara de corte oversize YoungLA x Naruto, con gráfica frontal de Gaara y logotipo Naruto Shippuden en la espalda.' : isItachiTee ? 'Polera negra de corte oversize YoungLA x Naruto, con gráfica de Itachi al frente y una ilustración posterior inspirada en Naruto Shippuden.' : isNarutoAkatsukiTee ? 'Polera negra de corte oversize YoungLA x Naruto, con gráfica de Sasori al frente y una composición de Sasori y Akatsuki en la espalda.' : isOversizeTee ? 'Polera negra YoungLA de corte oversize, con gráfico frontal de gran formato y mangas amplias.' : isOnePunchTee ? 'Polera negra de corte oversize de la colección YoungLA x One Punch Man, con gráfico de Saitama en la espalda.' : 'Esta prenda de compresión acompaña el movimiento con un ajuste firme y ligero.'}</p>
-                           <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">PRODUCTO:</strong> {isOnePunchMan ? 'Tallas disponibles: M, L y XL.' : isSasukeBuzo ? 'Tallas disponibles: M y L.' : isKuramaBuzo || isNarutoCloudsBuzo || isNarutoNegroBuzo ? (isKuramaBuzo ? 'Disponible en talla M.' : 'Tallas disponibles: M y L.') : isItachiShorts || isNarutoShorts ? 'Disponible en talla M.' : isNarutoTee || isItachiTee ? 'Tallas disponibles: M y L.' : isNarutoAkatsukiTee ? 'Tallas disponibles: M, L, XL y XXXL.' : isOversizeTee ? 'Tallas disponibles: M, L y XXXL.' : isOnePunchTee ? 'Disponible únicamente en talla M.' : 'Consulta disponibilidad de tallas por WhatsApp.'}</p>
+                           <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DISEÑO:</strong> {isOnePunchMan ? 'Buzo negro de la colección YoungLA x One Punch Man, con gráfico de Saitama y detalle One Punch Man en la pierna.' : isSasukeBuzo ? 'Buzo negro YoungLA x Naruto, con gráfica de Sasuke en la pierna y detalles morados de inspiración Naruto.' : isKuramaBuzo ? 'Buzo negro YoungLA x Naruto, con gráfica de Kurama y detalles de nubes Akatsuki en tonos oscuros.' : isNarutoCloudsBuzo ? 'Buzo rojo YoungLA x Naruto, con textura y diseño de nubes Akatsuki en toda la prenda.' : isNarutoNegroBuzo ? 'Buzo negro YoungLA x Naruto, con diseño de nubes Akatsuki en relieve tono sobre tono y detalle metálico en el frente.' : isSasukeSolera ? 'Solera negra YoungLA x Naruto, con gráfica de Sasuke al frente y una composición de Sasuke y Akatsuki en la espalda.' : isItachiShorts ? 'Shorts negros YoungLA x Naruto, con gráfico de Itachi y detalle Akatsuki en el frente y la parte posterior.' : isNarutoShorts ? 'Shorts negros YoungLA x Naruto, con gráficos Akatsuki y nubes rojas en ambas piernas.' : isNarutoTee ? 'Polera clara de corte oversize YoungLA x Naruto, con gráfica frontal de Gaara y logotipo Naruto Shippuden en la espalda.' : isItachiTee ? 'Polera negra de corte oversize YoungLA x Naruto, con gráfica de Itachi al frente y una ilustración posterior inspirada en Naruto Shippuden.' : isNarutoAkatsukiTee ? 'Polera negra de corte oversize YoungLA x Naruto, con gráfica de Sasori al frente y una composición de Sasori y Akatsuki en la espalda.' : isOversizeTee ? 'Polera negra YoungLA de corte oversize, con gráfico frontal de gran formato y mangas amplias.' : isOnePunchTee ? 'Polera negra de corte oversize de la colección YoungLA x One Punch Man, con gráfico de Saitama en la espalda.' : 'Esta prenda de compresión acompaña el movimiento con un ajuste firme y ligero.'}</p>
+                           <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">PRODUCTO:</strong> {isOnePunchMan ? 'Tallas disponibles: M, L y XL.' : isSasukeBuzo ? 'Tallas disponibles: M y L.' : isKuramaBuzo || isNarutoCloudsBuzo || isNarutoNegroBuzo || isSasukeSolera ? (isKuramaBuzo ? 'Disponible en talla M.' : 'Tallas disponibles: M y L.') : isItachiShorts || isNarutoShorts ? 'Disponible en talla M.' : isNarutoTee || isItachiTee ? 'Tallas disponibles: M y L.' : isNarutoAkatsukiTee ? 'Tallas disponibles: M, L, XL y XXXL.' : isOversizeTee ? 'Tallas disponibles: M, L y XXXL.' : isOnePunchTee ? 'Disponible únicamente en talla M.' : 'Consulta disponibilidad de tallas por WhatsApp.'}</p>
                        {!isCustomYounglaProduct && <p className="border-l-2 border-[#d93731] pl-4 text-[10px] leading-[1.6] text-[#716b65]">THE DARK KNIGHT TRILOGY and all related characters and elements © &amp; ™ DC and Warner Bros. Entertainment Inc. WB SHIELD: © &amp; ™ WBEI. (s26)</p>}
                    </div>
                     <div id="size-chart" className="mt-8 scroll-mt-24">
                       <h2 className="editorial-title text-[19px] font-bold uppercase">{isCustomYounglaProduct ? 'Tallas disponibles' : '4259 Size Chart'} {!isCustomYounglaProduct && <span className="font-sans text-[10px] font-medium normal-case tracking-normal text-[#8b857e]">(inches)</span>}</h2>
                       <div className="mt-4 overflow-x-auto border border-[#d9d3cc]">
-                           {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Tallas disponibles</span><strong className="text-[18px] text-[#d93731]">{isOnePunchMan ? 'M · L · XL' : isSasukeBuzo ? 'M · L' : isKuramaBuzo ? 'M' : isNarutoCloudsBuzo || isNarutoNegroBuzo ? 'M · L' : isItachiShorts || isNarutoShorts ? 'M' : isNarutoTee || isItachiTee ? 'M · L' : isNarutoAkatsukiTee ? 'M · L · XL · XXXL' : 'M · L · XXXL'}</strong></div> : <>
+                           {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Tallas disponibles</span><strong className="text-[18px] text-[#d93731]">{isOnePunchMan ? 'M · L · XL' : isSasukeBuzo ? 'M · L' : isKuramaBuzo ? 'M' : isNarutoCloudsBuzo || isNarutoNegroBuzo || isSasukeSolera ? 'M · L' : isItachiShorts || isNarutoShorts ? 'M' : isNarutoTee || isItachiTee ? 'M · L' : isNarutoAkatsukiTee ? 'M · L · XL · XXXL' : 'M · L · XXXL'}</strong></div> : <>
                        <table className="w-full min-w-[520px] border-collapse text-left text-[11px]">
                          <caption className="sr-only">4259 Size Chart in inches</caption>
                          <thead className="bg-[#171717] text-white"><tr><th scope="col" className="px-3 py-3 font-bold uppercase tracking-[.1em]">Size</th><th scope="col" className="px-3 py-3 font-bold">S</th><th scope="col" className="px-3 py-3 font-bold">M</th><th scope="col" className="px-3 py-3 font-bold">L</th><th scope="col" className="px-3 py-3 font-bold">XL</th><th scope="col" className="px-3 py-3 font-bold">XXL</th></tr></thead>
