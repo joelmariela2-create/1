@@ -58,6 +58,7 @@ type Product = {
 
 const products: Product[] = [
   { id: 'youngla-one-punch-man', name: 'Canguro One Punch Man', brand: 'YoungLA', price: formatBs(1000), priceValue: 1000, category: 'Hoodies', status: 'Nuevo', image: '/youngla-one-punch-man-front.jpg' },
+  { id: 'youngla-oversize-tee', name: 'Polera Oversize', brand: 'YoungLA', price: formatBs(550), priceValue: 550, category: 'Poleras', status: 'Nuevo', image: '/youngla-oversize-tee.jpg' },
   { id: 'breathe-sculpt-longline', name: 'Polera Compresión Core — Negra', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Últimas unidades', image: '/breathe-compression-black.webp' },
   { id: 'breathe-compression-graphite', name: 'Polera Compresión Core — Grafito', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-graphite.webp' },
   { id: 'breathe-compression-white', name: 'Polera Compresión Core — Blanca', brand: 'Breathe Divinity', price: formatBs(365), priceValue: 365, category: 'Compresión', status: 'Disponible', image: '/breathe-compression-white.webp' },
@@ -75,6 +76,7 @@ const products: Product[] = [
 
 const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' | 'fit' | 'features' | 'sizes'>> = {
   'youngla-one-punch-man': { material: 'Algodón de alto gramaje', fabricWeight: '380 GSM · pesado', fit: 'Oversized fit', sizes: ['M'], features: ['Capucha amplia', 'Bolsillo canguro frontal', 'Gráficos One Punch Man'] },
+  'youngla-oversize-tee': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['M', 'L', 'XXXL'], features: ['Corte amplio', 'Manga corta', 'Gráfico YoungLA frontal'] },
   'altitude-core-tee': { material: 'Algodón peinado', fabricWeight: '220 GSM', fit: 'Regular fit', sizes: ['XS', 'S', 'M', 'L', 'XL'], features: ['Costuras reforzadas en hombros', 'Cuello acanalado de recuperación', 'Etiqueta tejida ALTITUDE'] },
   'youngla-everyday-heavy': { material: 'Jersey de algodón', fabricWeight: '240 GSM', fit: 'Oversized fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Hombro caído', 'Dobladillo pesado', 'Lavado suave de alto contraste'] },
   'gymshark-pace-short': { material: 'Nylon técnico', fabricWeight: '140 GSM · ligero', fit: 'Athletic fit', sizes: ['S', 'M', 'L', 'XL'], features: ['Secado rápido', 'Bolsillo lateral con cierre', 'Cordón interno ajustable'] },
@@ -107,9 +109,17 @@ const younglaOnePunchGallery = [
   '/youngla-one-punch-man-product.jpg',
 ];
 
+const younglaOversizeGallery = [
+  '/youngla-oversize-tee.jpg',
+];
+
 function getProductGallery(product: Product) {
   if (product.id === 'youngla-one-punch-man') {
     return younglaOnePunchGallery;
+  }
+
+  if (product.id === 'youngla-oversize-tee') {
+    return younglaOversizeGallery;
   }
 
   if (product.brand === 'Breathe Divinity' && product.category === 'Compresión') {
@@ -823,6 +833,8 @@ function ProductDetailPage() {
   const detail = product ? getProductDetails(product) : undefined;
   const galleryImages = product ? getProductGallery(product) : [];
   const isOnePunchMan = product?.id === 'youngla-one-punch-man';
+  const isOversizeTee = product?.id === 'youngla-oversize-tee';
+  const isCustomYounglaProduct = isOnePunchMan || isOversizeTee;
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
 
   useEffect(() => {
@@ -951,14 +963,14 @@ function ProductDetailPage() {
                       <p><strong data-testid="text-detail-material" className="font-bold uppercase tracking-[.08em] text-[#171717]">MATERIAL:</strong> {detail.material}</p>
                       <p><strong data-testid="text-detail-weight" className="font-bold uppercase tracking-[.08em] text-[#171717]">FABRIC WEIGHT:</strong> {detail.fabricWeight}</p>
                       <p><strong data-testid="text-detail-fit" className="font-bold uppercase tracking-[.08em] text-[#171717]">FIT:</strong> {detail.fit}</p>
-                      <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DESIGN:</strong> {isOnePunchMan ? 'Canguro negro de la colección YoungLA x One Punch Man, con gráficos de Saitama en espalda, manga y capucha.' : 'This compression tee hugs close with a structured, armored-style pattern. It’s lightweight, supportive, and moves with you. Whether you’re hitting chest day or just trying to look mysterious at the gym. The crisp Batman emblem seals the deal being sleek and tough.'}</p>
-                      <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">PRODUCTO:</strong> {isOnePunchMan ? 'Disponible únicamente en talla M.' : "Andoni in the first photo is wearing a size XL. Weight: 215lb Height: 6'1."}</p>
-                      {!isOnePunchMan && <p className="border-l-2 border-[#d93731] pl-4 text-[10px] leading-[1.6] text-[#716b65]">THE DARK KNIGHT TRILOGY and all related characters and elements © &amp; ™ DC and Warner Bros. Entertainment Inc. WB SHIELD: © &amp; ™ WBEI. (s26)</p>}
+                       <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">DESIGN:</strong> {isOnePunchMan ? 'Canguro negro de la colección YoungLA x One Punch Man, con gráficos de Saitama en espalda, manga y capucha.' : isOversizeTee ? 'Polera negra YoungLA de corte oversize, con gráfico frontal de gran formato y mangas amplias.' : 'This compression tee hugs close with a structured, armored-style pattern. It’s lightweight, supportive, and moves with you. Whether you’re hitting chest day or just trying to look mysterious at the gym. The crisp Batman emblem seals the deal being sleek and tough.'}</p>
+                       <p><strong className="font-bold uppercase tracking-[.08em] text-[#171717]">PRODUCTO:</strong> {isOnePunchMan ? 'Disponible únicamente en talla M.' : isOversizeTee ? 'Tallas disponibles: M, L y XXXL.' : "Andoni in the first photo is wearing a size XL. Weight: 215lb Height: 6'1."}</p>
+                       {!isCustomYounglaProduct && <p className="border-l-2 border-[#d93731] pl-4 text-[10px] leading-[1.6] text-[#716b65]">THE DARK KNIGHT TRILOGY and all related characters and elements © &amp; ™ DC and Warner Bros. Entertainment Inc. WB SHIELD: © &amp; ™ WBEI. (s26)</p>}
                    </div>
                     <div id="size-chart" className="mt-8 scroll-mt-24">
-                      <h2 className="editorial-title text-[19px] font-bold uppercase">{isOnePunchMan ? 'Talla disponible' : '4259 Size Chart'} {!isOnePunchMan && <span className="font-sans text-[10px] font-medium normal-case tracking-normal text-[#8b857e]">(inches)</span>}</h2>
+                      <h2 className="editorial-title text-[19px] font-bold uppercase">{isCustomYounglaProduct ? 'Tallas disponibles' : '4259 Size Chart'} {!isCustomYounglaProduct && <span className="font-sans text-[10px] font-medium normal-case tracking-normal text-[#8b857e]">(inches)</span>}</h2>
                       <div className="mt-4 overflow-x-auto border border-[#d9d3cc]">
-                        {isOnePunchMan ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Única talla disponible</span><strong className="text-[18px] text-[#d93731]">M</strong></div> : <>
+                        {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">{isOnePunchMan ? 'Única talla disponible' : 'Selecciona tu talla'}</span><strong className="text-[18px] text-[#d93731]">{isOnePunchMan ? 'M' : 'M · L · XXXL'}</strong></div> : <>
                        <table className="w-full min-w-[520px] border-collapse text-left text-[11px]">
                          <caption className="sr-only">4259 Size Chart in inches</caption>
                          <thead className="bg-[#171717] text-white"><tr><th scope="col" className="px-3 py-3 font-bold uppercase tracking-[.1em]">Size</th><th scope="col" className="px-3 py-3 font-bold">S</th><th scope="col" className="px-3 py-3 font-bold">M</th><th scope="col" className="px-3 py-3 font-bold">L</th><th scope="col" className="px-3 py-3 font-bold">XL</th><th scope="col" className="px-3 py-3 font-bold">XXL</th></tr></thead>
