@@ -908,7 +908,7 @@ function ProductDetailPage() {
               </div>
                <div className="detail-info min-w-0 md:sticky md:top-5">
                  <h1 data-testid="text-detail-name" className="editorial-title mt-3 max-w-[560px] font-bold uppercase tracking-[-.065em] text-[26px]">{product.name}</h1>
-                  <p data-testid="text-detail-brand" className="section-label mt-3 text-[#d93731] text-[18px] ml-[122px]">{product.category === 'Compresión' && product.brand === 'Breathe Divinity' ? 'YoungLA' : product.brand}</p>
+                  <p data-testid="text-detail-brand" className="section-label mt-3 text-[#d93731] ml-0 text-[22px] rounded-tl-[0px] rounded-tr-[0px] rounded-br-[0px] rounded-bl-[0px]">{product.category === 'Compresión' && product.brand === 'Breathe Divinity' ? 'YoungLA' : product.brand}</p>
                  <div className="mt-6 flex items-end justify-between border-b border-[#d9d3cc] pb-5"><p data-testid="text-detail-price" className="text-[22px] font-bold tracking-[-.04em]">{product.price}</p><p data-testid="status-detail-availability" className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.1em] text-[#4e6a50]"><span className="h-2 w-2 rounded-full bg-[#4e6a50]" /> {product.status === 'Últimas unidades' ? 'Quedan pocas' : 'Disponible'}</p></div>
                  <div className="mt-5" aria-label="Seleccionar talla">
                    <div className="flex items-center justify-between gap-3">
