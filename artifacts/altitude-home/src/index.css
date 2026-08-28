@@ -1097,8 +1097,8 @@ body {
 }
 
 .header-logo-mark {
-  border-color: var(--altitude-gold) !important;
-  box-shadow: 0 0 0 3px rgba(213, 173, 74, .08), 0 0 22px rgba(213, 173, 74, .12);
+  border: 1px solid #171717 !important;
+  box-shadow: none !important;
 }
 
 .desktop-nav button,
