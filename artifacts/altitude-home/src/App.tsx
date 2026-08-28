@@ -775,20 +775,38 @@ const narutoDropCarouselImages = [
   '/naruto-drop-6.jpg',
   '/naruto-drop-7.jpg',
 ];
+const narutoDropCarouselSlides = [...narutoDropCarouselImages, narutoDropCarouselImages[0]];
 
 function NarutoDropCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
   const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
-      setActiveIndex((currentIndex) => (currentIndex + 1) % narutoDropCarouselImages.length);
+      setActiveIndex((currentIndex) => currentIndex + 1);
     }, 1000);
 
     return () => window.clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    if (activeIndex !== narutoDropCarouselImages.length) return;
+    const resetTimer = window.setTimeout(() => {
+      setIsTransitioning(false);
+      setActiveIndex(0);
+      window.requestAnimationFrame(() => setIsTransitioning(true));
+    }, 520);
+
+    return () => window.clearTimeout(resetTimer);
+  }, [activeIndex]);
+
   const goToSlide = (index: number) => {
+    if (index >= narutoDropCarouselImages.length && activeIndex === narutoDropCarouselImages.length - 1) {
+      setIsTransitioning(true);
+      setActiveIndex(narutoDropCarouselImages.length);
+      return;
+    }
     setActiveIndex((index + narutoDropCarouselImages.length) % narutoDropCarouselImages.length);
   };
 
@@ -811,13 +829,13 @@ function NarutoDropCarousel() {
           <p className="section-label mb-1 text-[#ca2f2b]">YoungLA × Naruto</p>
           <h2 id="naruto-drop-title" className="editorial-title text-[22px] font-bold uppercase tracking-[-.04em]">Nuevo drop Naruto</h2>
         </div>
-        <span className="font-mono text-[10px] text-[#8b857e]" aria-live="polite">{String(activeIndex + 1).padStart(2, '0')} / {String(narutoDropCarouselImages.length).padStart(2, '0')}</span>
+        <span className="font-mono text-[10px] text-[#8b857e]" aria-live="polite">{String(Math.min(activeIndex, narutoDropCarouselImages.length - 1) + 1).padStart(2, '0')} / {String(narutoDropCarouselImages.length).padStart(2, '0')}</span>
       </div>
       <div className="relative overflow-hidden bg-[#171717]" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-        <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
-          {narutoDropCarouselImages.map((image, index) => (
-            <div key={image} className="h-[min(105vw,560px)] w-full shrink-0 md:h-[500px]">
-              <img src={image} alt={`Nuevo drop Naruto, foto ${index + 1} de ${narutoDropCarouselImages.length}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" className="block h-full w-full object-cover" />
+        <div className={`flex ${isTransitioning ? 'transition-transform duration-500 ease-out' : ''}`} style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+          {narutoDropCarouselSlides.map((image, index) => (
+            <div key={`${image}-${index}`} className="h-[min(105vw,560px)] w-full shrink-0 md:h-[500px]">
+              <img src={image} alt={`Nuevo drop Naruto, foto ${(index % narutoDropCarouselImages.length) + 1} de ${narutoDropCarouselImages.length}`} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" className="block h-full w-full object-cover" />
             </div>
           ))}
         </div>
@@ -827,7 +845,7 @@ function NarutoDropCarousel() {
       </div>
       <div className="mt-3 flex items-center justify-center gap-2" role="tablist" aria-label="Seleccionar foto del nuevo drop Naruto">
         {narutoDropCarouselImages.map((image, index) => (
-          <button key={image} type="button" role="tab" aria-selected={activeIndex === index} aria-label={`Ver foto ${index + 1}`} onClick={() => goToSlide(index)} className={`h-1.5 rounded-full transition-all ${activeIndex === index ? 'w-7 bg-[#ca2f2b]' : 'w-1.5 bg-[#bcb5ae]'}`} />
+          <button key={image} type="button" role="tab" aria-selected={activeIndex % narutoDropCarouselImages.length === index} aria-label={`Ver foto ${index + 1}`} onClick={() => goToSlide(index)} className={`h-1.5 rounded-full transition-all ${activeIndex % narutoDropCarouselImages.length === index ? 'w-7 bg-[#ca2f2b]' : 'w-1.5 bg-[#bcb5ae]'}`} />
         ))}
       </div>
     </section>
