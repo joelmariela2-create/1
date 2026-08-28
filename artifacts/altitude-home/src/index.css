@@ -1640,9 +1640,9 @@ body {
 .products-page .announcement-strip,
 .detail-page .announcement-strip,
 .checkout-page .announcement-strip {
-  background: #fff !important;
+  background: #f4f2ef !important;
   border-color: #c9c1b8 !important;
-  color: #d93731 !important;
+  color: #4f4a45 !important;
 }
 
 .page-shell:not(.social-page) header,

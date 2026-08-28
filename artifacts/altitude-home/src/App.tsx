@@ -493,7 +493,7 @@ function Header({ cartCount, onMenu, onShop, onShowroom, onBenefits, onSearch, o
   const [, setLocation] = useLocation();
   return (
     <>
-      <div className="announcement-strip flex h-7 items-center overflow-hidden bg-white text-[9px] font-semibold uppercase tracking-[.16em] text-[#d93731]" aria-label="Información de envíos">
+      <div className="announcement-strip flex h-7 items-center overflow-hidden bg-[#eeece9] text-[9px] font-semibold uppercase tracking-[.16em] text-[#252525]" aria-label="Información de envíos">
         <div className="announcement-track flex min-w-max items-center">
            <span className="px-4">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS 🇧🇴 <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
            <span className="px-4" aria-hidden="true">ALTITUDE <span className="mx-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span> 📦 ENVÍOS A TODO EL PAÍS 🇧🇴 <span className="mx-2 text-[#c52d2a]">·</span> MARCAS 100% ORIGINALES 🇺🇸 <span className="ml-8 mr-2 text-[#c52d2a]">•</span> ONLINE <span className="mx-2 text-[#c52d2a]">-</span></span>
@@ -1184,10 +1184,10 @@ function ProductDetailPage() {
                    {galleryImages.map((image, index) => (
                      <div key={image} className="detail-gallery-slide">
                         <img data-testid={index === 0 ? `img-product-detail-${product.id}` : undefined} src={image} alt={`${product.name}, vista ${index + 1}`} draggable={false} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" fetchPriority={index === 0 ? 'high' : 'low'} className={`detail-photo h-full w-full ${hasMultipleGalleryImages || shouldFillSingleGallery ? 'object-cover' : 'object-contain'}`} />
-                       {hasMultipleGalleryImages && index > 0 && <button type="button" aria-label="Volver a la imagen anterior" onClick={(event) => { event.stopPropagation(); scrollGallery(-1); }} className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:h-9 md:w-9"><ChevronLeft size={15} strokeWidth={1.8} /></button>}
                      </div>
                    ))}
                  </div>
+                  {hasMultipleGalleryImages && activeGalleryIndex > 0 && <button type="button" aria-label="Imagen anterior" onClick={(event) => { event.stopPropagation(); scrollGallery(-1); }} className="gallery-arrow absolute left-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:flex"><ChevronLeft size={20} /></button>}
                   {hasMultipleGalleryImages && activeGalleryIndex < galleryImages.length - 1 && <button type="button" aria-label="Imagen siguiente" onClick={(event) => { event.stopPropagation(); scrollGallery(1); }} className="gallery-arrow absolute right-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#f6f4f0]/90 text-[#171717] shadow-sm transition-colors hover:bg-white md:flex"><ChevronRight size={20} /></button>}
                   {hasMultipleGalleryImages && <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-[#171717]/65 px-2.5 py-1.5" aria-label={`Imagen ${activeGalleryIndex + 1} de ${galleryImages.length}`}>
                     {galleryImages.map((image, index) => <span key={image} className={`h-1.5 w-1.5 rounded-full transition-all ${activeGalleryIndex === index ? 'scale-125 bg-white' : 'bg-white/45'}`} />)}
