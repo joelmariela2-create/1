@@ -127,9 +127,11 @@ const productCardImageZoom: Record<string, number> = {
   // Golds Gym reference image, so the garment needs a little more presence.
   'youngla-polera-nocturnal-premium': 1.35,
   'youngla-shonen-premium': 1.12,
+  'youngla-polera-calavera-premium': 1.04,
 };
 const getProductCardImageStyle = (product: Product) => ({
   '--product-card-image-zoom': productCardImageZoom[product.id] ?? 1,
+  '--product-card-image-offset-y': product.id === 'youngla-polera-calavera-premium' ? '-10px' : '0px',
 } as CSSProperties);
 const getProductCardImageFit = (product: Product) =>
   product.id.includes('tom-and-jerry') || product.id === 'youngla-darc-premium-loco'

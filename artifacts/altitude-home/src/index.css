@@ -328,7 +328,8 @@ button, a {
 }
 .product-card-product-image {
   --product-card-image-zoom: 1;
-  transform: scale(var(--product-card-image-zoom));
+  --product-card-image-offset-y: 0px;
+  transform: translateY(var(--product-card-image-offset-y)) scale(var(--product-card-image-zoom));
   transition: transform .55s cubic-bezier(.22,.61,.36,1), filter .35s ease;
 }
 .product-card .product-add {
@@ -349,7 +350,7 @@ button, a {
 @media (hover: hover) and (pointer: fine) {
   .product-card:hover .product-card-product-image,
   .group:hover .product-card-product-image {
-    transform: scale(calc(var(--product-card-image-zoom) * 1.035));
+    transform: translateY(var(--product-card-image-offset-y)) scale(calc(var(--product-card-image-zoom) * 1.035));
     filter: saturate(.9);
   }
   .product-card:hover .product-add {
