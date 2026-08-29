@@ -113,19 +113,32 @@ const products: Product[] = [
 ];
 const homePoleraProducts = products.filter((product) => product.category === 'Poleras');
 const isNarutoProduct = (product: Product) => /naruto|sasuke|kurama|itachi|akatsuki|sasori/i.test(`${product.id} ${product.name}`);
-const firstAddedSoleraIds = [
-  'youngla-solera-calavera',
-  'youngla-golds-gym-solera',
+const narutoSoleraIds = [
   'youngla-sasuke-solera',
   'youngla-itachi-solera',
 ];
+const recentlyAddedPoleraIds = [
+  'youngla-polera-nocturnal-premium',
+  'youngla-polera-calavera-premium',
+  'youngla-darc-premium-loco',
+  'youngla-thor-premium',
+  'youngla-shonen-premium',
+];
 const getAllProductsOrder = (a: Product, b: Product) => {
-  const aSoleraIndex = firstAddedSoleraIds.indexOf(a.id);
-  const bSoleraIndex = firstAddedSoleraIds.indexOf(b.id);
-  if (aSoleraIndex !== -1 || bSoleraIndex !== -1) {
-    if (aSoleraIndex === -1) return 1;
-    if (bSoleraIndex === -1) return -1;
-    return aSoleraIndex - bSoleraIndex;
+  const aNarutoSoleraIndex = narutoSoleraIds.indexOf(a.id);
+  const bNarutoSoleraIndex = narutoSoleraIds.indexOf(b.id);
+  if (aNarutoSoleraIndex !== -1 || bNarutoSoleraIndex !== -1) {
+    if (aNarutoSoleraIndex === -1) return 1;
+    if (bNarutoSoleraIndex === -1) return -1;
+    return aNarutoSoleraIndex - bNarutoSoleraIndex;
+  }
+
+  const aRecentPoleraIndex = recentlyAddedPoleraIds.indexOf(a.id);
+  const bRecentPoleraIndex = recentlyAddedPoleraIds.indexOf(b.id);
+  if (aRecentPoleraIndex !== -1 || bRecentPoleraIndex !== -1) {
+    if (aRecentPoleraIndex === -1) return 1;
+    if (bRecentPoleraIndex === -1) return -1;
+    return aRecentPoleraIndex - bRecentPoleraIndex;
   }
 
   const aNaruto = isNarutoProduct(a);
@@ -1095,9 +1108,9 @@ function ProductsPage() {
   const { cartItems, toast, addToCart, removeFromCart, notify } = useShop();
   const [menuOpen, setMenuOpen] = useState(false);
   const initialCategory = new URLSearchParams(window.location.search).get('category');
-   const initialBrand = new URLSearchParams(window.location.search).get('brand');
-    const [category, setCategory] = useState(() => ['Todas', 'Compresión', 'Poleras', 'Joggers', 'Otros'].includes(initialCategory ?? '') ? initialCategory! : initialBrand === 'Naruto' ? 'Todas' : 'Poleras');
-   const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
+  const initialBrand = new URLSearchParams(window.location.search).get('brand');
+  const [category, setCategory] = useState(() => ['Todas', 'Compresión', 'Poleras', 'Joggers', 'Otros'].includes(initialCategory ?? '') ? initialCategory! : 'Todas');
+  const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(() => Boolean(initialBrand));
   const [searchOpen, setSearchOpen] = useState(false);
@@ -1139,12 +1152,12 @@ function ProductsPage() {
         return getAllProductsOrder(a, b);
       }
       if (sort === 'newest' && category === 'Poleras') {
-        const aSoleraIndex = firstAddedSoleraIds.indexOf(a.id);
-        const bSoleraIndex = firstAddedSoleraIds.indexOf(b.id);
-        if (aSoleraIndex !== -1 || bSoleraIndex !== -1) {
-          if (aSoleraIndex === -1) return 1;
-          if (bSoleraIndex === -1) return -1;
-          if (aSoleraIndex !== bSoleraIndex) return aSoleraIndex - bSoleraIndex;
+        const aNarutoSoleraIndex = narutoSoleraIds.indexOf(a.id);
+        const bNarutoSoleraIndex = narutoSoleraIds.indexOf(b.id);
+        if (aNarutoSoleraIndex !== -1 || bNarutoSoleraIndex !== -1) {
+          if (aNarutoSoleraIndex === -1) return 1;
+          if (bNarutoSoleraIndex === -1) return -1;
+          if (aNarutoSoleraIndex !== bNarutoSoleraIndex) return aNarutoSoleraIndex - bNarutoSoleraIndex;
         }
         const aNaruto = isNarutoProduct(a);
         const bNaruto = isNarutoProduct(b);
