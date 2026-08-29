@@ -1129,12 +1129,16 @@ function ProductsPage() {
       { label: 'Otros', value: 'Otros', filter: 'category' },
    ];
    const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'];
-  const sortOptions = [
-    { value: 'newest', label: 'Novedades' },
-    { value: 'best', label: 'Más vendidos' },
-    { value: 'available', label: 'Disponibles' },
-    { value: 'price', label: 'Precio' },
-  ];
+   const sortOptions = [
+     { value: 'newest', label: '🆕 Novedades' },
+     { value: 'recent', label: 'Más recientes' },
+     { value: 'collections', label: 'Nuevas colecciones' },
+     { value: 'colors', label: 'Nuevos colores' },
+     { value: 'exclusive', label: 'Exclusivos' },
+     { value: 'limited', label: 'Edición limitada' },
+     { value: 'collaborations', label: 'Colaboraciones' },
+     { value: 'upcoming', label: 'Próximo drop' },
+   ];
   useEffect(() => {
     const timer = window.setTimeout(() => setIsLoading(false), 320);
     return () => window.clearTimeout(timer);
@@ -1219,8 +1223,8 @@ function ProductsPage() {
             <div className="flex gap-2">
               <button data-testid="button-toggle-filters" onClick={() => setFiltersOpen((open) => !open)} aria-expanded={filtersOpen} className={`flex h-11 flex-1 items-center justify-center gap-2 border px-4 text-[10px] font-bold uppercase tracking-[.1em] transition-colors md:flex-none ${filtersOpen ? 'border-[#171717] bg-[#171717] text-[#f6f4f0]' : 'border-[#cfc9c2] bg-[#fbfaf8] hover:border-[#171717]'}`}><SlidersHorizontal size={15} strokeWidth={1.6} /> Filtros</button>
               <label className="flex h-11 flex-1 items-center gap-2 border border-[#cfc9c2] bg-[#fbfaf8] px-3 md:flex-none">
-                <span className="sr-only">Ordenar productos</span>
-                <select data-testid="select-product-sort" value={sort} onChange={(event) => setSort(event.target.value)} className="w-full cursor-pointer bg-transparent text-[10px] font-bold uppercase tracking-[.07em] outline-none md:w-[150px]">
+                 <span className="sr-only">Filtrar novedades</span>
+                 <select data-testid="select-product-sort" value={sort} onChange={(event) => setSort(event.target.value)} className="w-full cursor-pointer bg-transparent text-[10px] font-bold uppercase tracking-[.07em] outline-none md:w-[190px]">
                   {sortOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
                 </select>
               </label>
