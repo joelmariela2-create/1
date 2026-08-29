@@ -122,6 +122,12 @@ const products: Product[] = [
 ];
 const homePoleraProducts = products.filter((product) => product.category === 'Poleras');
 const isNarutoProduct = (product: Product) => /naruto|sasuke|kurama|itachi|akatsuki|sasori/i.test(`${product.id} ${product.name}`);
+const firstAddedSoleraIds = [
+  'youngla-solera-calavera',
+  'youngla-golds-gym-solera',
+  'youngla-sasuke-solera',
+  'youngla-itachi-solera',
+];
 const productCardImageZoom: Record<string, number> = {
   // These source photos include noticeably more empty background than the
   // Golds Gym reference image, so the garment needs a little more presence.
@@ -1101,11 +1107,11 @@ function ProductsPage() {
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState(false);
-  const categories = ['Todas', 'Poleras', 'Joggers', 'Compresión', 'Hoodies', 'Shorts'];
+   const categories = ['Todas', 'Poleras', 'Compresión', 'Joggers', 'Hoodies', 'Shorts'];
    const searchCategories: Array<{ label: string; value: string; filter: 'category' | 'brand' }> = [
      { label: 'Todos los productos', value: 'Todas', filter: 'category' },
      { label: 'Naruto', value: 'Naruto', filter: 'brand' },
-     { label: 'Camisetas y tops', value: 'Poleras', filter: 'category' },
+      { label: 'Poleras y soleras', value: 'Poleras', filter: 'category' },
      { label: 'Joggers y pantalones deportivos', value: 'Joggers', filter: 'category' },
      { label: 'Pantalones', value: 'Joggers', filter: 'category' },
      { label: 'Chándales', value: 'Joggers', filter: 'category' },
@@ -1134,6 +1140,15 @@ function ProductsPage() {
       return matchesCategory && matchesBrand;
     });
     return result.sort((a, b) => {
+      if (sort === 'newest' && category === 'Poleras') {
+        const aSoleraIndex = firstAddedSoleraIds.indexOf(a.id);
+        const bSoleraIndex = firstAddedSoleraIds.indexOf(b.id);
+        if (aSoleraIndex !== -1 || bSoleraIndex !== -1) {
+          if (aSoleraIndex === -1) return 1;
+          if (bSoleraIndex === -1) return -1;
+          if (aSoleraIndex !== bSoleraIndex) return aSoleraIndex - bSoleraIndex;
+        }
+      }
       if (sort === 'best') return Number(Boolean(b.isBestSeller)) - Number(Boolean(a.isBestSeller));
       if (sort === 'available') return (a.status === 'Últimas unidades' ? 1 : 0) - (b.status === 'Últimas unidades' ? 1 : 0);
       if (sort === 'price') return a.priceValue - b.priceValue;
@@ -1198,7 +1213,7 @@ function ProductsPage() {
             </div>
           </div>
           <div className="product-filter-strip -mx-5 mt-4 flex gap-2 overflow-x-auto px-5 pb-0 md:mx-0 md:px-0">
-            {categories.map((item) => <button key={item} data-testid={`button-category-${item.toLowerCase()}`} onClick={() => setCategory(item)} className={`shrink-0 border px-3 py-2 text-[9px] font-bold uppercase tracking-[.09em] transition-colors ${category === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] bg-transparent text-[#69635d] hover:border-[#171717] hover:text-[#171717]'}`}>{item}</button>)}
+             {categories.map((item) => <button key={item} data-testid={`button-category-${item.toLowerCase()}`} onClick={() => setCategory(item)} className={`shrink-0 border px-3 py-2 text-[9px] font-bold uppercase tracking-[.09em] transition-colors ${category === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] bg-transparent text-[#69635d] hover:border-[#171717] hover:text-[#171717]'}`}>{item === 'Poleras' ? 'Poleras y soleras' : item}</button>)}
           </div>
           {filtersOpen && <div className="filter-drawer mt-4 border-t border-[#ddd8d2] pt-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
