@@ -113,6 +113,19 @@ const products: Product[] = [
 ];
 const homeCompressionProducts = products.filter((product) => product.category === 'Compresión');
 const isNarutoProduct = (product: Product) => /naruto|sasuke|kurama|itachi|akatsuki|sasori/i.test(`${product.id} ${product.name}`);
+type ProductFilterCategory = 'Todas' | 'Compresión' | 'Poleras' | 'Joggers' | 'Soleras' | 'Shorts' | 'Overside' | 'Sin mangas';
+const productFilterCategories: ProductFilterCategory[] = ['Todas', 'Compresión', 'Poleras', 'Joggers', 'Soleras', 'Shorts', 'Overside', 'Sin mangas'];
+const isSoleraProduct = (product: Product) => /solera/i.test(`${product.id} ${product.name}`);
+const isOversideProduct = (product: Product) => /oversize/i.test(`${product.id} ${product.name}`);
+const isSleevelessProduct = (product: Product) => /musculosa|sin mangas/i.test(`${product.id} ${product.name}`);
+const matchesProductFilter = (product: Product, filter: ProductFilterCategory) => {
+  if (filter === 'Todas') return true;
+  if (filter === 'Compresión' || filter === 'Joggers' || filter === 'Shorts') return product.category === filter;
+  if (filter === 'Soleras') return product.category === 'Poleras' && isSoleraProduct(product);
+  if (filter === 'Overside') return product.category === 'Poleras' && isOversideProduct(product);
+  if (filter === 'Sin mangas') return product.category === 'Poleras' && isSleevelessProduct(product);
+  return product.category === 'Poleras' && !isSoleraProduct(product) && !isOversideProduct(product) && !isSleevelessProduct(product);
+};
 const narutoSoleraIds = [
   'youngla-sasuke-solera',
   'youngla-itachi-solera',
@@ -1109,7 +1122,7 @@ function ProductsPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const initialCategory = new URLSearchParams(window.location.search).get('category');
   const initialBrand = new URLSearchParams(window.location.search).get('brand');
-  const [category, setCategory] = useState(() => ['Todas', 'Compresión', 'Poleras', 'Joggers', 'Otros'].includes(initialCategory ?? '') ? initialCategory! : 'Todas');
+   const [category, setCategory] = useState(() => productFilterCategories.includes(initialCategory as ProductFilterCategory) ? initialCategory! : 'Todas');
   const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(() => Boolean(initialBrand));
@@ -1119,14 +1132,17 @@ function ProductsPage() {
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState(false);
-    const categories = ['Todas', 'Compresión', 'Poleras', 'Joggers', 'Otros'];
+    const categories = productFilterCategories;
    const searchCategories: Array<{ label: string; value: string; filter: 'category' | 'brand' }> = [
      { label: 'Todos los productos', value: 'Todas', filter: 'category' },
      { label: 'Naruto', value: 'Naruto', filter: 'brand' },
       { label: 'Compresión', value: 'Compresión', filter: 'category' },
       { label: 'Poleras', value: 'Poleras', filter: 'category' },
       { label: 'Joggers', value: 'Joggers', filter: 'category' },
-      { label: 'Otros', value: 'Otros', filter: 'category' },
+      { label: 'Soleras', value: 'Soleras', filter: 'category' },
+      { label: 'Shorts', value: 'Shorts', filter: 'category' },
+      { label: 'Overside', value: 'Overside', filter: 'category' },
+      { label: 'Sin mangas', value: 'Sin mangas', filter: 'category' },
    ];
    const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'];
    const sortOptions = [
@@ -1146,8 +1162,7 @@ function ProductsPage() {
 
   const filteredProducts = useMemo(() => {
     const result = products.filter((product) => {
-       const matchesCategory = category === 'Todas'
-         || (category === 'Otros' ? product.category === 'Shorts' || product.category === 'Hoodies' : product.category === category);
+        const matchesCategory = matchesProductFilter(product, category as ProductFilterCategory);
        const matchesBrand = brand === 'Todas' || product.brand === brand || (brand === 'Naruto' && isNarutoProduct(product));
       return matchesCategory && matchesBrand;
     });
@@ -1524,17 +1539,15 @@ function ProductDetailPage() {
   return (
     <div className="detail-page page-shell min-h-[100dvh] bg-[#f6f4f0] pb-[78px] text-[#171717]">
       <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} onCart={() => setCartOpen(true)} />
-       <div className="px-5 pt-5 md:px-10 md:pt-7">
-         <button type="button" data-testid="button-detail-back" onClick={handleBackToPreviousPage} className="group inline-flex items-center gap-2 bg-transparent px-0 py-1 text-[10px] font-bold uppercase tracking-[.1em] text-[#716b65] transition-colors hover:text-[#d93731]">
-           <ArrowLeft size={16} strokeWidth={1.6} className="transition-transform group-hover:-translate-x-1" /> Atrás
-         </button>
-       </div>
       <main aria-live="polite">
         {isLoading ? <div className="detail-loading grid gap-5 px-5 py-7 md:grid-cols-2 md:px-10 md:py-12"><div className="product-skeleton aspect-[.86]" /><div className="space-y-5 pt-3"><div className="h-3 w-1/4 bg-[#e8e4de]" /><div className="h-14 w-4/5 bg-[#e8e4de]" /><div className="h-8 w-1/3 bg-[#e8e4de]" /><div className="h-24 w-full bg-[#e8e4de]" /></div></div>
           : !product || !detail ? <section className="flex min-h-[590px] flex-col items-center justify-center px-5 text-center"><p className="section-label text-[#d93731]">404 / selección no encontrada</p><h1 data-testid="text-product-not-found" className="editorial-title mt-4 text-[clamp(2.8rem,9vw,6rem)] font-bold uppercase leading-[.84]">Este drop<br /><span className="text-[#d93731]">ya voló.</span></h1><p className="mt-5 max-w-[310px] text-[12px] leading-[1.5] text-[#716b65]">No encontramos ese producto en el catálogo actual. Explora la selección completa para encontrar tu próximo ritmo.</p><Link href="/products" data-testid="link-not-found-products" className="mt-7 flex h-12 items-center gap-3 bg-[#171717] px-5 text-[10px] font-bold uppercase tracking-[.12em] text-[#f6f4f0] transition-colors hover:bg-[#d93731]"><ArrowLeft size={16} /> Volver a la tienda</Link></section>
           : <section className="detail-content px-5 py-6 md:px-10 md:py-10">
             <div className="grid gap-0 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
                 <div className={`detail-photo-wrap detail-gallery-wrap relative overflow-hidden bg-[#e7e3dd] ${hasMultipleGalleryImages ? 'has-gallery' : 'is-single-gallery'}`} role="button" tabIndex={0} aria-label={`Ampliar foto de ${product.name}${hasMultipleGalleryImages ? '; desliza para ver más imágenes' : ''}`} onClick={handlePhotoClick} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }} onTouchStart={handlePhotoTouchStart} onTouchEnd={handlePhotoTouchEnd}>
+                    <button type="button" data-testid="button-detail-back" onClick={handleBackToPreviousPage} className="group absolute left-4 top-4 z-20 inline-flex items-center gap-2 bg-transparent px-0 py-1 text-[10px] font-bold uppercase tracking-[.1em] text-[#171717] drop-shadow-[0_1px_2px_rgba(255,255,255,0.7)] transition-colors hover:text-[#d93731]">
+                      <ArrowLeft size={16} strokeWidth={1.6} className="transition-transform group-hover:-translate-x-1" /> Atrás
+                    </button>
                   <div ref={galleryRef} className="detail-gallery scrollbar-hide" onScroll={(event) => {
                    const gallery = event.currentTarget;
                    const firstSlide = gallery.querySelector<HTMLElement>('.detail-gallery-slide');
