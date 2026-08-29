@@ -60,6 +60,7 @@ const products: Product[] = [
   { id: 'youngla-compresiva-forme-negra', name: 'Compresiva Forme Negra', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Compresión', status: 'Nuevo', image: '/youngla-compresiva-forme-negra.jpg' },
   { id: 'youngla-compresiva-batman-burgundy', name: 'Compresiva Batman — Burgundy', brand: 'YoungLA', price: formatBs(840), priceValue: 840, category: 'Compresión', status: 'Nuevo', image: '/youngla-compresiva-batman-burgundy.jpg' },
   { id: 'youngla-compresiva-batman-manga-larga-negra', name: 'Compresiva Manga Larga Batman — Negra Entera', brand: 'YoungLA', price: formatBs(890), priceValue: 890, category: 'Compresión', status: 'Nuevo', image: '/youngla-compresiva-batman-manga-larga-negra.jpg' },
+  { id: 'youngla-compresiva-batman-manga-larga-burgundy', name: 'Compresiva Manga Larga Batman — Burgundy', brand: 'YoungLA', price: formatBs(890), priceValue: 890, category: 'Compresión', status: 'Nuevo', image: '/youngla-compresiva-batman-manga-larga-burgundy.jpg' },
   { id: 'youngla-golds-gym-solera', name: 'Solera Golds Gym', brand: 'YoungLA', price: formatBs(700), priceValue: 700, category: 'Poleras', status: 'Nuevo', image: '/youngla-golds-gym-solera.jpg' },
   { id: 'youngla-musculosas-pack-3', name: 'Musculosas YoungLA · Paquete de 3', brand: 'YoungLA', price: formatBs(750), priceValue: 750, category: 'Poleras', status: 'Nuevo', image: '/youngla-musculosas-pack-3.jpg' },
   { id: 'youngla-buzo-baggy-eternal', name: 'Buzo Baggy Eternal', brand: 'YoungLA', price: formatBs(1290), priceValue: 1290, category: 'Joggers', status: 'Nuevo', image: '/youngla-buzo-baggy-eternal.jpg' },
@@ -109,6 +110,7 @@ const productDetails: Record<string, Pick<Product, 'material' | 'fabricWeight' |
   'youngla-compresiva-forme-negra': { material: 'Tejido técnico elástico', fabricWeight: '220 GSM · compresivo', fit: 'Second-skin fit', sizes: ['M'], features: ['Ajuste compresivo', 'Manga corta', 'Logo YoungLA discreto'] },
   'youngla-compresiva-batman-burgundy': { material: 'Tejido técnico elástico', fabricWeight: '220 GSM · compresivo', fit: 'Second-skin fit', sizes: ['M'], features: ['Ajuste compresivo', 'Manga corta', 'Logo Batman frontal'] },
   'youngla-compresiva-batman-manga-larga-negra': { material: 'Tejido técnico elástico', fabricWeight: '220 GSM · compresivo', fit: 'Second-skin fit', sizes: ['M', 'L'], features: ['Ajuste compresivo', 'Manga larga', 'Logo Batman frontal'] },
+  'youngla-compresiva-batman-manga-larga-burgundy': { material: 'Tejido técnico elástico', fabricWeight: '220 GSM · compresivo', fit: 'Second-skin fit', sizes: ['L'], features: ['Ajuste compresivo', 'Manga larga', 'Logo Batman frontal'] },
   'youngla-golds-gym-solera': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Athletic fit', sizes: ['L'], features: ['Corte racerback', 'Gráfica Golds Gym frontal', 'Color rojo'] },
   'youngla-musculosas-pack-3': { material: 'Algodón suave', fabricWeight: '240 GSM', fit: 'Regular fit', sizes: ['M'], features: ['Paquete de 3 unidades', 'Corte sin mangas', 'Color negro'] },
   'youngla-buzo-baggy-eternal': { material: 'Algodón suave', fabricWeight: '380 GSM · pesado', fit: 'Baggy fit', sizes: ['M', 'L', 'XL', 'XXL'], features: ['Cintura elástica ajustable', 'Bolsillos laterales', 'Diseño Eternal en relieve'] },
@@ -193,6 +195,10 @@ const younglaCompresivaBatmanGallery = [
 
 const younglaCompresivaBatmanMangaLargaGallery = [
   '/youngla-compresiva-batman-manga-larga-negra.jpg',
+];
+
+const younglaCompresivaBatmanMangaLargaBurgundyGallery = [
+  '/youngla-compresiva-batman-manga-larga-burgundy.jpg',
 ];
 
 const younglaSasukeGallery = [
@@ -316,6 +322,10 @@ function getProductGallery(product: Product) {
 
   if (product.id === 'youngla-compresiva-batman-manga-larga-negra') {
     return younglaCompresivaBatmanMangaLargaGallery;
+  }
+
+  if (product.id === 'youngla-compresiva-batman-manga-larga-burgundy') {
+    return younglaCompresivaBatmanMangaLargaBurgundyGallery;
   }
 
   if (product.id === 'youngla-golds-gym-solera') {
@@ -1164,6 +1174,7 @@ function ProductDetailPage() {
    const isCompresivaForme = product?.id === 'youngla-compresiva-forme-negra';
    const isBatmanCompresiva = product?.id === 'youngla-compresiva-batman-burgundy';
    const isBatmanMangaLargaCompresiva = product?.id === 'youngla-compresiva-batman-manga-larga-negra';
+   const isBatmanMangaLargaBurgundyCompresiva = product?.id === 'youngla-compresiva-batman-manga-larga-burgundy';
    const isGoldsGymSolera = product?.id === 'youngla-golds-gym-solera';
    const isMusculosasPack = product?.id === 'youngla-musculosas-pack-3';
    const isBaggyEternalBuzo = product?.id === 'youngla-buzo-baggy-eternal';
@@ -1193,7 +1204,7 @@ function ProductDetailPage() {
   const isReversibleFloralBlanco = product?.id === 'youngla-short-reversible-floral-blanco';
   const isReversibleFloralNegro = product?.id === 'youngla-short-reversible-floral-negro';
   const isReversibleSkull = product?.id === 'youngla-short-reversible-skull';
-  const isCustomYounglaProduct = isCompresivaForme || isBatmanCompresiva || isBatmanMangaLargaCompresiva || isGoldsGymSolera || isMusculosasPack || isBaggyEternalBuzo || isClassicBuzo || isOnePunchMan || isSasukeBuzo || isKuramaBuzo || isNarutoCloudsBuzo || isNarutoNegroBuzo || isNarutoAkatsukiHoodie || isSasukeSolera || isItachiSolera || isOversizeTee || isTomAndJerryTee || isTomAndJerryYlaTee || isGoldsGymTee || isOnePunchTee || isNarutoTee || isItachiTee || isNarutoAkatsukiTee || isAotLeviTee || isAotErenTee || isNarutoShorts || isItachiShorts || isReversibleFloralBlanco || isReversibleFloralNegro || isReversibleSkull;
+  const isCustomYounglaProduct = isCompresivaForme || isBatmanCompresiva || isBatmanMangaLargaCompresiva || isBatmanMangaLargaBurgundyCompresiva || isGoldsGymSolera || isMusculosasPack || isBaggyEternalBuzo || isClassicBuzo || isOnePunchMan || isSasukeBuzo || isKuramaBuzo || isNarutoCloudsBuzo || isNarutoNegroBuzo || isNarutoAkatsukiHoodie || isSasukeSolera || isItachiSolera || isOversizeTee || isTomAndJerryTee || isTomAndJerryYlaTee || isGoldsGymTee || isOnePunchTee || isNarutoTee || isItachiTee || isNarutoAkatsukiTee || isAotLeviTee || isAotErenTee || isNarutoShorts || isItachiShorts || isReversibleFloralBlanco || isReversibleFloralNegro || isReversibleSkull;
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
 
   useEffect(() => {
@@ -1329,7 +1340,7 @@ function ProductDetailPage() {
                     <div id="size-chart" className="mt-8 scroll-mt-24">
                       <h2 className="editorial-title text-[19px] font-bold uppercase">{isCustomYounglaProduct ? 'Tallas disponibles' : '4259 Size Chart'} {!isCustomYounglaProduct && <span className="font-sans text-[10px] font-medium normal-case tracking-normal text-[#8b857e]">(inches)</span>}</h2>
                       <div className="mt-4 overflow-x-auto border border-[#d9d3cc]">
-                            {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Tallas disponibles</span><strong className="text-[18px] text-[#d93731]">{isCompresivaForme || isBatmanCompresiva ? 'M' : isBatmanMangaLargaCompresiva ? 'M · L' : isGoldsGymSolera ? 'L' : isMusculosasPack ? 'M' : isBaggyEternalBuzo || isClassicBuzo ? 'M · L · XL · XXL' : isOnePunchMan ? 'M · L · XL' : isSasukeBuzo ? 'M · L' : isKuramaBuzo ? 'M' : isNarutoCloudsBuzo || isNarutoNegroBuzo || isSasukeSolera ? 'M · L' : isNarutoAkatsukiHoodie ? 'M' : isItachiSolera ? 'M · L · XL · XXL' : isTomAndJerryTee ? 'L' : isGoldsGymTee || isTomAndJerryYlaTee ? 'M · L' : isReversibleFloralBlanco || isReversibleFloralNegro || isReversibleSkull || isAotLeviTee || isAotErenTee ? 'M' : isItachiShorts || isNarutoShorts ? 'M' : isNarutoTee || isItachiTee ? 'M · L' : isNarutoAkatsukiTee ? 'M · L · XL · XXXL' : 'M · L · XXXL'}</strong></div> : <>
+                            {isCustomYounglaProduct ? <div className="flex items-center justify-between px-4 py-5"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Tallas disponibles</span><strong className="text-[18px] text-[#d93731]">{isCompresivaForme || isBatmanCompresiva ? 'M' : isBatmanMangaLargaCompresiva ? 'M · L' : isBatmanMangaLargaBurgundyCompresiva ? 'L' : isGoldsGymSolera ? 'L' : isMusculosasPack ? 'M' : isBaggyEternalBuzo || isClassicBuzo ? 'M · L · XL · XXL' : isOnePunchMan ? 'M · L · XL' : isSasukeBuzo ? 'M · L' : isKuramaBuzo ? 'M' : isNarutoCloudsBuzo || isNarutoNegroBuzo || isSasukeSolera ? 'M · L' : isNarutoAkatsukiHoodie ? 'M' : isItachiSolera ? 'M · L · XL · XXL' : isTomAndJerryTee ? 'L' : isGoldsGymTee || isTomAndJerryYlaTee ? 'M · L' : isReversibleFloralBlanco || isReversibleFloralNegro || isReversibleSkull || isAotLeviTee || isAotErenTee ? 'M' : isItachiShorts || isNarutoShorts ? 'M' : isNarutoTee || isItachiTee ? 'M · L' : isNarutoAkatsukiTee ? 'M · L · XL · XXXL' : 'M · L · XXXL'}</strong></div> : <>
                        <table className="w-full min-w-[520px] border-collapse text-left text-[11px]">
                          <caption className="sr-only">4259 Size Chart in inches</caption>
                          <thead className="bg-[#171717] text-white"><tr><th scope="col" className="px-3 py-3 font-bold uppercase tracking-[.1em]">Size</th><th scope="col" className="px-3 py-3 font-bold">S</th><th scope="col" className="px-3 py-3 font-bold">M</th><th scope="col" className="px-3 py-3 font-bold">L</th><th scope="col" className="px-3 py-3 font-bold">XL</th><th scope="col" className="px-3 py-3 font-bold">XXL</th></tr></thead>
