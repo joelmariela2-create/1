@@ -1835,3 +1835,84 @@ body {
 .checkout-page {
   --altitude-divider: #d9d3cc;
 }
+
+/* En el carrito, el formulario reemplaza la lista para que la acción principal quede a la vista. */
+.products-page aside[role="dialog"]:has(.order-form) > div.flex-1.overflow-y-auto.py-5,
+.detail-page aside[role="dialog"]:has(.order-form) > div.flex-1.overflow-y-auto.py-5 {
+  display: none;
+}
+
+.products-page aside[role="dialog"] .order-form,
+.detail-page aside[role="dialog"] .order-form {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+}
+
+.products-page aside[role="dialog"] .order-form > div:first-child,
+.detail-page aside[role="dialog"] .order-form > div:first-child {
+  margin-bottom: 10px;
+}
+
+.products-page aside[role="dialog"] .order-form > div:nth-child(2),
+.detail-page aside[role="dialog"] .order-form > div:nth-child(2) {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+}
+
+.products-page aside[role="dialog"] .order-form > div:nth-child(2) > p,
+.detail-page aside[role="dialog"] .order-form > div:nth-child(2) > p {
+  margin-bottom: 4px;
+}
+
+.products-page aside[role="dialog"] .order-form > div:nth-child(2) > div,
+.detail-page aside[role="dialog"] .order-form > div:nth-child(2) > div {
+  gap: 2px;
+}
+
+.products-page aside[role="dialog"] .order-form > div:nth-child(3),
+.detail-page aside[role="dialog"] .order-form > div:nth-child(3) {
+  gap: 7px;
+}
+
+.products-page aside[role="dialog"] .order-form > div:nth-child(3) > div,
+.detail-page aside[role="dialog"] .order-form > div:nth-child(3) > div {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 8px;
+}
+
+.products-page aside[role="dialog"] .order-form label > span,
+.detail-page aside[role="dialog"] .order-form label > span {
+  margin-bottom: 2px;
+  font-size: 8px;
+}
+
+.products-page aside[role="dialog"] .order-form label input,
+.products-page aside[role="dialog"] .order-form label select,
+.detail-page aside[role="dialog"] .order-form label input,
+.detail-page aside[role="dialog"] .order-form label select {
+  height: 38px;
+}
+
+.products-page aside[role="dialog"] .order-form > div:nth-child(4),
+.detail-page aside[role="dialog"] .order-form > div:nth-child(4) {
+  margin-top: 12px;
+  padding-top: 10px;
+}
+
+.products-page aside[role="dialog"] .order-form > div:nth-child(4) strong,
+.detail-page aside[role="dialog"] .order-form > div:nth-child(4) strong {
+  font-size: 16px;
+}
+
+.products-page aside[role="dialog"] .order-form > button,
+.detail-page aside[role="dialog"] .order-form > button {
+  margin-top: 10px;
+  height: 44px;
+}
+
+.products-page aside[role="dialog"] .order-form > p:last-child,
+.detail-page aside[role="dialog"] .order-form > p:last-child {
+  margin-top: 5px;
+  line-height: 1.25;
+}
