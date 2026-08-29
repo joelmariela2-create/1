@@ -1489,6 +1489,13 @@ function ProductDetailPage() {
     openOrderWhatsApp(customer, cartItems, total);
     setConfirmedCustomer(customer);
   };
+   const handleBackToPreviousPage = () => {
+     if (window.history.length > 1) {
+       window.history.back();
+     } else {
+       setLocation('/products');
+     }
+   };
   const scrollGallery = (direction: number) => {
     const gallery = galleryRef.current;
     if (!gallery) return;
@@ -1517,6 +1524,11 @@ function ProductDetailPage() {
   return (
     <div className="detail-page page-shell min-h-[100dvh] bg-[#f6f4f0] pb-[78px] text-[#171717]">
       <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} onCart={() => setCartOpen(true)} />
+       <div className="px-5 pt-5 md:px-10 md:pt-7">
+         <button type="button" data-testid="button-detail-back" onClick={handleBackToPreviousPage} className="group inline-flex items-center gap-2 bg-transparent px-0 py-1 text-[10px] font-bold uppercase tracking-[.1em] text-[#716b65] transition-colors hover:text-[#d93731]">
+           <ArrowLeft size={16} strokeWidth={1.6} className="transition-transform group-hover:-translate-x-1" /> Atrás
+         </button>
+       </div>
       <main aria-live="polite">
         {isLoading ? <div className="detail-loading grid gap-5 px-5 py-7 md:grid-cols-2 md:px-10 md:py-12"><div className="product-skeleton aspect-[.86]" /><div className="space-y-5 pt-3"><div className="h-3 w-1/4 bg-[#e8e4de]" /><div className="h-14 w-4/5 bg-[#e8e4de]" /><div className="h-8 w-1/3 bg-[#e8e4de]" /><div className="h-24 w-full bg-[#e8e4de]" /></div></div>
           : !product || !detail ? <section className="flex min-h-[590px] flex-col items-center justify-center px-5 text-center"><p className="section-label text-[#d93731]">404 / selección no encontrada</p><h1 data-testid="text-product-not-found" className="editorial-title mt-4 text-[clamp(2.8rem,9vw,6rem)] font-bold uppercase leading-[.84]">Este drop<br /><span className="text-[#d93731]">ya voló.</span></h1><p className="mt-5 max-w-[310px] text-[12px] leading-[1.5] text-[#716b65]">No encontramos ese producto en el catálogo actual. Explora la selección completa para encontrar tu próximo ritmo.</p><Link href="/products" data-testid="link-not-found-products" className="mt-7 flex h-12 items-center gap-3 bg-[#171717] px-5 text-[10px] font-bold uppercase tracking-[.12em] text-[#f6f4f0] transition-colors hover:bg-[#d93731]"><ArrowLeft size={16} /> Volver a la tienda</Link></section>
