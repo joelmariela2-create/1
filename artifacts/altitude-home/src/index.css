@@ -1723,3 +1723,115 @@ body {
   color: #fff !important;
   border-color: #171717 !important;
 }
+
+/* CONTRASTE REFINADO — tinta profunda para lectura, sin romper el lienzo editorial. */
+:root {
+  --altitude-ink: #171717;
+  --altitude-muted-ink: #5f5a55;
+  --altitude-soft-ink: #6b645d;
+}
+
+/* El CTA vive sobre fotografías cambiantes: el texto debe mantenerse legible en cada slide. */
+.hero-cta,
+.hero-cta svg {
+  color: #fff !important;
+}
+
+.hero-cta:hover,
+.hero-cta:hover svg {
+  color: var(--altitude-ink) !important;
+}
+
+/* Refuerza los textos secundarios en superficies claras y conserva los acentos. */
+.home-main .text-\[\#7c7772\],
+.home-main .text-\[\#6b6660\],
+.home-main .text-\[\#8a837d\],
+.home-main .text-\[\#8b857e\],
+.home-main .text-\[\#8b857f\],
+.home-main .text-\[\#766f69\],
+.collection-page .text-\[\#6b6660\],
+.collection-page .text-\[\#8b857e\],
+.products-page .products-content .text-\[\#69635d\],
+.products-page .products-content .text-\[\#716b65\],
+.products-page .products-content .text-\[\#77716c\],
+.products-page .products-content .text-\[\#8b857e\],
+.detail-page .detail-content .text-\[\#5f5a55\],
+.detail-page .detail-content .text-\[\#716b65\],
+.detail-page .detail-content .text-\[\#8b857e\],
+.checkout-page .text-\[\#716b65\],
+.checkout-page .text-\[\#8b857e\],
+.social-page .text-\[\#716b65\],
+.social-page .text-\[\#8b857e\] {
+  color: var(--altitude-muted-ink) !important;
+}
+
+.home-main #benefits .hero-benefit span {
+  color: var(--altitude-soft-ink) !important;
+}
+
+.home-main #new-releases .section-label,
+.home-main #showroom .section-label,
+.collection-page > div:first-child .section-label,
+.products-page .products-content > section[aria-live="polite"] .section-label,
+.products-page .products-content > section[aria-label="Herramientas del catálogo"] > div > div > span,
+.detail-page .detail-spec-grid span,
+.checkout-page .section-label {
+  color: var(--altitude-muted-ink) !important;
+}
+
+/* Tiny metadata stays quiet, but never fades into the background. */
+.page-shell > footer p,
+.page-shell > footer > div:last-child,
+.social-page [class*="text-[#8b857e]"],
+.products-page .product-card p:first-child,
+.detail-page .detail-info a[class*="text-[#8b857e]"],
+.drawer-panel [class*="text-[#8b857e]"],
+.products-page aside[role="dialog"] [class*="text-[#8b857e]"],
+.detail-page aside[role="dialog"] [class*="text-[#8b857e]"] {
+  color: var(--altitude-muted-ink) !important;
+}
+
+/* The VIP page uses a light editorial canvas, so inherited white-alpha labels need ink. */
+.vip-page .vip-hero [class*="text-white/80"],
+.vip-page .vip-hero [class*="text-white/75"],
+.vip-page .vip-editorial [class*="text-white/75"],
+.vip-page .vip-final-cta [class*="text-white/45"],
+.vip-page .vip-final-cta [class*="text-white/70"] {
+  color: var(--altitude-muted-ink) !important;
+}
+
+.vip-page .vip-button,
+.vip-page .vip-final-cta button {
+  color: var(--altitude-ink) !important;
+}
+
+.vip-page .vip-button svg,
+.vip-page .vip-final-cta button svg {
+  color: currentColor !important;
+}
+
+.vip-page .vip-hero .vip-kicker,
+.vip-page .vip-hero .vip-display {
+  color: var(--altitude-gold-deep) !important;
+}
+
+.vip-page .vip-benefits > div > span,
+.vip-page .vip-benefit-card > div > span {
+  color: var(--altitude-muted-ink) !important;
+}
+
+.social-page [aria-disabled="true"] {
+  opacity: 1 !important;
+  border-color: #d9d3cc !important;
+  background: #faf9f7 !important;
+}
+
+/* Slightly stronger separators support the deeper text without adding visual noise. */
+.social-page,
+.home-main,
+.collection-page,
+.products-content,
+.detail-content,
+.checkout-page {
+  --altitude-divider: #d9d3cc;
+}
