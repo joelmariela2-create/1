@@ -572,6 +572,7 @@ button, a {
   .checkout-page form {
     margin-top: 6px;
     padding-top: 6px;
+    padding-bottom: calc(68px + env(safe-area-inset-bottom));
   }
   .checkout-page form > div:first-child {
     margin-bottom: 5px;
@@ -610,9 +611,18 @@ button, a {
   .checkout-page form > div:nth-child(4) strong {
     font-size: 15px;
   }
-  .checkout-page form > button {
-    margin-top: 5px;
-    height: 39px;
+  .checkout-page form > button[data-testid="button-confirm-order"] {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 45;
+    width: 100%;
+    height: calc(56px + env(safe-area-inset-bottom));
+    margin: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid rgba(23, 23, 23, .18);
+    box-shadow: 0 -8px 22px rgba(23, 23, 23, .14);
   }
   .checkout-page form > p:last-child {
     margin-top: 3px;
