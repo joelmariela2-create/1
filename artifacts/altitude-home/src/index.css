@@ -1932,3 +1932,27 @@ body {
   margin-top: 5px;
   line-height: 1.25;
 }
+
+/* Checkout: los textos auxiliares deben seguir siendo cómodos de leer en móvil. */
+.checkout-page main > p,
+.checkout-page form > p:last-child,
+.checkout-page form > div:nth-child(2) > p,
+.checkout-page .text-\[\#716b65\],
+.checkout-page .text-\[\#8b857e\] {
+  color: #514c47 !important;
+}
+
+.checkout-page .section-label {
+  color: #9d302c !important;
+  font-weight: 700;
+}
+
+.checkout-page form label > span {
+  color: #2f2b28 !important;
+  font-weight: 700;
+}
+
+.checkout-page input::placeholder {
+  color: #716b65 !important;
+  opacity: 1;
+}
