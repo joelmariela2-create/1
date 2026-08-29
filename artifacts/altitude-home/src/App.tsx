@@ -126,7 +126,7 @@ const productCardImageZoom: Record<string, number> = {
   // These source photos include noticeably more empty background than the
   // Golds Gym reference image, so the garment needs a little more presence.
   'youngla-polera-nocturnal-premium': 1.35,
-  'youngla-shonen-premium': 1.08,
+  'youngla-shonen-premium': 1.12,
 };
 const getProductCardImageStyle = (product: Product) => ({
   '--product-card-image-zoom': productCardImageZoom[product.id] ?? 1,
