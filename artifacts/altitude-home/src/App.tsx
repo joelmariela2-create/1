@@ -1079,7 +1079,7 @@ function ProductsPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const initialCategory = new URLSearchParams(window.location.search).get('category');
    const initialBrand = new URLSearchParams(window.location.search).get('brand');
-   const [category, setCategory] = useState(() => ['Todas', 'Poleras', 'Joggers', 'Compresión', 'Hoodies', 'Shorts'].includes(initialCategory ?? '') ? initialCategory! : initialBrand === 'Naruto' ? 'Todas' : 'Poleras');
+    const [category, setCategory] = useState(() => ['Todas', 'Compresión', 'Poleras', 'Joggers', 'Otros'].includes(initialCategory ?? '') ? initialCategory! : initialBrand === 'Naruto' ? 'Todas' : 'Poleras');
    const [brand, setBrand] = useState(() => ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'].includes(initialBrand ?? '') ? initialBrand! : 'Todas');
   const [sort, setSort] = useState('newest');
   const [filtersOpen, setFiltersOpen] = useState(() => Boolean(initialBrand));
@@ -1089,19 +1089,14 @@ function ProductsPage() {
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState(false);
-   const categories = ['Todas', 'Poleras', 'Compresión', 'Joggers', 'Hoodies', 'Shorts'];
+    const categories = ['Todas', 'Compresión', 'Poleras', 'Joggers', 'Otros'];
    const searchCategories: Array<{ label: string; value: string; filter: 'category' | 'brand' }> = [
      { label: 'Todos los productos', value: 'Todas', filter: 'category' },
      { label: 'Naruto', value: 'Naruto', filter: 'brand' },
-      { label: 'Poleras y soleras', value: 'Poleras', filter: 'category' },
-     { label: 'Joggers y pantalones deportivos', value: 'Joggers', filter: 'category' },
-     { label: 'Pantalones', value: 'Joggers', filter: 'category' },
-     { label: 'Chándales', value: 'Joggers', filter: 'category' },
-     { label: 'Camisetas sin mangas', value: 'Compresión', filter: 'category' },
-     { label: 'Conjuntos deportivos', value: 'Compresión', filter: 'category' },
-     { label: 'Camisetas de manga larga', value: 'Compresión', filter: 'category' },
-     { label: 'Shorts', value: 'Shorts', filter: 'category' },
-     { label: 'Sudaderas con capucha y sudaderas', value: 'Hoodies', filter: 'category' },
+      { label: 'Compresión', value: 'Compresión', filter: 'category' },
+      { label: 'Poleras', value: 'Poleras', filter: 'category' },
+      { label: 'Joggers', value: 'Joggers', filter: 'category' },
+      { label: 'Otros', value: 'Otros', filter: 'category' },
    ];
    const brands = ['Todas', 'YoungLA', 'Gymshark', 'Breathe Divinity', 'Naruto'];
   const sortOptions = [
@@ -1117,7 +1112,8 @@ function ProductsPage() {
 
   const filteredProducts = useMemo(() => {
     const result = products.filter((product) => {
-      const matchesCategory = category === 'Todas' || product.category === category;
+       const matchesCategory = category === 'Todas'
+         || (category === 'Otros' ? product.category === 'Shorts' || product.category === 'Hoodies' : product.category === category);
        const matchesBrand = brand === 'Todas' || product.brand === brand || (brand === 'Naruto' && isNarutoProduct(product));
       return matchesCategory && matchesBrand;
     });
@@ -1195,7 +1191,7 @@ function ProductsPage() {
             </div>
           </div>
           <div className="product-filter-strip -mx-5 mt-4 flex gap-2 overflow-x-auto px-5 pb-0 md:mx-0 md:px-0">
-             {categories.map((item) => <button key={item} data-testid={`button-category-${item.toLowerCase()}`} onClick={() => setCategory(item)} className={`shrink-0 border px-3 py-2 text-[9px] font-bold uppercase tracking-[.09em] transition-colors ${category === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] bg-transparent text-[#69635d] hover:border-[#171717] hover:text-[#171717]'}`}>{item === 'Poleras' ? 'Poleras y soleras' : item}</button>)}
+             {categories.map((item) => <button key={item} data-testid={`button-category-${item.toLowerCase()}`} onClick={() => setCategory(item)} className={`shrink-0 border px-3 py-2 text-[9px] font-bold uppercase tracking-[.09em] transition-colors ${category === item ? 'border-[#171717] bg-[#171717] text-white' : 'border-[#d3cdc6] bg-transparent text-[#69635d] hover:border-[#171717] hover:text-[#171717]'}`}>{item === 'Todas' ? 'Todos' : item}</button>)}
           </div>
           {filtersOpen && <div className="filter-drawer mt-4 border-t border-[#ddd8d2] pt-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
