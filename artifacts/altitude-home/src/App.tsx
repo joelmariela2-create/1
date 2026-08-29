@@ -1504,13 +1504,6 @@ function ProductDetailPage() {
     openOrderWhatsApp(customer, cartItems, total);
     setConfirmedCustomer(customer);
   };
-   const handleBackToPreviousPage = () => {
-     if (window.history.length > 1) {
-       window.history.back();
-     } else {
-       setLocation('/products');
-     }
-   };
   const scrollGallery = (direction: number) => {
     const gallery = galleryRef.current;
     if (!gallery) return;
@@ -1545,9 +1538,6 @@ function ProductDetailPage() {
           : <section className="detail-content px-5 py-6 md:px-10 md:py-10">
             <div className="grid gap-0 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
                 <div className={`detail-photo-wrap detail-gallery-wrap relative overflow-hidden bg-[#e7e3dd] ${hasMultipleGalleryImages ? 'has-gallery' : 'is-single-gallery'}`} role="button" tabIndex={0} aria-label={`Ampliar foto de ${product.name}${hasMultipleGalleryImages ? '; desliza para ver más imágenes' : ''}`} onClick={handlePhotoClick} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setZoomOpen(true); } }} onTouchStart={handlePhotoTouchStart} onTouchEnd={handlePhotoTouchEnd}>
-                    <button type="button" data-testid="button-detail-back" onClick={handleBackToPreviousPage} className="group absolute left-4 top-4 z-20 inline-flex items-center gap-2 bg-transparent px-0 py-1 text-[10px] font-bold uppercase tracking-[.1em] text-[#171717] drop-shadow-[0_1px_2px_rgba(255,255,255,0.7)] transition-colors hover:text-[#d93731]">
-                      <ArrowLeft size={16} strokeWidth={1.6} className="transition-transform group-hover:-translate-x-1" /> Atrás
-                    </button>
                   <div ref={galleryRef} className="detail-gallery scrollbar-hide" onScroll={(event) => {
                    const gallery = event.currentTarget;
                    const firstSlide = gallery.querySelector<HTMLElement>('.detail-gallery-slide');
