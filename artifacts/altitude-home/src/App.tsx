@@ -119,6 +119,21 @@ const firstAddedSoleraIds = [
   'youngla-sasuke-solera',
   'youngla-itachi-solera',
 ];
+const getAllProductsOrder = (a: Product, b: Product) => {
+  const aSoleraIndex = firstAddedSoleraIds.indexOf(a.id);
+  const bSoleraIndex = firstAddedSoleraIds.indexOf(b.id);
+  if (aSoleraIndex !== -1 || bSoleraIndex !== -1) {
+    if (aSoleraIndex === -1) return 1;
+    if (bSoleraIndex === -1) return -1;
+    return aSoleraIndex - bSoleraIndex;
+  }
+
+  const aNaruto = isNarutoProduct(a);
+  const bNaruto = isNarutoProduct(b);
+  if (aNaruto !== bNaruto) return Number(bNaruto) - Number(aNaruto);
+
+  return products.indexOf(b) - products.indexOf(a);
+};
 const productCardImageZoom: Record<string, number> = {
   // These source photos include noticeably more empty background than the
   // Golds Gym reference image, so the garment needs a little more presence.
@@ -1118,6 +1133,9 @@ function ProductsPage() {
       return matchesCategory && matchesBrand;
     });
     return result.sort((a, b) => {
+      if (sort === 'newest' && category === 'Todas') {
+        return getAllProductsOrder(a, b);
+      }
       if (sort === 'newest' && category === 'Poleras') {
         const aSoleraIndex = firstAddedSoleraIds.indexOf(a.id);
         const bSoleraIndex = firstAddedSoleraIds.indexOf(b.id);
@@ -1126,6 +1144,9 @@ function ProductsPage() {
           if (bSoleraIndex === -1) return -1;
           if (aSoleraIndex !== bSoleraIndex) return aSoleraIndex - bSoleraIndex;
         }
+        const aNaruto = isNarutoProduct(a);
+        const bNaruto = isNarutoProduct(b);
+        if (aNaruto !== bNaruto) return Number(bNaruto) - Number(aNaruto);
       }
       if (sort === 'best') return Number(Boolean(b.isBestSeller)) - Number(Boolean(a.isBestSeller));
       if (sort === 'available') return (a.status === 'Últimas unidades' ? 1 : 0) - (b.status === 'Últimas unidades' ? 1 : 0);
@@ -1580,6 +1601,12 @@ function SocialPage() {
     { name: 'WhatsApp', handle: '+591 63944376', href: storeWhatsAppUrl, color: '#25D366', icon: FaWhatsapp },
     { name: 'TikTok', handle: '@altitude.bo', href: 'https://www.tiktok.com/@altitude.bo?_r=1&_t=ZS-99DmQPVjKOD', color: '#FF0050', icon: FaTiktok },
   ];
+  const socialIconStyles: Record<string, CSSProperties> = {
+    Instagram: { background: 'linear-gradient(135deg, #833AB4 0%, #E1306C 52%, #FCAF45 100%)', color: '#fff' },
+    Facebook: { background: '#1877F2', color: '#fff' },
+    WhatsApp: { background: '#25D366', color: '#fff' },
+    TikTok: { background: '#050505', color: '#fff', textShadow: '-2px 0 #25F4EE, 2px 0 #FE2C55' },
+  };
   const handlePreRegistration = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const message = [
@@ -1605,8 +1632,7 @@ function SocialPage() {
           <p className="mt-4 max-w-[440px] text-[12px] leading-[1.6] text-[#716b65] md:text-[14px]">Sigue cada lanzamiento, novedad y movimiento de ALTITUDE online.</p>
           <div className="mt-7 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
             {socialLinks.map(({ name, handle, href, color, icon: Icon }) => {
-              const iconColor = color;
-              const card = <><div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#171717] text-white shadow-[0_8px_20px_rgba(23,23,23,0.16)] transition-transform duration-300 group-hover:scale-110" style={{ color: iconColor }}><Icon size={24} /></div><strong className="mt-3 text-[11px] uppercase tracking-[.08em] text-[#171717]">{name}</strong><span className="mt-1 text-center text-[9px] text-[#8b857e]">{handle}</span></>;
+              const card = <><div className="flex h-12 w-12 items-center justify-center rounded-full text-white shadow-[0_8px_20px_rgba(23,23,23,0.16)] transition-transform duration-300 group-hover:scale-110" style={socialIconStyles[name] ?? { background: color, color: '#fff' }}><Icon size={24} /></div><strong className="mt-3 text-[11px] uppercase tracking-[.08em] text-[#171717]">{name}</strong><span className="mt-1 text-center text-[9px] text-[#8b857e]">{handle}</span></>;
               return href
                 ? <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`Visitar ${name}`} className="group flex min-h-[150px] flex-col items-center justify-center border border-[#ded8d1] bg-white p-3 transition-all duration-300 hover:-translate-y-1 hover:border-[#171717] hover:shadow-[0_12px_28px_rgba(23,23,23,0.08)] md:min-h-[168px]">{card}</a>
                 : <div key={name} aria-disabled="true" className="group flex min-h-[150px] cursor-not-allowed flex-col items-center justify-center border border-[#e8e4de] bg-[#fbfaf8] p-3 opacity-75 md:min-h-[168px]">{card}</div>;
