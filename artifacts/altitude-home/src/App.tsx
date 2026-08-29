@@ -1598,25 +1598,25 @@ function SocialPage() {
   return (
     <div className="social-page page-shell min-h-[100dvh] bg-white pb-[76px] text-[#171717]">
       <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} />
-      <main className="px-5 py-12 md:px-12 md:py-20">
+      <main className="px-5 pb-8 pt-0 md:px-12 md:pb-12 md:pt-4">
         <section className="mx-auto max-w-[820px]" aria-labelledby="social-title">
           <p className="section-label text-[#d93731]">Conecta con ALTITUDE</p>
-          <h1 id="social-title" data-testid="text-social-title" className="mt-3 max-w-[720px] font-black uppercase leading-[.86] tracking-[-.07em] text-[#171717] text-[clamp(2.7rem,9vw,6.6rem)]">Visita nuestras redes sociales</h1>
-          <p className="mt-6 max-w-[440px] text-[12px] leading-[1.6] text-[#716b65] md:text-[14px]">Sigue cada lanzamiento, novedad y movimiento de ALTITUDE online.</p>
-          <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          <h1 id="social-title" data-testid="text-social-title" className="mt-2 max-w-[720px] font-black uppercase leading-[.86] tracking-[-.07em] text-[#171717] text-[clamp(2.7rem,9vw,6.6rem)]">Visita nuestras redes sociales</h1>
+          <p className="mt-4 max-w-[440px] text-[12px] leading-[1.6] text-[#716b65] md:text-[14px]">Sigue cada lanzamiento, novedad y movimiento de ALTITUDE online.</p>
+          <div className="mt-7 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
             {socialLinks.map(({ name, handle, href, color, icon: Icon }) => {
               const iconColor = color;
-              const card = <><div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#171717] text-white shadow-[0_8px_20px_rgba(23,23,23,0.16)] transition-transform duration-300 group-hover:scale-110" style={{ color: iconColor }}><Icon size={29} /></div><strong className="mt-6 text-[11px] uppercase tracking-[.08em] text-[#171717]">{name}</strong><span className="mt-2 text-center text-[9px] text-[#8b857e]">{handle}</span></>;
+              const card = <><div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#171717] text-white shadow-[0_8px_20px_rgba(23,23,23,0.16)] transition-transform duration-300 group-hover:scale-110" style={{ color: iconColor }}><Icon size={24} /></div><strong className="mt-3 text-[11px] uppercase tracking-[.08em] text-[#171717]">{name}</strong><span className="mt-1 text-center text-[9px] text-[#8b857e]">{handle}</span></>;
               return href
-                ? <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`Visitar ${name}`} className="group flex min-h-[190px] flex-col items-center justify-center border border-[#ded8d1] bg-white p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#171717] hover:shadow-[0_12px_28px_rgba(23,23,23,0.08)]">{card}</a>
-                : <div key={name} aria-disabled="true" className="group flex min-h-[190px] cursor-not-allowed flex-col items-center justify-center border border-[#e8e4de] bg-[#fbfaf8] p-4 opacity-75">{card}</div>;
+                ? <a key={name} href={href} target="_blank" rel="noreferrer" aria-label={`Visitar ${name}`} className="group flex min-h-[150px] flex-col items-center justify-center border border-[#ded8d1] bg-white p-3 transition-all duration-300 hover:-translate-y-1 hover:border-[#171717] hover:shadow-[0_12px_28px_rgba(23,23,23,0.08)] md:min-h-[168px]">{card}</a>
+                : <div key={name} aria-disabled="true" className="group flex min-h-[150px] cursor-not-allowed flex-col items-center justify-center border border-[#e8e4de] bg-[#fbfaf8] p-3 opacity-75 md:min-h-[168px]">{card}</div>;
             })}
           </div>
-          <section className="mt-16 border-t border-[#ded8d1] pt-10" aria-labelledby="pre-registration-title">
+          <section className="mt-10 border-t border-[#ded8d1] pt-7" aria-labelledby="pre-registration-title">
             <p className="section-label text-[#d93731]">Acceso anticipado</p>
             <h2 id="pre-registration-title" data-testid="text-pre-registration-title" className="mt-3 max-w-[660px] font-black uppercase leading-[.9] tracking-[-.06em] text-[#171717] text-[clamp(2rem,7vw,4.5rem)]">Pre-inscríbete para ser de los primeros</h2>
-            <p className="mt-5 max-w-[480px] text-[12px] leading-[1.6] text-[#716b65] md:text-[14px]">Déjanos tus datos y recibe primero las novedades y los próximos lanzamientos.</p>
-            <form onSubmit={handlePreRegistration} className="mt-8 grid gap-4 md:grid-cols-2">
+            <p className="mt-4 max-w-[480px] text-[12px] leading-[1.6] text-[#716b65] md:text-[14px]">Déjanos tus datos y recibe primero las novedades y los próximos lanzamientos.</p>
+            <form onSubmit={handlePreRegistration} className="mt-6 grid gap-3 md:grid-cols-2">
               <label className="block">
                 <span className="mb-2 flex items-center gap-2 text-[9px] font-bold uppercase tracking-[.12em] text-[#716b65]"><UserRound size={14} /> Nombre completo</span>
                 <input required value={preRegistration.fullName} onChange={(event) => setPreRegistration((current) => ({ ...current, fullName: event.target.value }))} className="h-12 w-full border border-[#d9d3cc] bg-white px-4 text-[12px] text-[#171717] outline-none transition-colors placeholder:text-[#aaa39b] focus:border-[#d93731]" placeholder="Tu nombre completo" />
