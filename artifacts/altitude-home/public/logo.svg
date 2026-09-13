@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 72" role="img" aria-labelledby="title">
+  <title>ALTITUDE</title>
+  <rect width="360" height="72" fill="#111111"/>
+  <path d="M30 51 50 20h11l20 31H68l-3.8-7H46.8l-4 7H30Zm21-14h8.5L55.3 29 51 37Z" fill="#f4f1ec"/>
+  <path d="M91 20h12v21h22v10H91V20Zm42 0h12v31h-12V20Zm22 0h35v10h-11.5v21h-12V30H155V20Zm44 0h13l16 19V20h12v31h-12l-17-20v20h-12V20Zm50 0h12v31h-12V20Zm22 0h43v10h-30v2h26v8h-26v2h30v9h-43V20Z" fill="#f4f1ec"/>
+  <rect x="30" y="58" width="322" height="2" fill="#d83932"/>
+</svg>

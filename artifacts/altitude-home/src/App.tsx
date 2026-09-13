@@ -7,13 +7,24 @@ import NotFound from '@/pages/not-found';
 import { playCartBell, playEntranceSound, startBackgroundMusic } from '@/lib/store-sounds';
 import { Link, Route, Switch, useLocation, Router as WouterRouter, useParams } from 'wouter';
 import {
-  ArrowLeft, ArrowRight, Box, Check, CheckCircle2, ChevronLeft, ChevronRight, Crown, CreditCard, Flame, House,
+  ArrowLeft, ArrowRight, ArrowUpRight, Box, Check, CheckCircle2, ChevronLeft, ChevronRight, Crown, CreditCard, Flame, House,
   LockKeyhole, MapPin, Menu, MessageCircle, Phone, Plus, RefreshCw, Search, ShieldCheck, UserRound,
   ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, X, Zap,
 } from 'lucide-react';
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa6';
+import { ClerkProvider, SignIn, SignUp, useAuth, useClerk } from '@clerk/react';
+import { publishableKeyFromHost } from '@clerk/react/internal';
+import { shadcn } from '@clerk/themes';
+import AdminPage from '@/pages/admin';
+import { useCreateOrder, useListProducts as useApiListProducts } from '@workspace/api-client-react';
 
 const queryClient = new QueryClient();
+const clerkPubKey = publishableKeyFromHost(
+  window.location.hostname,
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
+);
+const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 const storeWhatsAppUrl = 'https://wa.me/59163944376';
 const vipWhatsAppUrl = 'https://chat.whatsapp.com/GEZ219vgWOH4f7iOG9pKTt?s=cl&p=a&mlu=4';const bobFormatter = new Intl.NumberFormat('es-BO', {
   style: 'currency',
@@ -46,7 +57,7 @@ type Product = {
   price: string;
   priceValue: number;
   image: string;
-  category: 'Compresión' | 'Hoodies' | 'Joggers' | 'Shorts' | 'Poleras';
+  category: 'Compresión' | 'Hoodies' | 'Joggers' | 'Shorts' | 'Poleras' | 'Accesorios';
   status: 'Nuevo' | 'Disponible' | 'Últimas unidades';
   isBestSeller?: boolean;
   material?: string;
@@ -112,6 +123,54 @@ const products: Product[] = [
   { id: 'breathe-doom-tech-white', name: 'Compresiva Doom Tech-Blanca', brand: 'Breathe Divinity', price: formatBs(1200), priceValue: 1200, category: 'Compresión', status: 'Nuevo', image: '/breathe-doom-tech-white.jpg' },
 ];
 const homeCompressionProducts = products.filter((product) => product.category === 'Compresión');
+
+const StoreCatalogContext = createContext<{ products: Product[]; isLoading: boolean }>({
+  products,
+  isLoading: false,
+});
+
+function apiProductToStoreProduct(product: Awaited<ReturnType<typeof import('@workspace/api-client-react')['listProducts']>>[number]): Product {
+  const image = product.imageUrl ?? product.imageUrls[0] ?? '/altitude-logo-circle.png';
+  const category = ['Compresión', 'Hoodies', 'Joggers', 'Shorts', 'Poleras', 'Accesorios'].includes(product.category)
+    ? product.category as Product['category']
+    : 'Poleras';
+  return {
+    id: String(product.id),
+    name: product.name,
+    brand: 'ALTITUDE',
+    price: formatBs(product.price),
+    priceValue: product.price,
+    image,
+    category,
+    status: product.stock <= 0 ? 'Últimas unidades' : product.stock <= 3 ? 'Últimas unidades' : 'Disponible',
+    isBestSeller: product.featured,
+    material: product.description ?? undefined,
+    sizes: product.sizes,
+  };
+}
+
+function StoreCatalogProvider({ children }: { children: ReactNode }) {
+  const catalogQuery = useApiListProducts(
+    { active: true },
+    { query: { queryKey: ['/api/products', { active: true }], refetchOnMount: 'always', refetchInterval: 60000 } },
+  );
+  const catalogProducts = useMemo(() => {
+    const persisted = (catalogQuery.data ?? []).map(apiProductToStoreProduct);
+    if (persisted.length === 0) return products;
+    const persistedNames = new Set(persisted.map((product) => product.name.trim().toLowerCase()));
+    return [...persisted, ...products.filter((product) => !persistedNames.has(product.name.trim().toLowerCase()))];
+  }, [catalogQuery.data]);
+
+  return (
+    <StoreCatalogContext.Provider value={{ products: catalogProducts, isLoading: catalogQuery.isLoading }}>
+      {children}
+    </StoreCatalogContext.Provider>
+  );
+}
+
+function useStoreCatalog() {
+  return useContext(StoreCatalogContext);
+}
 const isNarutoProduct = (product: Product) => /naruto|sasuke|kurama|itachi|akatsuki|sasori/i.test(`${product.id} ${product.name}`);
 type ProductFilterCategory = 'Todas' | 'Compresión' | 'Poleras' | 'Joggers' | 'Soleras' | 'Shorts' | 'Overside' | 'Sin mangas';
 const productFilterCategories: ProductFilterCategory[] = ['Todas', 'Compresión', 'Poleras', 'Joggers', 'Soleras', 'Shorts', 'Overside', 'Sin mangas'];
@@ -702,9 +761,33 @@ function useShop() {
 
 function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; total: number; onConfirm: (customer: CustomerData) => void }) {
   const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'Bolivia', city: '' });
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const [error, setError] = useState('');
+  const createOrder = useCreateOrder();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onConfirm(customer);
+    setError('');
+    try {
+      await createOrder.mutateAsync({
+        data: {
+          customerName: customer.name.trim(),
+          phone: customer.phone.trim(),
+          country: customer.country,
+          city: customer.city,
+          items: cartItems.map((item) => ({
+            productId: Number(item.id) || 0,
+            productName: item.name,
+            size: item.selectedSize ?? null,
+            quantity: 1,
+            unitPrice: item.priceValue,
+            imageUrl: item.image || null,
+          })),
+          total,
+        },
+      });
+      onConfirm(customer);
+    } catch {
+      setError('No pudimos guardar tu pedido. Revisa tu conexión e inténtalo de nuevo.');
+    }
   };
   return <form onSubmit={handleSubmit} className="order-form mt-5 border-t border-[#171717] pt-5">
     <div className="mb-4">
@@ -725,7 +808,8 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
         </div>
      </div>
       <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[18px]">{formatBs(total)}</strong></div>
-     <button data-testid="button-confirm-order" type="submit" className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851]"><CheckCircle2 size={16} /> Confirmar pedido <ArrowRight size={16} /></button>
+      {error && <p role="alert" className="mt-4 border border-[#d8a19b] bg-[#fff0ee] px-3 py-2 text-[11px] text-[#9f302b]">{error}</p>}
+      <button data-testid="button-confirm-order" type="submit" disabled={createOrder.isPending} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851] disabled:cursor-wait disabled:opacity-70"><CheckCircle2 size={16} /> {createOrder.isPending ? 'Guardando pedido…' : 'Confirmar pedido'} <ArrowRight size={16} /></button>
      <p className="mt-3 text-center text-[9px] text-[#8b857e]">Tus datos se enviarán junto con el pedido por WhatsApp.</p>
   </form>;
 }
@@ -940,13 +1024,14 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
 
 function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Product; testId: string; zoomEnabled?: boolean }) {
   const [, setLocation] = useLocation();
+  const { products: catalogProducts } = useStoreCatalog();
   const [zoomOpen, setZoomOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const didSwipe = useRef(false);
-  const productIndex = products.findIndex((item) => item.id === product.id);
+  const productIndex = catalogProducts.findIndex((item) => item.id === product.id);
 
   const goToProduct = (index: number) => {
-    const nextProduct = products[index];
+    const nextProduct = catalogProducts[index];
     if (nextProduct) setLocation(`/products/${nextProduct.id}`);
   };
   const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
@@ -984,7 +1069,7 @@ function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Pr
       >
         <img src={product.image} alt={product.name} draggable={false} loading={productIndex < 2 ? 'eager' : 'lazy'} decoding="async" fetchPriority={productIndex === 0 ? 'high' : 'low'} style={getProductCardImageStyle(product)} className={`product-card-product-image h-full w-full ${getProductCardImageFit(product)} object-center grayscale-[.08]`} />
         {zoomEnabled && productIndex > 0 && <button type="button" aria-label="Producto anterior" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex - 1); }} className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronLeft size={15} /></button>}
-        {zoomEnabled && productIndex < products.length - 1 && <button type="button" aria-label="Producto siguiente" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex + 1); }} className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronRight size={15} /></button>}
+        {zoomEnabled && productIndex < catalogProducts.length - 1 && <button type="button" aria-label="Producto siguiente" onClick={(event) => { event.stopPropagation(); goToProduct(productIndex + 1); }} className="absolute right-2 top-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-[#171717] opacity-0 shadow-sm transition-opacity group-hover:opacity-100"><ChevronRight size={15} /></button>}
       </div>
       {zoomEnabled && zoomOpen && <div role="dialog" aria-modal="true" aria-label={`Foto ampliada de ${product.name}`} className="fixed inset-0 z-[70] flex items-center justify-center bg-[#050505]/95 p-4" onClick={() => setZoomOpen(false)}>
         <button type="button" aria-label="Cerrar foto ampliada" onClick={() => setZoomOpen(false)} className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center border border-white/40 text-white transition-colors hover:bg-white hover:text-[#171717]"><X size={21} /></button>
@@ -996,7 +1081,9 @@ function ProductCardPhoto({ product, testId, zoomEnabled = true }: { product: Pr
 }
 
 function ProductRail({ onAdd }: { onAdd: (product: Product) => void }) {
-  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">COMPRESIONES</h2></div><Link href="/products?category=Compresión" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div className="swipe-rail scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible">{homeCompressionProducts.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className={`group relative aspect-[.78] overflow-hidden ${product.id.includes('tom-and-jerry') ? 'bg-white' : 'bg-[#eeecea]'}`}><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
+  const { products: catalogProducts } = useStoreCatalog();
+  const compressionProducts = catalogProducts.filter((product) => product.category === 'Compresión');
+  return <section id="new-releases" className="px-5 pb-7 pt-1 md:px-8"><div className="mb-3 flex items-end justify-between"><div><p className="section-label mb-1 text-[#7c7772]">Recién llegados</p><h2 className="editorial-title text-[20px] font-bold uppercase tracking-[-.04em]">COMPRESIONES</h2></div><Link href="/products?category=Compresión" data-testid="link-rail-all-products" className="group flex items-center gap-1 pb-0.5 text-[9px] font-bold uppercase text-[#ca2f2b]">Ver todo <ArrowRight size={13} /></Link></div><div className="swipe-rail scrollbar-hide -mx-5 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-5 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible">{compressionProducts.map((product) => <article key={product.id} className="w-[145px] shrink-0 snap-start md:w-auto"><div className={`group relative aspect-[.78] overflow-hidden ${product.id.includes('tom-and-jerry') ? 'bg-white' : 'bg-[#eeecea]'}`}><ProductCardPhoto product={product} testId={`link-rail-image-${product.id}`} zoomEnabled={false} /><button type="button" onClick={(event) => { event.stopPropagation(); onAdd(product); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-rail-cart absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/90"><ShoppingCart size={14} strokeWidth={1.6} /></button><button onClick={() => onAdd(product)} className="absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-2 bg-white/95 text-[9px] font-bold uppercase tracking-[.08em] opacity-0 transition-opacity group-hover:opacity-100">Añadir <Plus size={13} /></button></div><div className="pt-2"><p className="text-[8px] font-semibold uppercase tracking-[.12em] text-[#8a837d]">{product.brand}</p><h3 className="mt-1 truncate text-[11px] font-semibold"><Link href={`/products/${product.id}`} data-testid={`link-rail-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-medium">{product.price}</p></div></article>)}</div></section>;
 }
 
 const narutoDropCarouselImages = [
@@ -1119,6 +1206,7 @@ function BottomNav({ onVip, onShowroom, active = 'home' }: { onVip: () => void; 
 function ProductsPage() {
   const [location, setLocation] = useLocation();
   const { cartItems, toast, addToCart, removeFromCart, notify } = useShop();
+  const { products: catalogProducts, isLoading: catalogLoading } = useStoreCatalog();
   const [menuOpen, setMenuOpen] = useState(false);
   const initialCategory = new URLSearchParams(window.location.search).get('category');
   const initialBrand = new URLSearchParams(window.location.search).get('brand');
@@ -1161,7 +1249,7 @@ function ProductsPage() {
   }, []);
 
   const filteredProducts = useMemo(() => {
-    const result = products.filter((product) => {
+    const result = catalogProducts.filter((product) => {
         const matchesCategory = matchesProductFilter(product, category as ProductFilterCategory);
        const matchesBrand = brand === 'Todas' || product.brand === brand || (brand === 'Naruto' && isNarutoProduct(product));
       return matchesCategory && matchesBrand;
@@ -1185,9 +1273,9 @@ function ProductsPage() {
       if (sort === 'best') return Number(Boolean(b.isBestSeller)) - Number(Boolean(a.isBestSeller));
       if (sort === 'available') return (a.status === 'Últimas unidades' ? 1 : 0) - (b.status === 'Últimas unidades' ? 1 : 0);
       if (sort === 'price') return a.priceValue - b.priceValue;
-      return products.indexOf(a) - products.indexOf(b);
+      return catalogProducts.indexOf(a) - catalogProducts.indexOf(b);
     });
-  }, [brand, category, sort]);
+  }, [brand, category, sort, catalogProducts]);
 
   const clearFilters = () => {
     setCategory('Todas');
@@ -1265,10 +1353,10 @@ function ProductsPage() {
               <p className="section-label text-[#8b857e]">Selección ALTITUDE</p>
                <h2 data-testid="text-results-heading" className="editorial-title mt-1 text-[22px] font-bold uppercase tracking-[-.04em]">{category !== 'Todas' ? category : brand === 'Todas' ? 'Todos los productos' : brand}</h2>
             </div>
-            <span data-testid="text-results-count" className="font-mono text-[10px] text-[#8b857e]">{isLoading ? '—' : `${filteredProducts.length} resultados`}</span>
+             <span data-testid="text-results-count" className="font-mono text-[10px] text-[#8b857e]">{isLoading || catalogLoading ? '—' : `${filteredProducts.length} resultados`}</span>
           </div>
           {catalogError ? <div className="flex min-h-[290px] flex-col items-center justify-center border border-[#d8d2cb] bg-[#fbfaf8] px-5 text-center"><p className="section-label text-[#d93731]">Catálogo no disponible</p><p className="mt-2 max-w-[300px] text-[12px] text-[#716b65]">Algo interrumpió la selección. Intenta cargarla de nuevo.</p><button data-testid="button-retry-catalog" onClick={() => { setCatalogError(false); setIsLoading(true); window.setTimeout(() => setIsLoading(false), 320); }} className="mt-5 flex items-center gap-2 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]"><RefreshCw size={14} /> Reintentar</button></div>
-             : isLoading ? <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5">{Array.from({ length: 8 }, (_, index) => <div key={index} className="animate-pulse"><div className="product-skeleton aspect-[.66]" /><div className="mt-3 h-2.5 w-1/3 bg-[#e8e4de]" /><div className="mt-2 h-3.5 w-4/5 bg-[#e8e4de]" /><div className="mt-2 h-2.5 w-1/4 bg-[#e8e4de]" /></div>)}</div>
+             : isLoading || catalogLoading ? <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5">{Array.from({ length: 8 }, (_, index) => <div key={index} className="animate-pulse"><div className="product-skeleton aspect-[.66]" /><div className="mt-3 h-2.5 w-1/3 bg-[#e8e4de]" /><div className="mt-2 h-3.5 w-4/5 bg-[#e8e4de]" /><div className="mt-2 h-2.5 w-1/4 bg-[#e8e4de]" /></div>)}</div>
             : filteredProducts.length === 0 ? <div data-testid="empty-product-results" className="flex min-h-[290px] flex-col items-center justify-center border border-dashed border-[#cfc9c2] bg-[#fbfaf8] px-5 text-center"><span className="flex h-12 w-12 items-center justify-center border border-[#d8d2cb] text-[#d93731]"><Search size={20} strokeWidth={1.4} /></span><h3 className="mt-5 text-[14px] font-bold uppercase tracking-[-.02em]">No encontramos ese drop</h3><p className="mt-2 max-w-[290px] text-[11px] leading-[1.5] text-[#716b65]">Prueba con otra palabra o vuelve a ver toda la selección.</p><button data-testid="button-empty-clear-filters" onClick={clearFilters} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Ver todos los productos</button></div>
               : <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} role="link" tabIndex={0} onClick={(event) => { if ((event.target as HTMLElement).closest('a,button')) return; setLocation(`/products/${product.id}`); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLocation(`/products/${product.id}`); } }} className="product-card group flex min-w-0 cursor-pointer flex-col">
                 <div className={`product-card-image relative aspect-[.66] overflow-hidden ${product.id.includes('tom-and-jerry') ? 'bg-white' : ''}`}>
@@ -1392,6 +1480,7 @@ function ProductDetailPage() {
   const params = useParams();
   const [, setLocation] = useLocation();
   const { cartItems, toast, addToCart, removeFromCart, notify } = useShop();
+  const { products: catalogProducts, isLoading: catalogLoading } = useStoreCatalog();
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [added, setAdded] = useState(false);
@@ -1404,7 +1493,7 @@ function ProductDetailPage() {
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const photoTouchStartX = useRef<number | null>(null);
   const photoDidSwipe = useRef(false);
-  const product = products.find((item) => item.id === params.id);
+  const product = catalogProducts.find((item) => item.id === params.id);
   const detail = product ? getProductDetails(product) : undefined;
   const galleryImages = product ? getProductGallery(product) : [];
   const hasMultipleGalleryImages = galleryImages.length > 1;
@@ -1533,7 +1622,7 @@ function ProductDetailPage() {
     <div className="detail-page page-shell min-h-[100dvh] bg-[#f6f4f0] pb-[78px] text-[#171717]">
       <Header cartCount={cartItems.length} onMenu={() => setMenuOpen(true)} onShop={() => setLocation('/products')} onShowroom={() => { setLocation('/'); window.setTimeout(() => scrollToSection('showroom'), 80); }} onCart={() => setCartOpen(true)} />
       <main aria-live="polite">
-        {isLoading ? <div className="detail-loading grid gap-5 px-5 py-7 md:grid-cols-2 md:px-10 md:py-12"><div className="product-skeleton aspect-[.86]" /><div className="space-y-5 pt-3"><div className="h-3 w-1/4 bg-[#e8e4de]" /><div className="h-14 w-4/5 bg-[#e8e4de]" /><div className="h-8 w-1/3 bg-[#e8e4de]" /><div className="h-24 w-full bg-[#e8e4de]" /></div></div>
+        {isLoading || catalogLoading ? <div className="detail-loading grid gap-5 px-5 py-7 md:grid-cols-2 md:px-10 md:py-12"><div className="product-skeleton aspect-[.86]" /><div className="space-y-5 pt-3"><div className="h-3 w-1/4 bg-[#e8e4de]" /><div className="h-14 w-4/5 bg-[#e8e4de]" /><div className="h-8 w-1/3 bg-[#e8e4de]" /><div className="h-24 w-full bg-[#e8e4de]" /></div></div>
           : !product || !detail ? <section className="flex min-h-[590px] flex-col items-center justify-center px-5 text-center"><p className="section-label text-[#d93731]">404 / selección no encontrada</p><h1 data-testid="text-product-not-found" className="editorial-title mt-4 text-[clamp(2.8rem,9vw,6rem)] font-bold uppercase leading-[.84]">Este drop<br /><span className="text-[#d93731]">ya voló.</span></h1><p className="mt-5 max-w-[310px] text-[12px] leading-[1.5] text-[#716b65]">No encontramos ese producto en el catálogo actual. Explora la selección completa para encontrar tu próximo ritmo.</p><Link href="/products" data-testid="link-not-found-products" className="mt-7 flex h-12 items-center gap-3 bg-[#171717] px-5 text-[10px] font-bold uppercase tracking-[.12em] text-[#f6f4f0] transition-colors hover:bg-[#d93731]"><ArrowLeft size={16} /> Volver a la tienda</Link></section>
             : <section className="detail-content px-5 pb-6 pt-0 md:px-10 md:pb-10 md:pt-0">
             <div className="grid gap-0 md:grid-cols-[minmax(0,1.08fr)_minmax(330px,.92fr)] md:items-start md:gap-14">
@@ -1816,13 +1905,164 @@ function VipPage() {
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) { const [location] = useLocation(); return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>; }
 
+function stripClerkBase(path: string) {
+  return basePath && path.startsWith(basePath) ? path.slice(basePath.length) || '/' : path;
+}
+
+function ClerkQueryClientCacheInvalidator() {
+  const { addListener } = useClerk();
+  const previousUserRef = useRef<string | null | undefined>(undefined);
+  useEffect(() => {
+    const unsubscribe = addListener(({ user }) => {
+      const userId = user?.id ?? null;
+      if (previousUserRef.current !== undefined && previousUserRef.current !== userId) queryClient.clear();
+      previousUserRef.current = userId;
+    });
+    return unsubscribe;
+  }, [addListener]);
+  return null;
+}
+
+function SignInPage() {
+  return (
+    <div className="altitude-auth-page">
+      <div className="altitude-auth-aside">
+        <div className="altitude-auth-brand"><span />ALTITUDE</div>
+        <p className="section-label">Private office</p>
+        <h1>La operación<br /><em>continúa.</em></h1>
+        <p>El centro de control para el catálogo y los pedidos de ALTITUDE.</p>
+        <span className="altitude-auth-index">ALT / 001 — OWNER ACCESS</span>
+      </div>
+      <div className="altitude-auth-card">
+        <div className="altitude-auth-mobile-brand"><span />ALTITUDE</div>
+        <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+      </div>
+    </div>
+  );
+}
+
+function SignUpPage() {
+  return (
+    <div className="altitude-auth-page">
+      <div className="altitude-auth-aside">
+        <div className="altitude-auth-brand"><span />ALTITUDE</div>
+        <p className="section-label">Private office</p>
+        <h1>Una cuenta.<br /><em>Un criterio.</em></h1>
+        <p>El acceso al back-office está reservado para el dueño de ALTITUDE.</p>
+        <span className="altitude-auth-index">ALT / 001 — OWNER ACCESS</span>
+      </div>
+      <div className="altitude-auth-card">
+        <div className="altitude-auth-mobile-brand"><span />ALTITUDE</div>
+        <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
+      </div>
+    </div>
+  );
+}
+
+function ProtectedAdmin({ section }: { section: 'dashboard' | 'products' | 'orders' }) {
+  const { isLoaded, isSignedIn } = useAuth();
+  const { signOut } = useClerk();
+  const [, setLocation] = useLocation();
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) setLocation('/sign-in');
+  }, [isLoaded, isSignedIn, setLocation]);
+  if (!isLoaded || !isSignedIn) return <div className="admin-app"><AdminSkeletonScreen /></div>;
+  return <AdminPage section={section} onSignOut={() => signOut({ redirectUrl: basePath || '/' })} />;
+}
+
+function AdminSkeletonScreen() {
+  return <div className="admin-skeleton"><div className="admin-skeleton-line wide" /><div className="admin-skeleton-grid">{Array.from({ length: 4 }).map((_, index) => <div className="admin-skeleton-card" key={index} />)}</div><div className="admin-skeleton-table" /></div>;
+}
+
+function AuthenticatedStoreLink() {
+  const { isLoaded, isSignedIn } = useAuth();
+  const [location] = useLocation();
+  if (!isLoaded || !isSignedIn || location.startsWith('/admin')) return null;
+  return <Link href="/admin" className="altitude-office-link" data-testid="link-admin-office"><ShieldCheck size={14} /> Panel privado <ArrowUpRight size={13} /></Link>;
+}
+
 function Router() {
   const [location] = useLocation();
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [location]);
-  return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/social" component={SocialPage} /><Route path="/vip" component={VipPage} /><Route path="/checkout" component={CheckoutPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
+  return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/social" component={SocialPage} /><Route path="/vip" component={VipPage} /><Route path="/checkout" component={CheckoutPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route path="/admin" component={() => <ProtectedAdmin section="dashboard" />} /><Route path="/admin/products" component={() => <ProtectedAdmin section="products" />} /><Route path="/admin/orders" component={() => <ProtectedAdmin section="orders" />} /><Route path="/sign-in/*?" component={SignInPage} /><Route path="/sign-up/*?" component={SignUpPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
 }
+
+const clerkAppearance = {
+  theme: shadcn,
+  cssLayerName: 'clerk',
+  options: {
+    logoPlacement: 'inside' as const,
+    logoLinkUrl: basePath || '/',
+    logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
+    socialButtonsPlacement: 'top' as const,
+    socialButtonsVariant: 'blockButton' as const,
+  },
+  variables: {
+    colorPrimary: '#d83932',
+    colorForeground: '#171717',
+    colorMutedForeground: '#77716b',
+    colorDanger: '#b3312c',
+    colorBackground: '#fbfaf7',
+    colorInput: '#f4f1ec',
+    colorInputForeground: '#171717',
+    colorNeutral: '#d4cec6',
+    fontFamily: 'DM Sans, sans-serif',
+    borderRadius: '0px',
+  },
+  elements: {
+    rootBox: 'w-full flex justify-center',
+    cardBox: 'bg-[#fbfaf7] rounded-none w-[440px] max-w-full overflow-hidden border border-[#ded9d2]',
+    card: '!shadow-none !border-0 !bg-transparent !rounded-none',
+    footer: '!shadow-none !border-0 !bg-transparent !rounded-none',
+    headerTitle: 'text-[#171717] font-semibold tracking-[-.04em]',
+    headerSubtitle: 'text-[#77716b]',
+    socialButtonsBlockButtonText: 'text-[#171717] font-medium',
+    formFieldLabel: 'text-[#171717] font-medium',
+    footerActionLink: 'text-[#d83932] font-semibold',
+    footerActionText: 'text-[#77716b]',
+    dividerText: 'text-[#77716b]',
+    identityPreviewEditButton: 'text-[#d83932]',
+    formFieldSuccessText: 'text-[#477653]',
+    alertText: 'text-[#9f302b]',
+    logoBox: 'h-9',
+    logoImage: 'h-9 w-auto',
+    socialButtonsBlockButton: 'border-[#d4cec6] bg-[#f4f1ec] hover:bg-[#ebe6df]',
+    formButtonPrimary: 'bg-[#d83932] hover:bg-[#b92f2a] text-white',
+    formFieldInput: 'border-[#d4cec6] bg-[#f4f1ec] text-[#171717]',
+    footerAction: 'border-0',
+    dividerLine: 'bg-[#ded9d2]',
+    alert: 'border-[#e1aaa5] bg-[#fff0ee]',
+    otpCodeFieldInput: 'border-[#d4cec6] bg-[#f4f1ec] text-[#171717]',
+    formFieldRow: 'gap-2',
+    main: 'gap-5',
+  },
+};
+
+function ClerkProviderWithRoutes() {
+  const [, setLocation] = useLocation();
+  return (
+    <ClerkProvider
+      publishableKey={clerkPubKey}
+      proxyUrl={clerkProxyUrl}
+      appearance={clerkAppearance}
+      signInUrl={`${basePath}/sign-in`}
+      signUpUrl={`${basePath}/sign-up`}
+      localization={{
+        signIn: { start: { title: 'Bienvenido de nuevo', subtitle: 'Entra para operar ALTITUDE' } },
+        signUp: { start: { title: 'Crear acceso', subtitle: 'Solo para el dueño de ALTITUDE' } },
+      }}
+      routerPush={(to) => setLocation(stripClerkBase(to))}
+      routerReplace={(to) => setLocation(stripClerkBase(to), { replace: true })}
+    >
+      <ClerkQueryClientCacheInvalidator />
+      <AuthenticatedStoreLink />
+      <ShopProvider><StoreCatalogProvider><Router /></StoreCatalogProvider></ShopProvider>
+    </ClerkProvider>
+  );
+}
+
 function App() {
   useEffect(() => {
     const entranceTimer = window.setTimeout(() => playEntranceSound(), 1000);
@@ -1840,7 +2080,7 @@ function App() {
       });
     };
   }, []);
-  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><ShopProvider><Router /></ShopProvider></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={basePath}><ClerkProviderWithRoutes /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
 }
 
 export default App;
