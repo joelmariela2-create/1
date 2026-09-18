@@ -16,7 +16,6 @@ import {
   ImagePlus,
   LayoutDashboard,
   LogOut,
-  MapPin,
   Menu,
   MoreHorizontal,
   Package,
@@ -29,7 +28,6 @@ import {
   Trash2,
   Truck,
   UploadCloud,
-  Phone,
   X,
 } from 'lucide-react';
 import {
@@ -51,7 +49,6 @@ const red = '#d83932';
 const ink = '#171717';
 const paper = '#f4f1ec';
 const muted = '#77716b';
-const lowStockThreshold = 3;
 const categories = ['Compresión', 'Poleras', 'Hoodies', 'Joggers', 'Shorts', 'Accesorios'];
 const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 const statuses: Array<{ value: OrderStatus; label: string }> = [
@@ -211,69 +208,6 @@ function EmptyState({ title, detail, action }: { title: string; detail: string; 
   );
 }
 
-function OrderDetailModal({ order, onClose }: { order: Order; onClose: () => void }) {
-  return (
-    <div className="admin-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target) onClose(); }}>
-      <section className="admin-order-detail" role="dialog" aria-modal="true" aria-labelledby="order-detail-heading">
-        <div className="admin-editor-top">
-          <div>
-            <p className="admin-eyebrow">Pedido / #{String(order.id).padStart(4, '0')}</p>
-            <h2 id="order-detail-heading">Detalle del pedido</h2>
-          </div>
-          <button type="button" className="admin-close" data-testid="button-close-order-details" onClick={onClose} aria-label="Cerrar detalle del pedido"><X size={20} /></button>
-        </div>
-        <div className="admin-order-detail-body">
-          <div className="admin-order-detail-topline">
-            <div>
-              <span className="admin-detail-label">Estado actual</span>
-              <StatusPill status={order.status} />
-            </div>
-            <div className="admin-detail-total">
-              <span className="admin-detail-label">Total</span>
-              <strong>{formatCurrency(order.total)}</strong>
-            </div>
-          </div>
-          <div className="admin-detail-grid">
-            <div className="admin-detail-block">
-              <span className="admin-detail-label">Cliente</span>
-              <strong>{order.customerName}</strong>
-              <a href={`tel:${order.phone}`}><Phone size={13} /> {order.phone}</a>
-            </div>
-            <div className="admin-detail-block">
-              <span className="admin-detail-label">Entrega</span>
-              <strong>{order.city}</strong>
-              <span><MapPin size={13} /> {order.country}</span>
-            </div>
-          </div>
-          <div className="admin-detail-items">
-            <div className="admin-detail-section-heading">
-              <span className="admin-detail-label">Artículos</span>
-              <span>{order.items.reduce((sum, item) => sum + item.quantity, 0)} unidades</span>
-            </div>
-            {order.items.map((item, index) => (
-              <div className="admin-detail-item" key={`${item.productId}-${item.size ?? 'one'}-${index}`}>
-                <div className="admin-detail-item-image">{item.imageUrl ? <img src={item.imageUrl} alt="" /> : <Package size={16} />}</div>
-                <div>
-                  <strong>{item.productName}</strong>
-                  <small>{item.size ? `Talla ${item.size} · ` : ''}{item.quantity} {item.quantity === 1 ? 'unidad' : 'unidades'}</small>
-                </div>
-                <span>{formatCurrency(item.unitPrice * item.quantity)}</span>
-              </div>
-            ))}
-          </div>
-          <div className="admin-detail-meta">
-            <span>Creado {formatDate(order.createdAt)}</span>
-            <span>Última actualización {formatDate(order.updatedAt)}</span>
-          </div>
-        </div>
-        <div className="admin-editor-actions">
-          <button type="button" className="admin-primary-button" data-testid="button-done-order-details" onClick={onClose}>Cerrar <Check size={16} /></button>
-        </div>
-      </section>
-    </div>
-  );
-}
-
 function AccessDenied() {
   const [, setLocation] = useLocation();
   return (
@@ -427,19 +361,18 @@ function ProductEditor({
 
 function DashboardView({ products, orders, summary, onProducts, onOrders }: { products: Product[]; orders: Order[]; summary?: { productCount: number; lowStockCount: number; orderCount: number; pendingOrderCount: number; revenue: number }; onProducts: () => void; onOrders: () => void }) {
   const latestOrders = orders.slice().sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt)).slice(0, 5);
-  const lowStockProducts = products.filter((product) => product.stock <= lowStockThreshold);
   return (
     <>
       <section className="admin-welcome"><div><p className="admin-eyebrow">Lunes, operación ALTITUDE</p><h2>Todo bajo control<span>.</span></h2><p className="admin-welcome-copy">Una lectura rápida de tu tienda para decidir qué sigue.</p></div><div className="admin-welcome-stamp"><span>ALT / 001</span><small>Owner workspace</small></div></section>
       <section className="admin-metrics">
         <MetricCard label="Productos" value={String(summary?.productCount ?? products.length)} note="en catálogo" icon={Package} />
-        <MetricCard label="Stock bajo" value={String(summary?.lowStockCount ?? lowStockProducts.length)} note="requieren atención" icon={AlertCircle} accent />
-        <MetricCard label="Pedidos" value={String(summary?.orderCount ?? orders.length)} note={`${summary?.pendingOrderCount ?? orders.filter((order) => order.status === 'pending').length} pendientes`} icon={ShoppingBag} />
+        <MetricCard label="Stock bajo" value={String(summary?.lowStockCount ?? products.filter((product) => product.stock <= 5).length)} note="requieren atención" icon={AlertCircle} accent />
+        <MetricCard label="Pedidos" value={String(summary?.orderCount ?? orders.length)} note="histórico total" icon={ShoppingBag} />
         <MetricCard label="Ingresos" value={formatCurrency(summary?.revenue ?? orders.reduce((total, order) => total + order.total, 0))} note="acumulado registrado" icon={CircleDollarSign} />
       </section>
       <div className="admin-dashboard-grid">
         <section className="admin-panel admin-order-panel"><div className="admin-panel-heading"><div><p className="admin-eyebrow">Últimos movimientos</p><h3>Pedidos recientes</h3></div><button type="button" data-testid="button-view-all-orders" onClick={onOrders}>Ver todos <ArrowUpRight size={14} /></button></div>{latestOrders.length ? <div className="admin-recent-list">{latestOrders.map((order) => <div className="admin-recent-order" key={order.id} data-testid={`row-recent-order-${order.id}`}><span className="admin-order-number">#{String(order.id).padStart(4, '0')}</span><div className="admin-order-customer"><strong>{order.customerName}</strong><small>{order.items.length} {order.items.length === 1 ? 'artículo' : 'artículos'} · {formatDate(order.createdAt)}</small></div><StatusPill status={order.status} /><strong className="admin-order-total">{formatCurrency(order.total)}</strong></div>)}</div> : <EmptyState title="Aún no hay pedidos" detail="Cuando llegue tu primera venta aparecerá aquí." />}</section>
-        <section className="admin-panel admin-stock-panel"><div className="admin-panel-heading"><div><p className="admin-eyebrow">Inventario</p><h3>Atención necesaria</h3></div><button type="button" data-testid="button-view-all-products" onClick={onProducts}>Gestionar <ArrowUpRight size={14} /></button></div><div className="admin-stock-summary"><div className="stock-summary-number"><strong>{summary?.lowStockCount ?? lowStockProducts.length}</strong><span>productos con<br />stock bajo</span></div><div className="stock-bar"><i style={{ width: `${Math.min(100, Math.max(8, (lowStockProducts.length / Math.max(products.length, 1)) * 100))}%` }} /></div></div><div className="admin-stock-list">{lowStockProducts.slice(0, 4).map((product) => <div key={product.id} className="admin-stock-row"><div className="admin-stock-image">{product.imageUrl ? <img src={product.imageUrl} alt="" /> : <Package size={15} />}</div><span>{product.name}</span><strong className={product.stock === 0 ? 'out' : ''}>{product.stock === 0 ? 'Agotado' : `${product.stock} uds.`}</strong></div>)}{lowStockProducts.length === 0 && <p className="admin-all-good"><Check size={15} /> El inventario está saludable.</p>}</div></section>
+        <section className="admin-panel admin-stock-panel"><div className="admin-panel-heading"><div><p className="admin-eyebrow">Inventario</p><h3>Atención necesaria</h3></div><button type="button" data-testid="button-view-all-products" onClick={onProducts}>Gestionar <ArrowUpRight size={14} /></button></div><div className="admin-stock-summary"><div className="stock-summary-number"><strong>{summary?.lowStockCount ?? products.filter((product) => product.stock <= 5).length}</strong><span>productos con<br />stock bajo</span></div><div className="stock-bar"><i style={{ width: `${Math.min(100, Math.max(8, (products.filter((product) => product.stock <= 5).length / Math.max(products.length, 1)) * 100))}%` }} /></div></div><div className="admin-stock-list">{products.filter((product) => product.stock <= 5).slice(0, 4).map((product) => <div key={product.id} className="admin-stock-row"><div className="admin-stock-image">{product.imageUrl ? <img src={product.imageUrl} alt="" /> : <Package size={15} />}</div><span>{product.name}</span><strong className={product.stock === 0 ? 'out' : ''}>{product.stock === 0 ? 'Agotado' : `${product.stock} uds.`}</strong></div>)}{products.filter((product) => product.stock <= 5).length === 0 && <p className="admin-all-good"><Check size={15} /> El inventario está saludable.</p>}</div></section>
       </div>
     </>
   );
@@ -462,7 +395,7 @@ function ProductsView({ products, onEdit, onCreate, onDelete }: { products: Prod
   );
 }
 
-function OrdersView({ orders, onUpdate, onDetails }: { orders: Order[]; onUpdate: (order: Order, status: OrderStatus) => void; onDetails: (order: Order) => void }) {
+function OrdersView({ orders, onUpdate }: { orders: Order[]; onUpdate: (order: Order, status: OrderStatus) => void }) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<OrderStatus | 'all'>('all');
   const filtered = useMemo(() => orders.filter((order) => {
@@ -473,7 +406,7 @@ function OrdersView({ orders, onUpdate, onDetails }: { orders: Order[]; onUpdate
     <section className="admin-list-page">
       <div className="admin-list-toolbar"><div className="admin-search"><Search size={16} /><input data-testid="input-search-orders" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Buscar por cliente, ciudad o pedido" /></div><div className="admin-orders-count"><Truck size={16} /> {orders.length} pedidos en total</div></div>
       <div className="admin-filter-tabs order-filters">{[['all', 'Todos'], ...statuses.map((status) => [status.value, status.label])].map(([value, label]) => <button type="button" key={value} data-testid={`button-filter-orders-${value}`} className={filter === value ? 'active' : ''} onClick={() => setFilter(value as OrderStatus | 'all')}>{label}<span>{value === 'all' ? orders.length : orders.filter((order) => order.status === value).length}</span></button>)}</div>
-      <div className="admin-table-wrap">{filtered.length ? <table className="admin-table orders-table"><thead><tr><th>Pedido</th><th>Cliente</th><th>Entrega</th><th>Artículos</th><th>Total</th><th>Estado</th><th><span className="sr-only">Acciones</span></th></tr></thead><tbody>{filtered.map((order) => <tr key={order.id} data-testid={`row-order-${order.id}`}><td><strong className="admin-order-id">#{String(order.id).padStart(4, '0')}</strong><small className="admin-table-sub">{formatDate(order.createdAt)}</small></td><td><strong>{order.customerName}</strong><small className="admin-table-sub">{order.phone}</small></td><td><span>{order.city}</span><small className="admin-table-sub">{order.country}</small></td><td><span>{order.items.reduce((sum, item) => sum + item.quantity, 0)} unidades</span></td><td><strong>{formatCurrency(order.total)}</strong></td><td><select data-testid={`select-order-status-${order.id}`} value={order.status} onChange={(event) => onUpdate(order, event.target.value as OrderStatus)}>{statuses.map((status) => <option value={status.value} key={status.value}>{status.label}</option>)}</select></td><td><button type="button" className="admin-more" data-testid={`button-order-details-${order.id}`} aria-label={`Ver pedido ${order.id}`} onClick={() => onDetails(order)}><MoreHorizontal size={18} /></button></td></tr>)}</tbody></table> : <EmptyState title="No hay pedidos para mostrar" detail={search ? 'Prueba otra búsqueda o cambia el estado.' : 'Los nuevos pedidos aparecerán aquí.'} />}</div>
+      <div className="admin-table-wrap">{filtered.length ? <table className="admin-table orders-table"><thead><tr><th>Pedido</th><th>Cliente</th><th>Entrega</th><th>Artículos</th><th>Total</th><th>Estado</th><th><span className="sr-only">Acciones</span></th></tr></thead><tbody>{filtered.map((order) => <tr key={order.id} data-testid={`row-order-${order.id}`}><td><strong className="admin-order-id">#{String(order.id).padStart(4, '0')}</strong><small className="admin-table-sub">{formatDate(order.createdAt)}</small></td><td><strong>{order.customerName}</strong><small className="admin-table-sub">{order.phone}</small></td><td><span>{order.city}</span><small className="admin-table-sub">{order.country}</small></td><td><span>{order.items.reduce((sum, item) => sum + item.quantity, 0)} unidades</span></td><td><strong>{formatCurrency(order.total)}</strong></td><td><select data-testid={`select-order-status-${order.id}`} value={order.status} onChange={(event) => onUpdate(order, event.target.value as OrderStatus)}>{statuses.map((status) => <option value={status.value} key={status.value}>{status.label}</option>)}</select></td><td><button type="button" className="admin-more" data-testid={`button-order-details-${order.id}`} aria-label={`Ver pedido ${order.id}`}><MoreHorizontal size={18} /></button></td></tr>)}</tbody></table> : <EmptyState title="No hay pedidos para mostrar" detail={search ? 'Prueba otra búsqueda o cambia el estado.' : 'Los nuevos pedidos aparecerán aquí.'} />}</div>
     </section>
   );
 }
@@ -484,7 +417,6 @@ export default function AdminPage({ section = 'dashboard', onSignOut }: { sectio
   const [mobileMenu, setMobileMenu] = useState(false);
   const [editor, setEditor] = useState<Product | null | undefined>(undefined);
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
-  const [detailOrder, setDetailOrder] = useState<Order | null>(null);
   const [toast, setToast] = useState('');
   const productsQuery = useListProducts(undefined, { query: { queryKey: getListProductsQueryKey(), refetchOnMount: 'always', refetchInterval: 60000 } });
   const ordersQuery = useListOrders({ query: { queryKey: getListOrdersQueryKey(), refetchOnMount: 'always', refetchInterval: 60000 } });
@@ -533,11 +465,10 @@ export default function AdminPage({ section = 'dashboard', onSignOut }: { sectio
         <main className="admin-content">
           {section === 'dashboard' && <DashboardView products={products} orders={orders} summary={summaryQuery.data} onProducts={() => setLocation('/admin/products')} onOrders={() => setLocation('/admin/orders')} />}
           {section === 'products' && <ProductsView products={products} onEdit={(product) => setEditor(product)} onCreate={() => setEditor(null)} onDelete={setDeleteTarget} />}
-          {section === 'orders' && <OrdersView orders={orders} onUpdate={handleOrderUpdate} onDetails={setDetailOrder} />}
+          {section === 'orders' && <OrdersView orders={orders} onUpdate={handleOrderUpdate} />}
         </main>
       </div>
       {editor !== undefined && <ProductEditor product={editor} onClose={() => setEditor(undefined)} onSaved={() => { setEditor(undefined); setToast('Cambios guardados.'); }} />}
-      {detailOrder && <OrderDetailModal order={detailOrder} onClose={() => setDetailOrder(null)} />}
       {deleteTarget && <div className="admin-modal-backdrop" role="presentation"><section className="admin-confirm" role="dialog" aria-modal="true" aria-labelledby="delete-heading"><div className="admin-confirm-icon"><Trash2 size={21} /></div><p className="admin-eyebrow">Eliminar producto</p><h2 id="delete-heading">¿Quitar “{deleteTarget.name}”?</h2><p>Esta acción elimina el producto del catálogo. No podrás deshacerla.</p><div className="admin-confirm-actions"><button type="button" className="admin-ghost-button" data-testid="button-cancel-delete" onClick={() => setDeleteTarget(null)}>Cancelar</button><button type="button" className="admin-danger-button" data-testid="button-confirm-delete" onClick={handleDelete} disabled={deleteProduct.isPending}>{deleteProduct.isPending ? 'Eliminando…' : 'Sí, eliminar'}</button></div></section></div>}
       {toast && <div className="admin-toast" role="status" data-testid="status-admin-toast"><Check size={16} /> {toast}</div>}
     </div>
