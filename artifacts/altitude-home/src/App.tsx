@@ -1220,6 +1220,10 @@ function ProductsPage() {
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [catalogError, setCatalogError] = useState(false);
+  const [productView, setProductView] = useState<'grid' | 'carousel'>('grid');
+  const productsCarouselRef = useRef<HTMLDivElement>(null);
+  const carouselTouchStart = useRef<{ x: number; y: number } | null>(null);
+  const carouselDidSwipe = useRef(false);
     const categories = productFilterCategories;
    const searchCategories: Array<{ label: string; value: string; filter: 'category' | 'brand' }> = [
      { label: 'Todos los productos', value: 'Todas', filter: 'category' },
@@ -1247,6 +1251,9 @@ function ProductsPage() {
     const timer = window.setTimeout(() => setIsLoading(false), 320);
     return () => window.clearTimeout(timer);
   }, []);
+  useEffect(() => {
+    productsCarouselRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
+  }, [brand, category, sort, productView]);
 
   const filteredProducts = useMemo(() => {
     const result = catalogProducts.filter((product) => {
@@ -1295,6 +1302,29 @@ function ProductsPage() {
   const openShowroom = () => {
     setLocation('/');
     window.setTimeout(() => scrollToSection('showroom'), 80);
+  };
+  const moveCarousel = (direction: -1 | 1) => {
+    const carousel = productsCarouselRef.current;
+    const firstCard = carousel?.querySelector<HTMLElement>('[data-product-slide]');
+    if (!carousel || !firstCard) return;
+    const gap = Number.parseFloat(window.getComputedStyle(carousel).columnGap) || 0;
+    carousel.scrollBy({ left: direction * (firstCard.offsetWidth + gap), behavior: 'smooth' });
+  };
+  const handleCarouselTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0];
+    if (touch) carouselTouchStart.current = { x: touch.clientX, y: touch.clientY };
+  };
+  const handleCarouselTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    const start = carouselTouchStart.current;
+    const touch = event.changedTouches[0];
+    carouselTouchStart.current = null;
+    if (!start || !touch) return;
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) return;
+    carouselDidSwipe.current = true;
+    window.setTimeout(() => { carouselDidSwipe.current = false; }, 350);
+    moveCarousel(deltaX > 0 ? 1 : -1);
   };
 
   return (
@@ -1355,10 +1385,23 @@ function ProductsPage() {
             </div>
              <span data-testid="text-results-count" className="font-mono text-[10px] text-[#8b857e]">{isLoading || catalogLoading ? '—' : `${filteredProducts.length} resultados`}</span>
           </div>
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <span className="text-[9px] font-semibold uppercase tracking-[.1em] text-[#8b857e]">{productView === 'carousel' ? 'Desliza para explorar' : 'Vista de productos'}</span>
+            <div className="flex items-center gap-2">
+              {productView === 'carousel' && <div className="flex gap-1">
+                <button type="button" aria-label="Productos anteriores" onClick={() => moveCarousel(-1)} className="flex h-9 w-9 items-center justify-center border border-[#343434] text-[#f6f4f0] transition-colors hover:border-[#d5ad4a] hover:text-[#d5ad4a]"><ChevronLeft size={16} /></button>
+                <button type="button" aria-label="Productos siguientes" onClick={() => moveCarousel(1)} className="flex h-9 w-9 items-center justify-center border border-[#343434] text-[#f6f4f0] transition-colors hover:border-[#d5ad4a] hover:text-[#d5ad4a]"><ChevronRight size={16} /></button>
+              </div>}
+              <div className="flex border border-[#343434]">
+                <button type="button" aria-pressed={productView === 'grid'} onClick={() => setProductView('grid')} className={`h-9 px-3 text-[9px] font-bold uppercase tracking-[.08em] transition-colors ${productView === 'grid' ? 'bg-[#d5ad4a] text-[#080808]' : 'text-[#f6f4f0] hover:text-[#d5ad4a]'}`}>Cuadrícula</button>
+                <button type="button" aria-pressed={productView === 'carousel'} onClick={() => setProductView('carousel')} className={`h-9 px-3 text-[9px] font-bold uppercase tracking-[.08em] transition-colors ${productView === 'carousel' ? 'bg-[#d5ad4a] text-[#080808]' : 'text-[#f6f4f0] hover:text-[#d5ad4a]'}`}>Carrusel</button>
+              </div>
+            </div>
+          </div>
           {catalogError ? <div className="flex min-h-[290px] flex-col items-center justify-center border border-[#d8d2cb] bg-[#fbfaf8] px-5 text-center"><p className="section-label text-[#d93731]">Catálogo no disponible</p><p className="mt-2 max-w-[300px] text-[12px] text-[#716b65]">Algo interrumpió la selección. Intenta cargarla de nuevo.</p><button data-testid="button-retry-catalog" onClick={() => { setCatalogError(false); setIsLoading(true); window.setTimeout(() => setIsLoading(false), 320); }} className="mt-5 flex items-center gap-2 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]"><RefreshCw size={14} /> Reintentar</button></div>
              : isLoading || catalogLoading ? <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5">{Array.from({ length: 8 }, (_, index) => <div key={index} className="animate-pulse"><div className="product-skeleton aspect-[.66]" /><div className="mt-3 h-2.5 w-1/3 bg-[#e8e4de]" /><div className="mt-2 h-3.5 w-4/5 bg-[#e8e4de]" /><div className="mt-2 h-2.5 w-1/4 bg-[#e8e4de]" /></div>)}</div>
             : filteredProducts.length === 0 ? <div data-testid="empty-product-results" className="flex min-h-[290px] flex-col items-center justify-center border border-dashed border-[#cfc9c2] bg-[#fbfaf8] px-5 text-center"><span className="flex h-12 w-12 items-center justify-center border border-[#d8d2cb] text-[#d93731]"><Search size={20} strokeWidth={1.4} /></span><h3 className="mt-5 text-[14px] font-bold uppercase tracking-[-.02em]">No encontramos ese drop</h3><p className="mt-2 max-w-[290px] text-[11px] leading-[1.5] text-[#716b65]">Prueba con otra palabra o vuelve a ver toda la selección.</p><button data-testid="button-empty-clear-filters" onClick={clearFilters} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Ver todos los productos</button></div>
-              : <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} role="link" tabIndex={0} onClick={(event) => { if ((event.target as HTMLElement).closest('a,button')) return; setLocation(`/products/${product.id}`); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLocation(`/products/${product.id}`); } }} className="product-card group flex min-w-0 cursor-pointer flex-col">
+              : <div ref={productView === 'carousel' ? productsCarouselRef : undefined} role="region" aria-label={productView === 'carousel' ? 'Carrusel horizontal de productos' : 'Catálogo de productos'} onTouchStart={productView === 'carousel' ? handleCarouselTouchStart : undefined} onTouchEnd={productView === 'carousel' ? handleCarouselTouchEnd : undefined} onClickCapture={(event) => { if (carouselDidSwipe.current) { event.preventDefault(); event.stopPropagation(); } }} className={productView === 'carousel' ? 'swipe-rail scrollbar-hide -mx-3 flex snap-x snap-mandatory touch-pan-y gap-3 overflow-x-auto overscroll-x-contain scroll-smooth px-3 pb-3 md:mx-0 md:gap-5 md:px-0' : 'grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8'}>{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} data-product-slide={productView === 'carousel' ? '' : undefined} role="link" tabIndex={0} onClick={(event) => { if (carouselDidSwipe.current || (event.target as HTMLElement).closest('a,button')) return; setLocation(`/products/${product.id}`); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLocation(`/products/${product.id}`); } }} className={`product-card group flex min-w-0 cursor-pointer flex-col ${productView === 'carousel' ? 'w-[78vw] shrink-0 snap-start sm:w-[calc((100%-0.75rem)/2)] md:w-[calc((100%-3.75rem)/4)]' : ''}`}>
                 <div className={`product-card-image relative aspect-[.66] overflow-hidden ${product.id.includes('tom-and-jerry') ? 'bg-white' : ''}`}>
                    <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} decoding="async" style={getProductCardImageStyle(product)} className={`product-card-product-image h-full w-full ${getProductCardImageFit(product)} object-center`} /></Link>
                    <button data-testid={`button-cart-product-${product.id}`} onClick={() => { addToCart(product); setCartOpen(true); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-cart absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-[#171717] hover:text-white"><ShoppingCart size={15} strokeWidth={1.6} /></button>
