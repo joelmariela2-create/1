@@ -945,7 +945,7 @@ function HomeSearchOverlay({ open, onClose }: { open: boolean; onClose: () => vo
 
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-[60] h-[100dvh] overflow-hidden bg-white text-[#171717]" role="dialog" aria-modal="true" aria-label="Categorías de productos">
+    <div className="screen-overlay-enter fixed inset-0 z-[60] h-[100dvh] overflow-hidden bg-white text-[#171717]" role="dialog" aria-modal="true" aria-label="Categorías de productos">
       <div className="mx-auto flex h-full w-full max-w-[1280px] flex-col">
         <header className="relative flex h-[76px] items-center justify-center border-b border-[#eeeeee] px-5">
           <button type="button" onClick={onClose} aria-label="Volver al inicio" className="absolute left-4 flex h-11 w-11 items-center justify-center transition-colors hover:text-[#d93731]">
@@ -1178,8 +1178,8 @@ function HomeCartDrawer({ open, onClose }: { open: boolean; onClose: () => void 
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
   if (!open) return null;
   return <div className="fixed inset-0 z-50">
-    <button data-testid="button-close-home-cart-overlay" aria-label="Cerrar carrito" onClick={onClose} className="absolute inset-0 bg-[#171717]/35 backdrop-blur-[1px]" />
-    <aside role="dialog" aria-modal="true" aria-labelledby="home-cart-title" className="absolute bottom-0 right-0 top-0 flex w-full max-w-[410px] flex-col bg-[#f6f4f0] px-5 py-6 shadow-2xl md:px-7">
+    <button data-testid="button-close-home-cart-overlay" aria-label="Cerrar carrito" onClick={onClose} className="drawer-backdrop-enter absolute inset-0 bg-[#171717]/35 backdrop-blur-[1px]" />
+    <aside role="dialog" aria-modal="true" aria-labelledby="home-cart-title" className="right-drawer-enter absolute bottom-0 right-0 top-0 flex w-full max-w-[410px] flex-col bg-[#f6f4f0] px-5 py-6 shadow-2xl md:px-7">
       <div className="flex items-center justify-between border-b border-[#d9d3cc] pb-5">
         <div><p className="section-label text-[#d93731]">Tu selección</p><h2 id="home-cart-title" className="editorial-title mt-1 text-[25px] font-bold uppercase">Carrito <span className="font-mono text-[11px] text-[#8b857e]">({cartItems.length})</span></h2></div>
         <button data-testid="button-close-home-cart" onClick={onClose} aria-label="Cerrar carrito" className="flex h-9 w-9 items-center justify-center border border-[#d9d3cc]"><X size={18} strokeWidth={1.5} /></button>
@@ -1310,8 +1310,8 @@ function ProductsPage() {
       />
       <main className="products-content">
         {searchOpen && <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Categorías de la tienda">
-          <button type="button" aria-label="Cerrar categorías" onClick={() => setSearchOpen(false)} className="absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" />
-          <aside className="absolute bottom-0 right-0 top-0 w-[86%] max-w-[390px] overflow-y-auto bg-[#fbfaf8] px-5 py-6 shadow-2xl md:px-8">
+          <button type="button" aria-label="Cerrar categorías" onClick={() => setSearchOpen(false)} className="drawer-backdrop-enter absolute inset-0 bg-[#171717]/30 backdrop-blur-[1px]" />
+          <aside className="right-drawer-enter absolute bottom-0 right-0 top-0 w-[86%] max-w-[390px] overflow-y-auto bg-[#fbfaf8] px-5 py-6 shadow-2xl md:px-8">
             <div className="flex items-center justify-between border-b border-[#e1ddd8] pb-5">
               <div><p className="section-label text-[#ca2f2b]">Explorar</p><h2 className="editorial-title mt-1 text-[23px] font-bold uppercase">Categorías</h2></div>
               <button type="button" onClick={() => setSearchOpen(false)} aria-label="Cerrar categorías" className="flex h-9 w-9 items-center justify-center border border-[#d8d3ce]"><X size={18} strokeWidth={1.5} /></button>
@@ -1355,16 +1355,18 @@ function ProductsPage() {
             </div>
              <span data-testid="text-results-count" className="font-mono text-[10px] text-[#8b857e]">{isLoading || catalogLoading ? '—' : `${filteredProducts.length} resultados`}</span>
           </div>
-          {catalogError ? <div className="flex min-h-[290px] flex-col items-center justify-center border border-[#d8d2cb] bg-[#fbfaf8] px-5 text-center"><p className="section-label text-[#d93731]">Catálogo no disponible</p><p className="mt-2 max-w-[300px] text-[12px] text-[#716b65]">Algo interrumpió la selección. Intenta cargarla de nuevo.</p><button data-testid="button-retry-catalog" onClick={() => { setCatalogError(false); setIsLoading(true); window.setTimeout(() => setIsLoading(false), 320); }} className="mt-5 flex items-center gap-2 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]"><RefreshCw size={14} /> Reintentar</button></div>
+         <div key={`${category}-${brand}-${sort}`} className="tab-content-transition">
+         {catalogError ? <div className="flex min-h-[290px] flex-col items-center justify-center border border-[#d8d2cb] bg-[#fbfaf8] px-5 text-center"><p className="section-label text-[#d93731]">Catálogo no disponible</p><p className="mt-2 max-w-[300px] text-[12px] text-[#716b65]">Algo interrumpió la selección. Intenta cargarla de nuevo.</p><button data-testid="button-retry-catalog" onClick={() => { setCatalogError(false); setIsLoading(true); window.setTimeout(() => setIsLoading(false), 320); }} className="mt-5 flex items-center gap-2 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em]"><RefreshCw size={14} /> Reintentar</button></div>
              : isLoading || catalogLoading ? <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5">{Array.from({ length: 8 }, (_, index) => <div key={index} className="animate-pulse"><div className="product-skeleton aspect-[.66]" /><div className="mt-3 h-2.5 w-1/3 bg-[#e8e4de]" /><div className="mt-2 h-3.5 w-4/5 bg-[#e8e4de]" /><div className="mt-2 h-2.5 w-1/4 bg-[#e8e4de]" /></div>)}</div>
             : filteredProducts.length === 0 ? <div data-testid="empty-product-results" className="flex min-h-[290px] flex-col items-center justify-center border border-dashed border-[#cfc9c2] bg-[#fbfaf8] px-5 text-center"><span className="flex h-12 w-12 items-center justify-center border border-[#d8d2cb] text-[#d93731]"><Search size={20} strokeWidth={1.4} /></span><h3 className="mt-5 text-[14px] font-bold uppercase tracking-[-.02em]">No encontramos ese drop</h3><p className="mt-2 max-w-[290px] text-[11px] leading-[1.5] text-[#716b65]">Prueba con otra palabra o vuelve a ver toda la selección.</p><button data-testid="button-empty-clear-filters" onClick={clearFilters} className="mt-5 border border-[#171717] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#171717] hover:text-white">Ver todos los productos</button></div>
-              : <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} role="link" tabIndex={0} onClick={(event) => { if ((event.target as HTMLElement).closest('a,button')) return; setLocation(`/products/${product.id}`); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLocation(`/products/${product.id}`); } }} className="product-card group flex min-w-0 cursor-pointer flex-col">
+               : <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{filteredProducts.map((product, index) => <article key={product.id} data-testid={`card-product-${product.id}`} role="link" tabIndex={0} onClick={(event) => { if ((event.target as HTMLElement).closest('a,button')) return; setLocation(`/products/${product.id}`); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLocation(`/products/${product.id}`); } }} className="product-card group flex min-w-0 cursor-pointer flex-col">
                 <div className={`product-card-image relative aspect-[.66] overflow-hidden ${product.id.includes('tom-and-jerry') ? 'bg-white' : ''}`}>
                    <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full"><img src={product.image} alt={product.name} loading={index < 4 ? 'eager' : 'lazy'} decoding="async" style={getProductCardImageStyle(product)} className={`product-card-product-image h-full w-full ${getProductCardImageFit(product)} object-center`} /></Link>
                    <button data-testid={`button-cart-product-${product.id}`} onClick={() => { addToCart(product); setCartOpen(true); }} aria-label={`Añadir al carrito: ${product.name}`} className="product-cart absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#f6f4f0]/95 transition-colors hover:bg-[#171717] hover:text-white"><ShoppingCart size={15} strokeWidth={1.6} /></button>
               </div>
                   <div className="flex flex-1 flex-col pt-2"><h3 data-testid={`text-product-name-${product.id}`} className="text-[14px] font-medium leading-[1.3] text-[#171717]"><Link href={`/products/${product.id}`} data-testid={`link-product-name-${product.id}`} className="transition-colors hover:text-[#d93731]">{product.name}</Link></h3><p className="mt-1 text-[11px] font-semibold leading-[1.4] text-[#d93731]">{product.brand}</p><p data-testid={`text-product-price-${product.id}`} className="mt-1 text-[15px] font-bold leading-none text-[#171717]">{product.price}</p></div>
-            </article>)}</div>}
+             </article>)}</div>}
+         </div>
         </section>
       </main>
       <BottomNav active="shop" onVip={() => setLocation('/vip')} onShowroom={openShowroom} />
@@ -1986,7 +1988,7 @@ function Router() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [location]);
-  return <RoutedErrorBoundary><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/social" component={SocialPage} /><Route path="/vip" component={VipPage} /><Route path="/checkout" component={CheckoutPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route path="/admin" component={() => <ProtectedAdmin section="dashboard" />} /><Route path="/admin/products" component={() => <ProtectedAdmin section="products" />} /><Route path="/admin/orders" component={() => <ProtectedAdmin section="orders" />} /><Route path="/sign-in/*?" component={SignInPage} /><Route path="/sign-up/*?" component={SignUpPage} /><Route component={NotFound} /></Switch></RoutedErrorBoundary>;
+  return <RoutedErrorBoundary><div key={location} className="route-screen-enter"><Switch><Route path="/" component={Home} /><Route path="/collection" component={CollectionPage} /><Route path="/social" component={SocialPage} /><Route path="/vip" component={VipPage} /><Route path="/checkout" component={CheckoutPage} /><Route path="/products" component={ProductsPage} /><Route path="/products/:id" component={ProductDetailPage} /><Route path="/admin" component={() => <ProtectedAdmin section="dashboard" />} /><Route path="/admin/products" component={() => <ProtectedAdmin section="products" />} /><Route path="/admin/orders" component={() => <ProtectedAdmin section="orders" />} /><Route path="/sign-in/*?" component={SignInPage} /><Route path="/sign-up/*?" component={SignUpPage} /><Route component={NotFound} /></Switch></div></RoutedErrorBoundary>;
 }
 
 const clerkAppearance = {
