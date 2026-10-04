@@ -121,38 +121,14 @@ button, a {
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .drawer-backdrop-enter { animation: drawerBackdropIn .25s ease-out both; }
 .drawer-panel-enter { animation: drawerPanelIn .25s cubic-bezier(.22,.61,.36,1) both; will-change: transform, opacity; }
-.right-drawer-enter { animation: rightDrawerIn .25s cubic-bezier(.22,.61,.36,1) both; will-change: transform, opacity; }
-.route-screen-enter,
-.tab-content-transition,
-.screen-overlay-enter { animation: screenScaleIn .25s cubic-bezier(.22,.61,.36,1) both; }
-.products-page [aria-labelledby="cart-title"],
-.detail-page [aria-labelledby="detail-cart-title"] { animation: rightDrawerIn .25s cubic-bezier(.22,.61,.36,1) both; will-change: transform, opacity; }
-.products-page [data-testid="button-close-cart-overlay"],
-.detail-page [data-testid="button-close-detail-cart-overlay"] { animation: drawerBackdropIn .25s ease-out both; }
 @keyframes drawerBackdropIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes drawerPanelIn {
   from { opacity: 0; transform: translateX(-14px) scale(.96); }
   to { opacity: 1; transform: translateX(0) scale(1); }
 }
-@keyframes rightDrawerIn {
-  from { opacity: 0; transform: translateX(14px) scale(.96); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
-}
-@keyframes screenScaleIn {
-  from { opacity: 0; transform: scale(.985); }
-  to { opacity: 1; transform: none; }
-}
 @media (prefers-reduced-motion: reduce) {
   .drawer-backdrop-enter,
-  .drawer-panel-enter,
-  .right-drawer-enter,
-  .route-screen-enter,
-  .tab-content-transition,
-  .screen-overlay-enter,
-  .products-page [aria-labelledby="cart-title"],
-  .detail-page [aria-labelledby="detail-cart-title"] { animation: none; will-change: auto; }
-  .products-page [data-testid="button-close-cart-overlay"],
-  .detail-page [data-testid="button-close-detail-cart-overlay"] { animation: none; }
+  .drawer-panel-enter { animation: none; will-change: auto; }
 }
 .campaign-hero .campaign-image { animation: campaignFade .8s ease both; }
 .campaign-hero .campaign-image-altitude { transform: translateY(-35px) scale(1.68); }
