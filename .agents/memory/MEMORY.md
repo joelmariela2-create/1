@@ -1,1 +1,0 @@
-- [Tienda: vistas de productos](store-product-views.md) — Mantén la cuadrícula vertical como vista inicial y ofrece el carrusel horizontal como alternativa.
