@@ -2389,3 +2389,13 @@ body {
   border-color: #171717;
   box-shadow: 0 0 0 2px rgb(23 23 23 / 12%);
 }
+
+.form-field-emoji {
+  display: inline-block;
+  margin-left: 3px;
+  font-size: 18px;
+  line-height: 1;
+  vertical-align: middle;
+  filter: brightness(1.18) saturate(1.45) drop-shadow(0 1px 2px rgb(0 0 0 / 18%));
+  transform: translateY(-1px);
+}
