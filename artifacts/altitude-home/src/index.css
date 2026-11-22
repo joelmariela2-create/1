@@ -2343,3 +2343,30 @@ body {
     letter-spacing: .12em;
   }
 }
+
+.order-message-preview {
+  border: 1px solid #d9d3cc;
+  background: #f5f3ef;
+  padding: 12px;
+}
+
+.order-message-preview-title {
+  color: #514c47;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.order-message-preview pre {
+  max-height: 240px;
+  margin: 8px 0 0;
+  overflow: auto;
+  color: #514c47;
+  font-family: inherit;
+  font-size: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
