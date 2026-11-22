@@ -620,7 +620,7 @@ button, a {
     padding-top: 6px;
   }
   .checkout-page form > div:nth-child(4) strong {
-    font-size: 15px;
+    font-size: 18px;
   }
   .checkout-page form > button[data-testid="button-confirm-order"] {
     position: fixed;
@@ -2289,7 +2289,7 @@ body {
 
 .products-page aside[role="dialog"] .order-form > div:nth-child(4) strong,
 .detail-page aside[role="dialog"] .order-form > div:nth-child(4) strong {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .products-page aside[role="dialog"] .order-form > button,

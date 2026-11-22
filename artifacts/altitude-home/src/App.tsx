@@ -821,7 +821,7 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
            <textarea data-testid="textarea-order-whatsapp-preview" aria-labelledby="order-message-preview-title" aria-describedby="order-message-preview-hint" value={previewMessage} onChange={(event) => setMessageOverride(event.target.value)} rows={12} spellCheck={false} />
          </section>
      </div>
-      <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[18px]">{formatBs(total)}</strong></div>
+      <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[18px] font-bold uppercase tracking-[.04em]">Total del pedido</span><strong className="text-[18px] font-bold">{formatBs(total)}</strong></div>
       {error && <p role="alert" className="mt-4 border border-[#d8a19b] bg-[#fff0ee] px-3 py-2 text-[11px] text-[#9f302b]">{error}</p>}
       <button data-testid="button-confirm-order" type="submit" disabled={createOrder.isPending} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851] disabled:cursor-wait disabled:opacity-70"><CheckCircle2 size={16} /> {createOrder.isPending ? 'Guardando pedido…' : 'Confirmar pedido'} <ArrowRight size={16} /></button>
      <p className="mt-3 text-center text-[9px] text-[#8b857e]">Tus datos se enviarán junto con el pedido por WhatsApp.</p>
