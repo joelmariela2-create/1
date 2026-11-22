@@ -804,7 +804,15 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
     </div>
     <div className="mb-5 border border-[#d9d3cc] bg-white px-3 py-3">
       <p className="mb-2 text-[9px] font-bold uppercase tracking-[.1em] text-[#8b857e]">Resumen de pedido</p>
-       <div className="space-y-1">{cartItems.map((item, index) => <div key={`${item.id}-${index}`} className="flex justify-between gap-3 text-[11px]"><span className="min-w-0 truncate">{item.name}{item.selectedSize ? ` · ${item.selectedSize}` : ''}</span><strong className="shrink-0">{formatBs(item.priceValue)}</strong></div>)}</div>
+       <div className="order-summary-items">{cartItems.map((item, index) => <article key={`${item.id}-${index}`} className={`order-summary-item ${cartItems.length === 1 ? 'order-summary-item-featured' : ''}`}>
+         <img data-testid={`img-order-preview-${item.id}-${index}`} className="order-summary-image" src={item.image} alt={item.name} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+         <div className="order-summary-info">
+           <p className="order-summary-brand">{item.brand}</p>
+           <p className="order-summary-name">{item.name}</p>
+           {item.selectedSize && <p className="order-summary-size">Talla {item.selectedSize}</p>}
+           <strong className="order-summary-price">{formatBs(item.priceValue)}</strong>
+         </div>
+       </article>)}</div>
        <div className="mt-3 flex justify-between border-t border-[#e6e2de] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">{formatBs(total)}</span></div>
     </div>
       <div className="space-y-3">
