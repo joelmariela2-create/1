@@ -14,6 +14,8 @@ export interface Order {
   phone: string;
   country: string;
   city: string;
+  /** @nullable */
+  address: string | null;
   items: OrderItem[];
   total: number;
   status: OrderStatus;

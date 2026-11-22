@@ -36,6 +36,7 @@ router.post("/orders", async (req, res): Promise<void> => {
       phone: data.phone,
       country: data.country,
       city: data.city,
+      address: data.address,
       items: data.items,
       total: String(data.total),
       status: "pending",

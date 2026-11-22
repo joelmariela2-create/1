@@ -734,10 +734,10 @@ const boliviaDepartments = [
   'Chuquisaca', 'La Paz', 'Cochabamba', 'Oruro', 'Potosí',
   'Tarija', 'Santa Cruz', 'Beni', 'Pando',
 ];
-type CustomerData = { name: string; phone: string; country: string; city: string };
+type CustomerData = { name: string; phone: string; country: string; city: string; address: string };
 function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total: number) {
   const summary = cartItems.map((item) => `${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join(', ');
-  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: ${formatBs(total)}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}»`;
+  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: ${formatBs(total)}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}\n🏠 DOMICILIO: ${customer.address}»`;
 }
 function openOrderWhatsApp(customer: CustomerData, cartItems: CartItem[], total: number, message: string) {
   const whatsappUrl = `${storeWhatsAppUrl}?text=${encodeURIComponent(message)}`;
@@ -760,7 +760,7 @@ function useShop() {
 }
 
 function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; total: number; onConfirm: (customer: CustomerData, message: string) => void }) {
-  const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'Bolivia', city: '' });
+  const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'Bolivia', city: '', address: '' });
   const [messageOverride, setMessageOverride] = useState<string | null>(null);
   const [error, setError] = useState('');
   const createOrder = useCreateOrder();
@@ -780,6 +780,7 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
           phone: customer.phone.trim(),
           country: customer.country,
           city: customer.city,
+          address: customer.address.trim(),
           items: cartItems.map((item) => ({
             productId: Number(item.id) || 0,
             productName: item.name,
@@ -813,6 +814,7 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
              <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => updateCustomer('country', event.target.value)} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="Bolivia">🇧🇴 Bolivia</option></select></label>
             <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Departamento</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => updateCustomer('city', event.target.value)} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu departamento</option>{boliviaDepartments.map((department) => <option key={department} value={department}>{department}</option>)}</select></label>
         </div>
+         <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Domicilio</span><input data-testid="input-order-address" required autoComplete="street-address" value={customer.address} onChange={(event) => updateCustomer('address', event.target.value)} placeholder="Calle y número de casa" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
          <section className="order-message-preview" aria-labelledby="order-message-preview-title">
            <h4 id="order-message-preview-title" className="order-message-preview-title">Vista previa del mensaje para WhatsApp</h4>
            <p id="order-message-preview-hint" className="order-message-preview-hint">Toca el texto para editarlo</p>

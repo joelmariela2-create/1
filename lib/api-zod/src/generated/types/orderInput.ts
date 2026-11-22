@@ -16,6 +16,8 @@ export interface OrderInput {
   country: string;
   /** @minLength 1 */
   city: string;
+  /** @minLength 1 */
+  address: string;
   /** @minItems 1 */
   items: OrderItem[];
   /** @minimum 0 */

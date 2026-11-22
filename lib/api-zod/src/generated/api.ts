@@ -158,6 +158,7 @@ export const ListOrdersResponseItem = zod.object({
   "phone": zod.string(),
   "country": zod.string(),
   "city": zod.string(),
+  "address": zod.string().nullable(),
   "items": zod.array(zod.object({
   "productId": zod.number(),
   "productName": zod.string(),
@@ -182,6 +183,7 @@ export const ListOrdersResponse = zod.array(ListOrdersResponseItem)
 
 
 
+
 export const createOrderBodyItemsItemUnitPriceMin = 0;
 
 
@@ -194,6 +196,7 @@ export const CreateOrderBody = zod.object({
   "phone": zod.string().min(1),
   "country": zod.string().min(1),
   "city": zod.string().min(1),
+  "address": zod.string().min(1),
   "items": zod.array(zod.object({
   "productId": zod.number(),
   "productName": zod.string(),
@@ -216,6 +219,7 @@ export const CreateOrderResponse = zod.object({
   "phone": zod.string(),
   "country": zod.string(),
   "city": zod.string(),
+  "address": zod.string().nullable(),
   "items": zod.array(zod.object({
   "productId": zod.number(),
   "productName": zod.string(),
@@ -256,6 +260,7 @@ export const UpdateOrderResponse = zod.object({
   "phone": zod.string(),
   "country": zod.string(),
   "city": zod.string(),
+  "address": zod.string().nullable(),
   "items": zod.array(zod.object({
   "productId": zod.number(),
   "productName": zod.string(),

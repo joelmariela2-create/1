@@ -8,6 +8,7 @@ export const ordersTable = pgTable("orders", {
   phone: text("phone").notNull(),
   country: text("country").notNull(),
   city: text("city").notNull(),
+  address: text("address"),
   items: jsonb("items").notNull().$type<unknown[]>(),
   total: text("total").notNull(),
   status: text("status").notNull().default("pending"),
