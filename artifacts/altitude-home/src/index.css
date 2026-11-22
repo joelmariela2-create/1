@@ -2327,3 +2327,19 @@ body {
   color: #716b65 !important;
   opacity: 1;
 }
+
+@media (max-width: 767px) {
+  .checkout-page form label input,
+  .checkout-page form label select {
+    height: 54px !important;
+    min-height: 54px;
+    padding-inline: 14px !important;
+    font-size: 16px !important;
+  }
+
+  .checkout-page form label > span {
+    margin-bottom: 6px !important;
+    font-size: 10px !important;
+    letter-spacing: .12em;
+  }
+}
