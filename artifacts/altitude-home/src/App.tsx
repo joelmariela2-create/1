@@ -762,14 +762,32 @@ function useShop() {
 function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; total: number; onConfirm: (customer: CustomerData, message: string) => void }) {
   const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'Bolivia', city: '', address: '' });
   const [messageOverride, setMessageOverride] = useState<string | null>(null);
+  const [selectedPreviewIndex, setSelectedPreviewIndex] = useState(0);
   const [error, setError] = useState('');
   const createOrder = useCreateOrder();
   const generatedMessage = createOrderMessage(customer, cartItems, total);
   const previewMessage = messageOverride ?? generatedMessage;
+  const activePreviewIndex = Math.min(selectedPreviewIndex, Math.max(0, cartItems.length - 1));
+  const activePreviewItem = cartItems[activePreviewIndex];
   const updateCustomer = (field: keyof CustomerData, value: string) => {
     setCustomer((current) => ({ ...current, [field]: value }));
     setMessageOverride(null);
   };
+  const changePreview = (direction: number) => {
+    if (!cartItems.length) return;
+    setSelectedPreviewIndex((current) => (Math.min(current, cartItems.length - 1) + direction + cartItems.length) % cartItems.length);
+  };
+  const renderSummaryItem = (item: CartItem, index: number, featured = false) => (
+    <article key={`${item.id}-${index}`} className={`order-summary-item ${featured ? 'order-summary-item-featured' : ''}`}>
+      <img data-testid={`img-order-preview-${item.id}-${index}`} className="order-summary-image" src={item.image} alt={item.name} loading={featured ? 'eager' : 'lazy'} decoding="async" />
+      <div className="order-summary-info">
+        <p className="order-summary-brand">{item.brand}</p>
+        <p className="order-summary-name">{item.name}</p>
+        {item.selectedSize && <p className="order-summary-size">Talla {item.selectedSize}</p>}
+        <strong className="order-summary-price">{formatBs(item.priceValue)}</strong>
+      </div>
+    </article>
+  );
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
@@ -804,15 +822,24 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
     </div>
     <div className="mb-5 border border-[#d9d3cc] bg-white px-3 py-3">
       <p className="mb-2 text-[9px] font-bold uppercase tracking-[.1em] text-[#8b857e]">Resumen de pedido</p>
-       <div className="order-summary-items">{cartItems.map((item, index) => <article key={`${item.id}-${index}`} className={`order-summary-item ${cartItems.length === 1 ? 'order-summary-item-featured' : ''}`}>
-         <img data-testid={`img-order-preview-${item.id}-${index}`} className="order-summary-image" src={item.image} alt={item.name} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
-         <div className="order-summary-info">
-           <p className="order-summary-brand">{item.brand}</p>
-           <p className="order-summary-name">{item.name}</p>
-           {item.selectedSize && <p className="order-summary-size">Talla {item.selectedSize}</p>}
-           <strong className="order-summary-price">{formatBs(item.priceValue)}</strong>
-         </div>
-       </article>)}</div>
+       <div className="order-summary-items">
+         {cartItems.length === 1 ? renderSummaryItem(cartItems[0], 0, true) : activePreviewItem && (
+           <div className="order-summary-carousel" role="group" aria-label="Productos del pedido">
+             {renderSummaryItem(activePreviewItem, activePreviewIndex, true)}
+             <div className="order-summary-carousel-controls">
+               <button type="button" data-testid="button-order-preview-previous" aria-label="Ver producto anterior" onClick={() => changePreview(-1)}><ChevronLeft size={18} /></button>
+               <span aria-live="polite">{activePreviewIndex + 1} / {cartItems.length}</span>
+               <button type="button" data-testid="button-order-preview-next" aria-label="Ver siguiente producto" onClick={() => changePreview(1)}><ChevronRight size={18} /></button>
+             </div>
+             <div className="order-summary-picker" role="group" aria-label="Elegir producto para previsualizar">
+               {cartItems.map((item, index) => <button type="button" key={`${item.id}-${index}`} className={`order-summary-picker-item ${index === activePreviewIndex ? 'is-active' : ''}`} aria-label={`Previsualizar ${item.name}`} aria-pressed={index === activePreviewIndex} onClick={() => setSelectedPreviewIndex(index)}>
+                 <img src={item.image} alt="" loading="lazy" decoding="async" />
+                 <span>{item.name}</span>
+               </button>)}
+             </div>
+           </div>
+         )}
+       </div>
        <div className="mt-3 flex justify-between border-t border-[#e6e2de] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">{formatBs(total)}</span></div>
     </div>
       <div className="space-y-3">
