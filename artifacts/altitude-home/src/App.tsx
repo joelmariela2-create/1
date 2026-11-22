@@ -739,8 +739,8 @@ function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total
   const summary = cartItems.map((item) => `${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join(', ');
   return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${cartItems.length}\n💰 TOTAL: ${formatBs(total)}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}»`;
 }
-function openOrderWhatsApp(customer: CustomerData, cartItems: CartItem[], total: number) {
-  const whatsappUrl = `${storeWhatsAppUrl}?text=${encodeURIComponent(createOrderMessage(customer, cartItems, total))}`;
+function openOrderWhatsApp(customer: CustomerData, cartItems: CartItem[], total: number, message: string) {
+  const whatsappUrl = `${storeWhatsAppUrl}?text=${encodeURIComponent(message)}`;
   window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 }
 type ShopContextValue = {
@@ -759,10 +759,17 @@ function useShop() {
   return value;
 }
 
-function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; total: number; onConfirm: (customer: CustomerData) => void }) {
+function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; total: number; onConfirm: (customer: CustomerData, message: string) => void }) {
   const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'Bolivia', city: '' });
+  const [messageOverride, setMessageOverride] = useState<string | null>(null);
   const [error, setError] = useState('');
   const createOrder = useCreateOrder();
+  const generatedMessage = createOrderMessage(customer, cartItems, total);
+  const previewMessage = messageOverride ?? generatedMessage;
+  const updateCustomer = (field: keyof CustomerData, value: string) => {
+    setCustomer((current) => ({ ...current, [field]: value }));
+    setMessageOverride(null);
+  };
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
@@ -784,7 +791,7 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
           total,
         },
       });
-      onConfirm(customer);
+      onConfirm(customer, previewMessage);
     } catch {
       setError('No pudimos guardar tu pedido. Revisa tu conexión e inténtalo de nuevo.');
     }
@@ -800,15 +807,16 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
        <div className="mt-3 flex justify-between border-t border-[#e6e2de] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">{formatBs(total)}</span></div>
     </div>
       <div className="space-y-3">
-       <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo</span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} placeholder="Escribe tu nombre" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
-         <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} placeholder="Ej. 7 123 4567" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
+        <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo</span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => updateCustomer('name', event.target.value)} placeholder="Escribe tu nombre" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
+          <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono</span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => updateCustomer('phone', event.target.value)} placeholder="Ej. 7 123 4567" className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]" /></label>
         <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => setCustomer({ ...customer, country: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="Bolivia">🇧🇴 Bolivia</option></select></label>
-           <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Departamento</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => setCustomer({ ...customer, city: event.target.value })} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu departamento</option>{boliviaDepartments.map((department) => <option key={department} value={department}>{department}</option>)}</select></label>
+             <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => updateCustomer('country', event.target.value)} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="Bolivia">🇧🇴 Bolivia</option></select></label>
+            <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Departamento</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => updateCustomer('city', event.target.value)} className="h-11 w-full border border-[#cfc9c2] bg-white px-3 text-[12px] outline-none focus:border-[#171717]"><option value="">Selecciona tu departamento</option>{boliviaDepartments.map((department) => <option key={department} value={department}>{department}</option>)}</select></label>
         </div>
          <section className="order-message-preview" aria-labelledby="order-message-preview-title">
            <h4 id="order-message-preview-title" className="order-message-preview-title">Vista previa del mensaje para WhatsApp</h4>
-           <pre data-testid="text-order-whatsapp-preview">{createOrderMessage(customer, cartItems, total)}</pre>
+           <p id="order-message-preview-hint" className="order-message-preview-hint">Toca el texto para editarlo</p>
+           <textarea data-testid="textarea-order-whatsapp-preview" aria-labelledby="order-message-preview-title" aria-describedby="order-message-preview-hint" value={previewMessage} onChange={(event) => setMessageOverride(event.target.value)} rows={12} spellCheck={false} />
          </section>
      </div>
       <div className="mt-5 flex items-center justify-between border-t border-[#d9d3cc] pt-4"><span className="text-[10px] font-bold uppercase tracking-[.1em]">Total del pedido</span><strong className="text-[18px]">{formatBs(total)}</strong></div>
@@ -834,8 +842,8 @@ function CheckoutPage() {
   const { cartItems } = useShop();
   const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
   const total = cartItems.reduce((sum, item) => sum + item.priceValue, 0);
-  const handleOrderConfirm = (customer: CustomerData) => {
-    openOrderWhatsApp(customer, cartItems, total);
+  const handleOrderConfirm = (customer: CustomerData, message: string) => {
+    openOrderWhatsApp(customer, cartItems, total, message);
     setConfirmedCustomer(customer);
   };
   if (cartItems.length === 0) return <div className="page-shell flex min-h-[100dvh] flex-col items-center justify-center bg-[#f6f4f0] px-5 text-center"><ShoppingBag size={30} className="text-[#d93731]" /><p className="section-label mt-4 text-[#d93731]">Tu bolsa está vacía</p><h1 className="editorial-title mt-2 text-[28px] font-bold uppercase">Añade un producto para continuar</h1><button onClick={() => setLocation('/products')} className="mt-6 bg-[#171717] px-5 py-4 text-[10px] font-bold uppercase tracking-[.1em] text-white">Ver productos</button></div>;
@@ -1290,10 +1298,10 @@ function ProductsPage() {
   const handleCartCheckout = () => {
     setLocation('/checkout');
   };
-  const handleOrderConfirm = (customer: CustomerData) => {
+  const handleOrderConfirm = (customer: CustomerData, message: string) => {
     setOrderFormOpen(false);
     setCartOpen(false);
-    openOrderWhatsApp(customer, cartItems, total);
+    openOrderWhatsApp(customer, cartItems, total, message);
     setConfirmedCustomer(customer);
   };
   const openShowroom = () => {
@@ -1591,10 +1599,10 @@ function ProductDetailPage() {
   const handleDetailCartCheckout = () => {
     setLocation('/checkout');
   };
-  const handleDetailOrderConfirm = (customer: CustomerData) => {
+  const handleDetailOrderConfirm = (customer: CustomerData, message: string) => {
     setOrderFormOpen(false);
     setCartOpen(false);
-    openOrderWhatsApp(customer, cartItems, total);
+    openOrderWhatsApp(customer, cartItems, total, message);
     setConfirmedCustomer(customer);
   };
   const scrollGallery = (direction: number) => {

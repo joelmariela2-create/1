@@ -2351,7 +2351,7 @@ body {
 }
 
 .order-message-preview-title {
-  color: #514c47;
+  color: #171717;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .12em;
@@ -2359,14 +2359,33 @@ body {
   text-transform: uppercase;
 }
 
-.order-message-preview pre {
-  max-height: 240px;
+.order-message-preview-hint {
   margin: 8px 0 0;
-  overflow: auto;
   color: #514c47;
-  font-family: inherit;
   font-size: 10px;
+}
+
+.order-message-preview textarea {
+  display: block;
+  width: 100%;
+  min-height: 230px;
+  max-height: 320px;
+  margin-top: 6px;
+  overflow: auto;
+  resize: vertical;
+  border: 1px solid #c9c1b8;
+  background: #fff;
+  padding: 10px;
+  color: #171717;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
   line-height: 1.5;
   overflow-wrap: anywhere;
-  white-space: pre-wrap;
+  outline: none;
+}
+
+.order-message-preview textarea:focus {
+  border-color: #171717;
+  box-shadow: 0 0 0 2px rgb(23 23 23 / 12%);
 }
