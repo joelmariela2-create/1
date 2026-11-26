@@ -155,7 +155,7 @@ function StoreCatalogProvider({ children }: { children: ReactNode }) {
     { query: { queryKey: ['/api/products', { active: true }], refetchOnMount: 'always', refetchInterval: 60000 } },
   );
   const catalogProducts = useMemo(() => {
-    const persisted = (catalogQuery.data ?? []).map(apiProductToStoreProduct);
+    const persisted = Array.isArray(catalogQuery.data) ? catalogQuery.data.map(apiProductToStoreProduct) : [];
     if (persisted.length === 0) return products;
     const persistedNames = new Set(persisted.map((product) => product.name.trim().toLowerCase()));
     return [...persisted, ...products.filter((product) => !persistedNames.has(product.name.trim().toLowerCase()))];
