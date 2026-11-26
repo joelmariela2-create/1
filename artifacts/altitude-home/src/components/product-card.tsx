@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Heart, Plus, ShoppingCart } from 'lucide-react';
 import { getProductCardImageFit, getProductCardImageStyle } from '@/lib/product-visuals';
@@ -19,12 +19,27 @@ type ProductCardProps = {
   product: ProductCardProduct;
   index?: number;
   compact?: boolean;
+  images?: string[];
 };
 
-function ProductCardBase({ product, index = 0, compact = false }: ProductCardProps) {
+function ProductCardBase({ product, index = 0, compact = false, images }: ProductCardProps) {
   const [, setLocation] = useLocation();
   const { addToCart, openCart, toggleFavorite, isFavorite, notify } = useShop();
   const favorite = isFavorite(product.id);
+  const cardImages = images && images.length > 0
+    ? Array.from(new Set([product.image, ...images]))
+    : [product.image];
+  const isCarousel = cardImages.length > 1;
+  const [activeImage, setActiveImage] = useState(0);
+  const activeImageIndex = activeImage % cardImages.length;
+
+  useEffect(() => {
+    if (!isCarousel) return;
+    const timer = window.setInterval(() => {
+      setActiveImage((current) => (current + 1) % cardImages.length);
+    }, 2500);
+    return () => window.clearInterval(timer);
+  }, [isCarousel, cardImages.length]);
   const openProduct = () => setLocation(`/products/${product.id}`);
   const handleAdd = () => {
     addToCart(product);
@@ -43,15 +58,21 @@ function ProductCardBase({ product, index = 0, compact = false }: ProductCardPro
     >
       <div className={`product-card-image relative aspect-[.66] overflow-hidden ${product.id.includes('tom-and-jerry') ? 'bg-white' : ''}`}>
         <Link href={`/products/${product.id}`} data-testid={`link-product-image-${product.id}`} aria-label={`Ver detalle de ${product.name}`} className="block h-full w-full">
-          <img
-            src={product.image}
-            alt={product.name}
-            loading={index < 4 ? 'eager' : 'lazy'}
-            decoding="async"
-            fetchPriority={index === 0 ? 'high' : 'auto'}
-            style={getProductCardImageStyle(product)}
-            className={`product-card-product-image h-full w-full ${getProductCardImageFit(product)} object-center`}
-          />
+          <div className="relative h-full w-full">
+            {cardImages.map((image, imageIndex) => (
+              <img
+                key={image}
+                src={image}
+                alt={imageIndex === 0 ? product.name : ''}
+                aria-hidden={isCarousel && imageIndex !== activeImageIndex ? true : undefined}
+                loading={imageIndex === 0 && index < 4 ? 'eager' : 'lazy'}
+                decoding="async"
+                fetchPriority={index === 0 && imageIndex === 0 ? 'high' : 'auto'}
+                style={getProductCardImageStyle(product)}
+                className={`product-card-product-image h-full w-full ${getProductCardImageFit(product)} object-center ${isCarousel ? `absolute inset-0 ${imageIndex === activeImageIndex ? 'opacity-100' : 'opacity-0'}` : ''}`}
+              />
+            ))}
+          </div>
         </Link>
 
         <button

@@ -342,7 +342,7 @@ button, a {
   --product-card-image-zoom: 1;
   --product-card-image-offset-y: 0px;
   transform: translateY(var(--product-card-image-offset-y)) scale(var(--product-card-image-zoom));
-  transition: transform .55s cubic-bezier(.22,.61,.36,1), filter .35s ease;
+  transition: transform .55s cubic-bezier(.22,.61,.36,1), filter .35s ease, opacity .7s ease;
 }
 .product-card .product-add {
   transform: translateY(6px);
