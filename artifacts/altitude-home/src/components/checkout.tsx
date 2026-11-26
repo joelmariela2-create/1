@@ -113,14 +113,14 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
         </div>
         <div className="ck-fields">
           <label className="ck-field">
-            <span>Nombre completo</span>
+            <span>Nombre completo 📋</span>
             <input data-testid="input-order-name" required value={customer.name} onChange={(event) => updateCustomer('name', event.target.value)} placeholder="Escribe tu nombre" autoComplete="name" />
           </label>
           <label className="ck-field">
             <span>Teléfono</span>
             <div className="ck-phone">
               <span className="ck-phone-prefix">+591</span>
-              <input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => updateCustomer('phone', event.target.value)} placeholder="Ej. 7 123 4567" autoComplete="tel" />
+              <input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => updateCustomer('phone', event.target.value)} placeholder="Número local" autoComplete="tel" />
             </div>
           </label>
           <div className="ck-grid-2">
