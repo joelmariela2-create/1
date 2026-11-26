@@ -1187,7 +1187,7 @@ function ProductsPage() {
           </div>
           {catalogLoading ? <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5">{Array.from({ length: 8 }, (_, index) => <div key={index} className="animate-pulse"><div className="product-skeleton aspect-[.66]" /><div className="mt-3 h-2.5 w-1/3 bg-[#E5E5E1]" /><div className="mt-2 h-3.5 w-4/5 bg-[#E5E5E1]" /><div className="mt-2 h-2.5 w-1/4 bg-[#E5E5E1]" /></div>)}</div>
             : filteredProducts.length === 0 ? <div data-testid="empty-product-results" className="flex min-h-[290px] flex-col items-center justify-center border border-dashed border-[#E5E5E1] bg-[#FBFBFA] px-5 text-center"><span className="flex h-12 w-12 items-center justify-center border border-[#E5E5E1] text-[#0047FF]"><Search size={20} strokeWidth={1.4} /></span><h3 className="mt-5 text-[14px] font-bold uppercase tracking-[-.02em]">No encontramos ese drop</h3><p className="mt-2 max-w-[290px] text-[11px] leading-[1.5] text-[#6B6B66]">Prueba con otra palabra o vuelve a ver toda la selección.</p><button data-testid="button-empty-clear-filters" onClick={clearFilters} className="mt-5 border border-[#0A0A0A] px-4 py-3 text-[10px] font-bold uppercase tracking-[.1em] transition-colors hover:bg-[#0A0A0A] hover:text-white">Ver todos los productos</button></div>
-              : <><div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{visibleProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} />)}</div>
+              : <><div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4 md:gap-x-5 md:gap-y-8">{visibleProducts.map((product, index) => <ProductCard key={product.id} product={product} index={index} images={getProductGallery(product)} />)}</div>
                 {visibleCount < filteredProducts.length && <div className="mt-9 flex flex-col items-center gap-2"><button data-testid="button-load-more" onClick={() => setVisibleCount((count) => count + PRODUCTS_PAGE_SIZE)} className="h-12 border border-[#0A0A0A] px-8 text-[10px] font-bold uppercase tracking-[.12em] transition-colors hover:bg-[#0A0A0A] hover:text-white">Ver más productos</button><span className="font-mono text-[10px] text-[#6B6B66]">{visibleProducts.length} de {filteredProducts.length}</span></div>}</>}
         </section>
       </main>
@@ -1558,11 +1558,11 @@ function ProductDetailPage() {
               <div><p className="section-label text-[#6B6B66]">Combina con</p><h2 className="editorial-title mt-1 text-[20px] font-bold uppercase">También te puede gustar</h2></div>
               {product && <Link href={`/products?category=${encodeURIComponent(product.category)}`} className="pb-1 text-[9px] font-bold uppercase tracking-[.1em] text-[#0047FF]">Ver todo</Link>}
             </div>
-            <div className="grid grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-4 md:gap-x-5">{relatedProducts.map((item, index) => <ProductCard key={item.id} product={item} index={index} compact />)}</div>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-4 md:gap-x-5">{relatedProducts.map((item, index) => <ProductCard key={item.id} product={item} index={index} compact images={getProductGallery(item)} />)}</div>
           </div>}
           {recentProducts.length > 0 && <div>
             <div className="mb-4"><p className="section-label text-[#6B6B66]">Tu historial</p><h2 className="editorial-title mt-1 text-[20px] font-bold uppercase">Vistos recientemente</h2></div>
-            <div className="grid grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-4 md:gap-x-5">{recentProducts.map((item, index) => <ProductCard key={item.id} product={item} index={index} compact />)}</div>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-4 md:gap-x-5">{recentProducts.map((item, index) => <ProductCard key={item.id} product={item} index={index} compact images={getProductGallery(item)} />)}</div>
           </div>}
         </section>}
       </main>
