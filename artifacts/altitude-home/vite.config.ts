@@ -63,6 +63,17 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, 'dist/public'),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        // Separa las dependencias estables del código de la tienda para que
+        // el navegador las cachee entre despliegues y las descargue en paralelo.
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          clerk: ['@clerk/react'],
+          vendor: ['framer-motion', 'lucide-react', 'wouter', '@tanstack/react-query'],
+        },
+      },
+    },
   },
   server: {
     port,
