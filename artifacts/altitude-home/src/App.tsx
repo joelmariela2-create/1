@@ -10,11 +10,14 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { playEntranceSound, startBackgroundMusic } from '@/lib/store-sounds';
 import { formatBs } from '@/lib/format';
+import { boliviaDepartments } from '@/lib/bolivia';
+import { storeWhatsAppUrl } from '@/lib/store-links';
+import { CheckoutPage } from '@/components/checkout';
 import { getProductCardImageFit, getProductCardImageStyle } from '@/lib/product-visuals';
 import { ShopProvider, useShop, type CartItem } from '@/lib/shop';
 import { Link, Route, Switch, useLocation, Router as WouterRouter, useParams } from 'wouter';
 import {
-  ArrowLeft, ArrowRight, ArrowUpRight, Box, Check, CheckCircle2, ChevronLeft, ChevronRight, Crown, CreditCard, Flame, Heart, House,
+  ArrowLeft, ArrowRight, ArrowUpRight, Box, Check, ChevronLeft, ChevronRight, Crown, CreditCard, Flame, Heart, House,
   LockKeyhole, MapPin, Menu, MessageCircle, Minus, Phone, Plus, RefreshCw, Search, Share2, ShieldCheck, UserRound,
   ShoppingBag, ShoppingCart, SlidersHorizontal, Tag, Truck, X, Zap,
 } from 'lucide-react';
@@ -33,7 +36,6 @@ const clerkPubKey = publishableKeyFromHost(
 );
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const storeWhatsAppUrl = 'https://wa.me/59163944376';
 const vipWhatsAppUrl = 'https://chat.whatsapp.com/GEZ219vgWOH4f7iOG9pKTt?s=cl&p=a&mlu=4';type Campaign = {
   label: string;
   title: string;
@@ -711,150 +713,6 @@ function getProductGallery(product: Product) {
     .map((item) => item.image);
 
   return Array.from(new Set([product.image, ...relatedImages])).slice(0, 3);
-}
-
-const boliviaDepartments = [
-  'Chuquisaca', 'La Paz', 'Cochabamba', 'Oruro', 'Potosí',
-  'Tarija', 'Santa Cruz', 'Beni', 'Pando',
-];
-type CustomerData = { name: string; phone: string; country: string; city: string; address: string };
-function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total: number) {
-  const summary = cartItems.map((item) => `${item.quantity > 1 ? `${item.quantity}× ` : ''}${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join(', ');
-  const units = cartItems.reduce((count, item) => count + item.quantity, 0);
-  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${units}\n💰 TOTAL: ${formatBs(total)}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}\n🏠 DOMICILIO: ${customer.address}»`;
-}
-function openOrderWhatsApp(customer: CustomerData, cartItems: CartItem[], total: number, message: string) {
-  const whatsappUrl = `${storeWhatsAppUrl}?text=${encodeURIComponent(message)}`;
-  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-}
-function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; total: number; onConfirm: (customer: CustomerData, message: string) => void }) {
-  const [customer, setCustomer] = useState<CustomerData>({ name: '', phone: '', country: 'Bolivia', city: '', address: '' });
-  const [messageOverride, setMessageOverride] = useState<string | null>(null);
-  const [selectedPreviewIndex, setSelectedPreviewIndex] = useState(0);
-  const [previewDirection, setPreviewDirection] = useState<'next' | 'previous'>('next');
-  const [error, setError] = useState('');
-  const createOrder = useCreateOrder();
-  const generatedMessage = createOrderMessage(customer, cartItems, total);
-  const previewMessage = messageOverride ?? generatedMessage;
-  const activePreviewIndex = Math.min(selectedPreviewIndex, Math.max(0, cartItems.length - 1));
-  const activePreviewItem = cartItems[activePreviewIndex];
-  const updateCustomer = (field: keyof CustomerData, value: string) => {
-    setCustomer((current) => ({ ...current, [field]: value }));
-    setMessageOverride(null);
-  };
-  const changePreview = (direction: number) => {
-    if (!cartItems.length) return;
-    setPreviewDirection(direction > 0 ? 'next' : 'previous');
-    setSelectedPreviewIndex((current) => (Math.min(current, cartItems.length - 1) + direction + cartItems.length) % cartItems.length);
-  };
-  const renderSummaryItem = (item: CartItem, index: number, featured = false) => (
-    <article key={`${item.id}-${index}`} className={`order-summary-item ${featured ? 'order-summary-item-featured' : ''}`}>
-      <img data-testid={`img-order-preview-${item.id}-${index}`} className="order-summary-image" src={item.image} alt={item.name} loading={featured ? 'eager' : 'lazy'} decoding="async" />
-      <div className="order-summary-info">
-        <p className="order-summary-brand">{item.brand}</p>
-        <p className="order-summary-name">{item.name}</p>
-        {item.selectedSize && <p className="order-summary-size">Talla {item.selectedSize}</p>}
-        <strong className="order-summary-price">{formatBs(item.priceValue)}</strong>
-      </div>
-    </article>
-  );
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError('');
-    try {
-      await createOrder.mutateAsync({
-        data: {
-          customerName: customer.name.trim(),
-          phone: customer.phone.trim(),
-          country: customer.country,
-          city: customer.city,
-          address: customer.address.trim(),
-          items: cartItems.map((item) => ({
-            productId: Number(item.id) || 0,
-            productName: item.name,
-            size: item.selectedSize ?? null,
-            quantity: item.quantity,
-            unitPrice: item.priceValue,
-            imageUrl: item.image || null,
-          })),
-          total,
-        },
-      });
-      onConfirm(customer, previewMessage);
-    } catch {
-      setError('No pudimos guardar tu pedido. Revisa tu conexión e inténtalo de nuevo.');
-    }
-  };
-  return <form onSubmit={handleSubmit} className="order-form mt-5 border-t border-[#0A0A0A] pt-5">
-    <div className="mb-4">
-      <p className="section-label text-[#0047FF]">Datos de entrega</p>
-      <h3 className="editorial-title mt-1 text-[18px] font-bold uppercase">Completa tu pedido</h3>
-    </div>
-    <div className="mb-5 border border-[#E5E5E1] bg-white px-3 py-3">
-      <div className="order-summary-heading">
-        <p className="text-[9px] font-bold uppercase tracking-[.1em] text-[#6B6B66]">Resumen de pedido</p>
-        {cartItems.length > 1 && <div className="order-summary-carousel-controls" role="group" aria-label="Cambiar producto previsualizado">
-          <button type="button" data-testid="button-order-preview-previous" aria-label="Ver producto anterior" onClick={() => changePreview(-1)}><ChevronLeft size={17} /></button>
-          <span aria-live="polite">{activePreviewIndex + 1} / {cartItems.length}</span>
-          <button type="button" data-testid="button-order-preview-next" aria-label="Ver siguiente producto" onClick={() => changePreview(1)}><ChevronRight size={17} /></button>
-        </div>}
-      </div>
-       <div className="order-summary-items">
-         {cartItems.length === 1 ? renderSummaryItem(cartItems[0], 0, true) : activePreviewItem && (
-           <div key={`${activePreviewItem.id}-${activePreviewIndex}`} className={`order-summary-carousel-card is-${previewDirection}`} role="group" aria-label={`Producto ${activePreviewIndex + 1} de ${cartItems.length}`}>
-             {renderSummaryItem(activePreviewItem, activePreviewIndex, true)}
-           </div>
-         )}
-       </div>
-       <div className="mt-3 flex justify-between border-t border-[#E5E5E1] pt-3 text-[12px] font-bold"><span>TOTAL</span><span data-testid="text-order-summary-total">{formatBs(total)}</span></div>
-    </div>
-      <div className="space-y-3">
-        <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Nombre completo <span className="form-field-emoji" aria-hidden="true">📋</span></span><input data-testid="input-order-name" required value={customer.name} onChange={(event) => updateCustomer('name', event.target.value)} placeholder="Escribe tu nombre" className="h-11 w-full border border-[#E5E5E1] bg-white px-3 text-[12px] outline-none focus:border-[#0A0A0A]" /></label>
-          <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Teléfono <span className="form-field-emoji" aria-hidden="true">📱</span></span><input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => updateCustomer('phone', event.target.value)} placeholder="Ej. 7 123 4567" className="h-11 w-full border border-[#E5E5E1] bg-white px-3 text-[12px] outline-none focus:border-[#0A0A0A]" /></label>
-        <div className="grid gap-3 sm:grid-cols-2">
-             <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">País</span><select data-testid="select-order-country" required value={customer.country} onChange={(event) => updateCustomer('country', event.target.value)} className="h-11 w-full border border-[#E5E5E1] bg-white px-3 text-[12px] outline-none focus:border-[#0A0A0A]"><option value="Bolivia">🇧🇴 Bolivia</option></select></label>
-            <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Departamento</span><select data-testid="select-order-city" required value={customer.city} onChange={(event) => updateCustomer('city', event.target.value)} className="h-11 w-full border border-[#E5E5E1] bg-white px-3 text-[12px] outline-none focus:border-[#0A0A0A]"><option value="">Selecciona tu departamento</option>{boliviaDepartments.map((department) => <option key={department} value={department}>{department}</option>)}</select></label>
-        </div>
-         <label className="block"><span className="mb-1 block text-[9px] font-bold uppercase tracking-[.1em]">Domicilio <span className="form-field-emoji" aria-hidden="true">🏠</span></span><input data-testid="input-order-address" required autoComplete="street-address" value={customer.address} onChange={(event) => updateCustomer('address', event.target.value)} placeholder="Calle y número de casa" className="h-11 w-full border border-[#E5E5E1] bg-white px-3 text-[12px] outline-none focus:border-[#0A0A0A]" /></label>
-         <section className="order-message-preview" aria-labelledby="order-message-preview-title">
-           <h4 id="order-message-preview-title" className="order-message-preview-title">Vista previa del mensaje para WhatsApp</h4>
-           <p id="order-message-preview-hint" className="order-message-preview-hint">Toca el texto para editarlo</p>
-           <textarea data-testid="textarea-order-whatsapp-preview" aria-labelledby="order-message-preview-title" aria-describedby="order-message-preview-hint" value={previewMessage} onChange={(event) => setMessageOverride(event.target.value)} rows={12} spellCheck={false} />
-         </section>
-     </div>
-      <div className="mt-5 flex items-center justify-between border-t border-[#E5E5E1] pt-4"><span className="text-[18px] font-bold uppercase tracking-[.04em]">Total del pedido</span><strong className="text-[18px] font-bold">{formatBs(total)}</strong></div>
-      {error && <p role="alert" className="mt-4 border border-[#d8a19b] bg-[#fff0ee] px-3 py-2 text-[11px] text-[#9f302b]">{error}</p>}
-      <button data-testid="button-confirm-order" type="submit" disabled={createOrder.isPending} className="mt-4 flex h-12 w-full items-center justify-center gap-2 bg-[#25D366] text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-[#1da851] disabled:cursor-wait disabled:opacity-70"><CheckCircle2 size={16} /> {createOrder.isPending ? 'Guardando pedido…' : 'Confirmar pedido'} <ArrowRight size={16} /></button>
-     <p className="mt-3 text-center text-[9px] text-[#6B6B66]">Tus datos se enviarán junto con el pedido por WhatsApp.</p>
-  </form>;
-}
-
-function OrderConfirmed({ customer, cartItems, total, onClose }: { customer: CustomerData; cartItems: CartItem[]; total: number; onClose: () => void }) {
-  return <div className="fixed inset-0 z-[70] overflow-y-auto bg-[#0A0A0A]/55 px-5 py-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="order-confirmed-title">
-    <div className="flex min-h-full items-center justify-center">
-      <div className="my-auto flex max-h-[calc(100dvh-2rem)] w-full max-w-[390px] flex-col overflow-y-auto bg-[#F9F9F7] text-center shadow-2xl">
-        <img src="/pedido-confirmado.svg" alt="Pedido confirmado" loading="lazy" decoding="async" className="h-[220px] w-full shrink-0 object-cover" />
-        <div className="px-6 py-7"><p className="section-label text-[#0047FF]">ALTITUDE / gracias</p><h2 id="order-confirmed-title" className="editorial-title mt-2 text-[27px] font-bold uppercase">Pedido confirmado</h2><p className="mt-3 text-[12px] leading-[1.5] text-[#6B6B66]">Recibimos tu solicitud, {customer.name.split(' ')[0]}. Tu pedido fue enviado a WhatsApp.</p><button data-testid="button-close-confirmation" onClick={onClose} className="mt-5 w-full border border-[#0A0A0A] py-3 text-[10px] font-bold uppercase tracking-[.1em]">Volver a la tienda</button></div>
-      </div>
-    </div>
-  </div>;
-}
-
-function CheckoutPage() {
-  const [, setLocation] = useLocation();
-  const { cartItems, clearCart } = useShop();
-  const [confirmedCustomer, setConfirmedCustomer] = useState<CustomerData | null>(null);
-  const total = cartItems.reduce((sum, item) => sum + item.priceValue * item.quantity, 0);
-  const handleOrderConfirm = (customer: CustomerData, message: string) => {
-    openOrderWhatsApp(customer, cartItems, total, message);
-    setConfirmedCustomer(customer);
-  };
-  if (cartItems.length === 0) return <div className="page-shell flex min-h-[100dvh] flex-col items-center justify-center bg-[#F9F9F7] px-5 text-center"><ShoppingBag size={30} className="text-[#0047FF]" /><p className="section-label mt-4 text-[#0047FF]">Tu bolsa está vacía</p><h1 className="editorial-title mt-2 text-[28px] font-bold uppercase">Añade un producto para continuar</h1><button onClick={() => setLocation('/products')} className="mt-6 bg-[#0A0A0A] px-5 py-4 text-[10px] font-bold uppercase tracking-[.1em] text-white">Ver productos</button></div>;
-  return <div className="checkout-page page-shell min-h-[100dvh] bg-[#F9F9F7] px-5 pb-4 pt-2 text-[#0A0A0A] md:px-10 md:pb-7 md:pt-6">
-    <header className="flex items-center justify-between border-b border-[#E5E5E1] pb-3"><button aria-label="Volver a la tienda" onClick={() => setLocation('/products')} className="flex min-h-11 items-center gap-2 whitespace-nowrap text-[12px] font-extrabold uppercase tracking-[.08em] text-[#0A0A0A] transition-colors hover:text-[#0047FF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0A0A0A]"><ArrowLeft size={20} strokeWidth={2.2} /> <span>Volver a la tienda</span></button><span className="altitude-wordmark text-[25px]">ALTITUDE online</span></header>
-      <main className="mx-auto max-w-[560px] py-2 md:py-8"><p className="section-label text-[#0047FF]">ALTITUDE / checkout</p><h1 className="editorial-title mt-1 text-[clamp(2.2rem,6vw,4rem)] font-bold uppercase leading-[.9]">Confirma tu pedido</h1><p className="mt-2 max-w-[420px] text-[12px] leading-[1.35] text-[#6B6B66] rounded-tl-[0px] rounded-tr-[0px] rounded-br-[0px] rounded-bl-[0px]">Revisa tu selección y completa tus datos para coordinar la entrega en Bolivia.</p><OrderForm cartItems={cartItems} total={total} onConfirm={handleOrderConfirm} /></main>
-    {confirmedCustomer && <OrderConfirmed customer={confirmedCustomer} cartItems={cartItems} total={total} onClose={() => { clearCart(); setConfirmedCustomer(null); setLocation('/products'); }} />}
-  </div>;
 }
 
 function scrollToSection(id: string) {
