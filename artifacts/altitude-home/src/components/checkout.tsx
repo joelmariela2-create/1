@@ -10,11 +10,9 @@ import { cartItemKey, useShop, type CartItem } from '@/lib/shop';
 type CustomerData = { name: string; phone: string; country: string; city: string; address: string };
 
 function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total: number) {
-  const summary = cartItems
-    .map((item) => `${item.name}${item.selectedSize ? ` · Talla ${item.selectedSize}` : ''} | × ${item.quantity}`)
-    .join('\n');
+  const summary = cartItems.map((item) => `${item.quantity > 1 ? `${item.quantity}× ` : ''}${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join(', ');
   const units = cartItems.reduce((count, item) => count + item.quantity, 0);
-  return `*📦 RESUMEN DE TU COMPRA*\n\nProducto | Cantidad\n${summary}\n\n*TOTAL A PAGAR*: ${formatBs(total)}\n🔢 CANTIDAD: ${units}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}\n🏠 DOMICILIO: ${customer.address}`;
+  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${units}\n💰 TOTAL: ${formatBs(total)}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}\n🏠 DOMICILIO: ${customer.address}»`;
 }
 
 function openOrderWhatsApp(message: string) {
@@ -120,7 +118,10 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
           </label>
           <label className="ck-field">
             <span>Teléfono</span>
-            <input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => updateCustomer('phone', event.target.value)} placeholder="Ej. 7 123 4567" autoComplete="tel" />
+            <div className="ck-phone">
+              <span className="ck-phone-prefix">+591</span>
+              <input data-testid="input-order-phone" required type="tel" inputMode="tel" value={customer.phone} onChange={(event) => updateCustomer('phone', event.target.value)} placeholder="Ej. 7 123 4567" autoComplete="tel" />
+            </div>
           </label>
           <div className="ck-grid-2">
             <label className="ck-field">
@@ -138,7 +139,7 @@ function OrderForm({ cartItems, total, onConfirm }: { cartItems: CartItem[]; tot
             </label>
           </div>
           <label className="ck-field">
-            <span>Domicilio</span>
+            <span>Domicilio 🏠</span>
             <input data-testid="input-order-address" required autoComplete="street-address" value={customer.address} onChange={(event) => updateCustomer('address', event.target.value)} placeholder="Calle y número de casa" />
           </label>
         </div>

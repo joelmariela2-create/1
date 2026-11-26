@@ -2611,6 +2611,41 @@ body {
   box-shadow: 0 0 0 3px rgba(0, 71, 255, .12);
 }
 
+/* Prefijo de país fijo dentro del campo de teléfono. */
+.checkout-page .ck-phone {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #D9D7D2;
+  background: #fff;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.checkout-page .ck-phone:focus-within {
+  border-color: #0047FF;
+  box-shadow: 0 0 0 3px rgba(0, 71, 255, .12);
+}
+
+.checkout-page .ck-phone-prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-right: 1px solid #E5E5E1;
+  background: #F4F3EF;
+  color: #0A0A0A;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+
+.checkout-page .ck-phone input {
+  border: 0;
+  background: transparent;
+}
+
+.checkout-page .ck-phone input:focus {
+  box-shadow: none;
+}
+
 .checkout-page .ck-details {
   padding: 0;
 }
