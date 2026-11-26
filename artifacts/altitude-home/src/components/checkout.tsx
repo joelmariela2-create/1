@@ -10,9 +10,11 @@ import { cartItemKey, useShop, type CartItem } from '@/lib/shop';
 type CustomerData = { name: string; phone: string; country: string; city: string; address: string };
 
 function createOrderMessage(customer: CustomerData, cartItems: CartItem[], total: number) {
-  const summary = cartItems.map((item) => `${item.quantity > 1 ? `${item.quantity}× ` : ''}${item.name}${item.selectedSize ? ` · talla ${item.selectedSize}` : ''}`).join(', ');
+  const summary = cartItems
+    .map((item) => `${item.name}${item.selectedSize ? ` · Talla ${item.selectedSize}` : ''} | × ${item.quantity}`)
+    .join('\n');
   const units = cartItems.reduce((count, item) => count + item.quantity, 0);
-  return `🌐 VENGO DE LA TIENDA VIRTUAL 🛒\n\n«🛍️ MI PEDIDO SELECCIONADO 📦\n\n📦 PEDIDO: ${summary}\n🔢 CANTIDAD: ${units}\n💰 TOTAL: ${formatBs(total)}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}\n🏠 DOMICILIO: ${customer.address}»`;
+  return `*📦 RESUMEN DE TU COMPRA*\n\nProducto | Cantidad\n${summary}\n\n*TOTAL A PAGAR*: ${formatBs(total)}\n🔢 CANTIDAD: ${units}\n💱 MONEDA: BOLIVIANOS (Bs.)\n\n📊 DATOS DEL CLIENTE:\n📝 NOMBRE COMPLETO: ${customer.name}\n📲 TELÉFONO: ${customer.phone}\n🇧🇴 PAÍS: ${customer.country}\n🗺️ DEPARTAMENTO: ${customer.city}\n🏠 DOMICILIO: ${customer.address}`;
 }
 
 function openOrderWhatsApp(message: string) {
