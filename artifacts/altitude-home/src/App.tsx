@@ -855,6 +855,10 @@ function CampaignHero({ onShop }: { onShop: (campaign: Campaign) => void }) {
       {campaign.id === 'gymshark-featured' && <div aria-hidden="true" className="absolute bottom-[93px] left-0 right-0 z-[1] h-3 bg-[#050505]" />}
        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,0) 42%, rgba(0,0,0,.2) 100%)' }} />
       <div className="relative z-10 flex flex-1 flex-col justify-between px-5 pb-6 pt-8 md:px-10 md:pb-8 md:pt-12">
+        <div className="sn-hero-meta flex items-start justify-between">
+          <span>{campaign.label}</span>
+          <span className="sn-hero-index font-mono">{String(activeIndex + 1).padStart(2, '0')} / {String(campaigns.length).padStart(2, '0')}</span>
+        </div>
         <div className="campaign-content absolute bottom-[18px] left-5 right-5 max-w-[520px]">
           <button data-testid={`button-collection-${campaign.id}`} onClick={() => onShop(campaign)} className="hero-cta group flex h-[44px] w-[240px] items-center justify-between border border-white bg-transparent px-4 text-[10px] font-bold uppercase tracking-[.1em] text-white transition-colors hover:bg-white hover:text-[#0A0A0A]"><span className={activeIndex < 2 ? 'text-[#0A0A0A]' : ''}>Ver colección</span><ArrowRight size={20} strokeWidth={1.7} className="text-white transition-transform group-hover:translate-x-1" /></button>
         </div>

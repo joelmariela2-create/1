@@ -2833,3 +2833,743 @@ body {
   .checkout-page form > .ck-bar .ck-bar-total strong { font-size: 17px; }
   .checkout-page form > .ck-note { margin-top: 8px; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   SPORT NOCTURNO — capa final de la tienda (todas las rutas).
+   Lienzo nocturno, superficies de grafito, acento eléctrico y
+   tipografía display. Vive al final del archivo para mandar sobre las
+   capas anteriores (BLACK EDITION / RESTAURACIÓN / CONTRASTE).
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --sn-void: #05060a;
+  --sn-bg: #08090d;
+  --sn-panel: #0e1117;
+  --sn-panel-2: #141922;
+  --sn-panel-3: #1b212c;
+  --sn-line: rgba(255, 255, 255, .09);
+  --sn-line-strong: rgba(255, 255, 255, .22);
+  --sn-ink: #f3f5f8;
+  --sn-muted: #98a2af;
+  --sn-faint: rgba(243, 245, 248, .52);
+  --sn-accent: #3d6bff;
+  --sn-accent-strong: #2c53dc;
+  --sn-accent-soft: rgba(61, 107, 255, .16);
+  --sn-display: 'Anton', 'Space Grotesk', system-ui, sans-serif;
+
+  /* Tokens shadcn: toda la app respira oscuro. */
+  --background: 222 27% 4%;
+  --foreground: 220 25% 96%;
+  --border: 220 12% 15%;
+  --card: 220 22% 6%;
+  --card-foreground: 220 25% 96%;
+  --primary: 226 100% 62%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 16% 11%;
+  --secondary-foreground: 220 25% 96%;
+  --muted: 220 16% 11%;
+  --muted-foreground: 218 12% 66%;
+  --accent: 226 100% 62%;
+  --accent-foreground: 0 0% 100%;
+  --input: 220 14% 19%;
+  --ring: 226 100% 62%;
+}
+
+/* ── 1. Base ─────────────────────────────────────────────────────────── */
+
+html { background: var(--sn-bg); }
+
+body {
+  background: var(--sn-bg) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root { background: var(--sn-bg); }
+
+::selection { background: var(--sn-accent); color: #fff; }
+
+* { scrollbar-color: rgba(255, 255, 255, .18) transparent; }
+
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--sn-accent);
+  outline-offset: 3px;
+}
+
+/* Lienzos: todas las rutas comparten el mismo fondo nocturno. */
+#root .page-shell,
+#root .page-shell:not(.vip-page),
+#root .page-shell:not(.social-page),
+#root .products-page,
+#root .detail-page,
+#root .checkout-page,
+#root .collection-page,
+#root .social-page,
+#root .vip-page {
+  background: var(--sn-bg) !important;
+  background-image: none !important;
+  color: var(--sn-ink) !important;
+}
+
+/* Remapeo de la paleta clara heredada del marcado. */
+#root [class~="text-[#0A0A0A]"],
+#root [class~="text-[#1A1A1A]"],
+#root [class~="text-[#111]"],
+#root [class~="text-[#111111]"] {
+  color: var(--sn-ink) !important;
+}
+
+#root [class~="text-[#6B6B66]"],
+#root [class~="text-[#77716c]"],
+#root [class~="text-[#514c47]"],
+#root [class~="text-[#9d9891]"],
+#root [class~="text-[#999]"] {
+  color: var(--sn-muted) !important;
+}
+
+#root [class~="border-[#E5E5E1]"],
+#root [class~="border-[#D9D7D2]"],
+#root [class~="border-[#eeeeee]"],
+#root [class~="border-[#e7e7e7]"],
+#root [class~="border-[#c9c1b8]"] {
+  border-color: var(--sn-line) !important;
+}
+
+#root [class~="border-[#0A0A0A]"] { border-color: var(--sn-line-strong) !important; }
+#root [class~="hover:border-[#0A0A0A]"]:hover { border-color: var(--sn-line-strong) !important; }
+
+#root [class~="bg-white"],
+#root [class~="bg-[#F9F9F7]"],
+#root [class~="bg-[#FBFBFA]"] {
+  background-color: var(--sn-panel) !important;
+}
+
+#root [class~="bg-[#EFEFEC]"],
+#root [class~="bg-[#eeecea]"],
+#root [class~="bg-[#F4F4F1]"],
+#root [class~="bg-[#F4F3EF]"],
+#root [class~="bg-[#EAEAE6]"],
+#root [class~="bg-[#0A0A0A]"] {
+  background-color: var(--sn-panel-2) !important;
+}
+
+#root [class~="bg-[#0047FF]"] { background-color: var(--sn-accent) !important; }
+#root [class~="text-[#0047FF]"] { color: var(--sn-accent) !important; }
+
+/* ── 2. Tipografía display ───────────────────────────────────────────── */
+
+#root .editorial-title,
+#root .campaign-tile-title,
+#root .vip-heading,
+#root .vip-editorial-title,
+#root .vip-display,
+#root .vip-kicker {
+  font-family: var(--sn-display) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  letter-spacing: .005em !important;
+  text-transform: uppercase;
+}
+
+#root .header-wordmark,
+#root .altitude-wordmark {
+  font-family: var(--sn-display) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase;
+}
+
+#root .section-label {
+  font-family: var(--app-font-mono) !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  letter-spacing: .2em !important;
+  text-transform: uppercase;
+}
+
+#root .font-mono,
+#root .tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* ── 3. Barra de anuncios, header y navegación ───────────────────────── */
+
+#root .announcement-strip {
+  background: var(--sn-void) !important;
+  border-color: var(--sn-line) !important;
+  color: var(--sn-faint) !important;
+  letter-spacing: .2em !important;
+}
+
+#root .announcement-strip span { color: var(--sn-faint) !important; }
+#root .announcement-strip .announcement-separator { color: var(--sn-accent) !important; }
+
+#root .page-shell header,
+#root .products-page header,
+#root .detail-page header,
+#root .checkout-page header,
+#root .vip-page header,
+#root .social-page header {
+  background: rgba(8, 9, 13, .82) !important;
+  border-color: var(--sn-line) !important;
+  color: var(--sn-ink) !important;
+  backdrop-filter: blur(18px) saturate(1.15);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .04), 0 18px 40px -30px rgba(0, 0, 0, .9);
+}
+
+#root .page-shell header a,
+#root .page-shell header button,
+#root .products-page header a,
+#root .products-page header button,
+#root .detail-page header a,
+#root .detail-page header button,
+#root .checkout-page header button,
+#root .vip-page header a,
+#root .vip-page header button {
+  color: var(--sn-ink) !important;
+}
+
+#root .page-shell header button:hover,
+#root .products-page header button:hover,
+#root .detail-page header button:hover,
+#root .vip-page header button:hover {
+  color: var(--sn-accent) !important;
+}
+
+#root .header-logo-mark { border-color: var(--sn-line-strong) !important; }
+
+#root .desktop-nav {
+  background: rgba(8, 9, 13, .9) !important;
+  border-color: var(--sn-line) !important;
+}
+
+#root .desktop-nav button {
+  color: var(--sn-muted) !important;
+  letter-spacing: .18em !important;
+  transition: color .2s ease;
+}
+
+#root .desktop-nav button:hover { color: var(--sn-ink) !important; }
+#root .desktop-nav .vip-nav-link { color: var(--sn-accent) !important; }
+
+#root .bottom-nav {
+  background: rgba(8, 9, 13, .94) !important;
+  border-color: var(--sn-line) !important;
+  color: var(--sn-muted) !important;
+  backdrop-filter: blur(20px) saturate(1.2);
+}
+
+#root .bottom-nav button { color: var(--sn-muted) !important; }
+#root .bottom-nav button.active-nav { color: var(--sn-accent) !important; }
+
+/* ── 4. Home: hero ───────────────────────────────────────────────────── */
+
+#root .campaign-hero {
+  background: var(--sn-void) !important;
+  border-bottom: 1px solid var(--sn-line);
+}
+
+#root .campaign-hero .campaign-image {
+  filter: brightness(.86) contrast(1.06) saturate(.94);
+}
+
+#root .campaign-hero::before {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(61, 107, 255, .18), transparent 58%),
+    linear-gradient(180deg, rgba(5, 6, 10, .55) 0%, rgba(5, 6, 10, 0) 34%, rgba(5, 6, 10, .82) 100%);
+  content: '';
+}
+
+.sn-hero-meta {
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(243, 245, 248, .62);
+}
+
+.sn-hero-meta .sn-hero-index { color: rgba(243, 245, 248, .42); }
+
+#root .hero-cta {
+  background: var(--sn-accent) !important;
+  border-color: var(--sn-accent) !important;
+  box-shadow: 0 16px 40px -18px rgba(61, 107, 255, .8);
+}
+
+#root .hero-cta,
+#root .hero-cta span,
+#root .hero-cta svg { color: #fff !important; }
+
+#root .hero-cta:hover {
+  background: var(--sn-accent-strong) !important;
+  border-color: var(--sn-accent-strong) !important;
+}
+
+#root .hero-cta:hover span,
+#root .hero-cta:hover svg { color: #fff !important; }
+
+/* ── 5. Home: beneficios, rails, carrusel, showroom, footer ──────────── */
+
+#root #benefits,
+#root .home-main #benefits {
+  background: var(--sn-panel) !important;
+  border-color: var(--sn-line) !important;
+  color: var(--sn-ink) !important;
+  backdrop-filter: none;
+}
+
+#root #benefits .hero-benefit { border-color: var(--sn-line) !important; }
+#root #benefits .hero-benefit svg { color: var(--sn-accent) !important; }
+#root #benefits .hero-benefit strong { color: var(--sn-ink) !important; letter-spacing: .08em !important; }
+#root #benefits .hero-benefit span { color: var(--sn-muted) !important; }
+
+#root #benefits .hero-benefit:hover { background-color: var(--sn-accent) !important; color: #fff !important; }
+#root #benefits .hero-benefit:hover svg,
+#root #benefits .hero-benefit:hover strong,
+#root #benefits .hero-benefit:hover span { color: #fff !important; }
+
+#root .home-main #new-releases,
+#root .home-main #showroom,
+#root .home-main section,
+#root .page-shell > footer {
+  border-color: var(--sn-line) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root .home-main #new-releases { background: transparent !important; }
+#root .home-main #showroom { background: transparent !important; }
+#root .home-main #showroom .bg-\[\#EFEFEC\] { background: var(--sn-panel) !important; }
+
+/* Miniaturas del rail de compresiones. */
+#root .home-main #new-releases article > div:first-child {
+  background: var(--sn-panel-2) !important;
+  border: 1px solid var(--sn-line);
+}
+
+#root .home-main #new-releases article img { transition: transform .6s cubic-bezier(.22, .61, .36, 1); }
+#root .home-main #new-releases article:hover img { transform: scale(1.05); }
+
+/* Carrusel del drop. */
+#root #youngla { border-color: var(--sn-line) !important; }
+#root #youngla > div:nth-of-type(2) { border: 1px solid var(--sn-line); }
+
+#root .page-shell > footer {
+  background: var(--sn-void) !important;
+  border-top: 1px solid var(--sn-line) !important;
+}
+
+#root .page-shell > footer .altitude-wordmark {
+  color: var(--sn-ink) !important;
+  font-size: 34px !important;
+  letter-spacing: .1em !important;
+}
+
+/* ── 6. Tienda ───────────────────────────────────────────────────────── */
+
+#root .products-page .products-content > section[aria-label="Herramientas del catálogo"],
+#root .products-page .products-content > section:first-child {
+  background: var(--sn-panel) !important;
+  border-color: var(--sn-line) !important;
+}
+
+#root .products-page .products-content input,
+#root .products-page .products-content select,
+#root .products-page .products-content label {
+  background-color: transparent;
+  color: var(--sn-ink) !important;
+}
+
+#root .products-page .products-content input::placeholder { color: var(--sn-muted) !important; }
+
+#root .products-page .products-content select option {
+  background: var(--sn-panel-2) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root .products-page .products-content button[class~="bg-[#0A0A0A]"] {
+  background: var(--sn-accent) !important;
+  border-color: var(--sn-accent) !important;
+  color: #fff !important;
+}
+
+#root .products-page .product-card-image {
+  background: var(--sn-panel-2) !important;
+  border: 1px solid var(--sn-line);
+}
+
+#root .products-page .product-card img { transition: transform .7s cubic-bezier(.22, .61, .36, 1); }
+#root .products-page .product-card:hover img { transform: scale(1.04); }
+
+#root .products-page .product-card h3,
+#root .products-page .product-card h3 a,
+#root .products-page .product-card p { color: var(--sn-ink) !important; }
+#root .products-page .product-card p[class~="text-[#6B6B66]"] { color: var(--sn-muted) !important; }
+
+#root .products-page .product-card .product-cart {
+  background: rgba(14, 17, 23, .92) !important;
+  color: var(--sn-ink) !important;
+  border: 1px solid var(--sn-line);
+}
+
+#root .products-page .product-card .product-cart:hover {
+  background: var(--sn-accent) !important;
+  border-color: var(--sn-accent) !important;
+  color: #fff !important;
+}
+
+#root .products-page .product-quick-add {
+  background: var(--sn-accent) !important;
+  color: #fff !important;
+}
+
+#root .product-skeleton { background: var(--sn-panel-2) !important; }
+
+/* ── 7. Detalle de producto ──────────────────────────────────────────── */
+
+#root .detail-page .detail-photo-wrap,
+#root .detail-page .detail-photo,
+#root .detail-page .detail-gallery-slide {
+  background: var(--sn-panel-2) !important;
+  border-color: var(--sn-line) !important;
+}
+
+#root .detail-page .detail-spec-grid > div {
+  background: var(--sn-panel) !important;
+  border-color: var(--sn-line) !important;
+}
+
+#root .detail-page .detail-spec-grid strong { color: var(--sn-ink) !important; }
+#root .detail-page .detail-spec-grid span { color: var(--sn-muted) !important; }
+
+#root .detail-page .detail-features li { border-color: var(--sn-line) !important; }
+#root .detail-page .detail-features li svg { color: var(--sn-accent) !important; }
+
+#root .detail-page #size-chart { border-color: var(--sn-line) !important; }
+
+/* ── 8. Colección ────────────────────────────────────────────────────── */
+
+#root .collection-page .campaign-tile {
+  background: var(--sn-panel) !important;
+  border: 1px solid var(--sn-line) !important;
+}
+
+#root .collection-page .campaign-tile [class*="from-white"] {
+  background: linear-gradient(90deg, rgba(5, 6, 10, .92) 0%, rgba(5, 6, 10, .4) 58%, rgba(5, 6, 10, 0) 100%) !important;
+}
+
+#root .collection-page .campaign-tile h2,
+#root .collection-page .campaign-tile p,
+#root .collection-page .campaign-tile button {
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, .55) !important;
+}
+
+#root .collection-page .campaign-tile button:hover {
+  background: var(--sn-accent) !important;
+  border-color: var(--sn-accent) !important;
+}
+
+#root .collection-page > div:first-child { background: transparent !important; }
+
+/* ── 9. Checkout ─────────────────────────────────────────────────────── */
+
+#root .checkout-page .ck-card {
+  background: var(--sn-panel) !important;
+  border: 1px solid var(--sn-line) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root .checkout-page .ck-section-head { border-color: var(--sn-line) !important; }
+#root .checkout-page .ck-section-title { color: var(--sn-ink) !important; }
+#root .checkout-page .ck-step { color: var(--sn-accent) !important; }
+#root .checkout-page .ck-count { color: var(--sn-muted) !important; }
+
+#root .checkout-page .ck-item { border-color: var(--sn-line) !important; }
+#root .checkout-page .ck-item-image { background: var(--sn-panel-2) !important; }
+#root .checkout-page .ck-item-name,
+#root .checkout-page .ck-item-price { color: var(--sn-ink) !important; }
+#root .checkout-page .ck-item-brand,
+#root .checkout-page .ck-item-meta { color: var(--sn-muted) !important; }
+#root .checkout-page .ck-item-qty { border-color: var(--sn-line) !important; color: var(--sn-ink) !important; }
+
+#root .checkout-page .ck-totals,
+#root .checkout-page .ck-total-row { border-color: var(--sn-line-strong) !important; }
+#root .checkout-page .ck-totals dt { color: var(--sn-muted) !important; }
+#root .checkout-page .ck-totals dd,
+#root .checkout-page .ck-total-row dt,
+#root .checkout-page .ck-total-row dd { color: var(--sn-ink) !important; }
+
+#root .checkout-page .ck-assurance {
+  border-color: var(--sn-line) !important;
+}
+#root .checkout-page .ck-assurance li { color: var(--sn-muted) !important; }
+#root .checkout-page .ck-assurance svg { color: var(--sn-accent) !important; }
+
+#root .checkout-page .ck-field span { color: var(--sn-muted) !important; }
+
+#root .checkout-page .ck-field input,
+#root .checkout-page .ck-field select,
+#root .checkout-page .ck-details textarea {
+  background: var(--sn-panel-2) !important;
+  border: 1px solid var(--sn-line-strong) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root .checkout-page .ck-field input::placeholder,
+#root .checkout-page .ck-details textarea::placeholder { color: rgba(243, 245, 248, .38) !important; }
+
+#root .checkout-page .ck-field input:focus,
+#root .checkout-page .ck-field select:focus,
+#root .checkout-page .ck-details textarea:focus {
+  border-color: var(--sn-accent) !important;
+  box-shadow: 0 0 0 3px var(--sn-accent-soft) !important;
+}
+
+#root .checkout-page .ck-phone {
+  background: var(--sn-panel-2) !important;
+  border: 1px solid var(--sn-line-strong) !important;
+}
+
+#root .checkout-page .ck-phone-prefix {
+  background: var(--sn-panel-3) !important;
+  border-color: var(--sn-line) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root .checkout-page .ck-details-summary { color: var(--sn-ink) !important; }
+#root .checkout-page .ck-details-label { color: var(--sn-ink) !important; }
+#root .checkout-page .ck-details-hint,
+#root .checkout-page .ck-details-help { color: var(--sn-muted) !important; }
+#root .checkout-page .ck-details-icon { color: var(--sn-accent) !important; }
+#root .checkout-page .ck-details-body { border-color: var(--sn-line) !important; }
+
+#root .checkout-page form > .ck-bar {
+  background: var(--sn-bg) !important;
+  border-color: var(--sn-line-strong) !important;
+}
+
+#root .checkout-page .ck-bar-total span { color: var(--sn-muted) !important; }
+#root .checkout-page form > .ck-bar .ck-bar-total strong { color: var(--sn-ink) !important; }
+#root .checkout-page .ck-note { color: var(--sn-muted) !important; }
+
+#root .checkout-page .ck-submit {
+  background: var(--sn-accent) !important;
+  box-shadow: 0 16px 40px -20px rgba(61, 107, 255, .9);
+}
+
+#root .checkout-page .ck-submit:hover { background: var(--sn-accent-strong) !important; }
+
+#root .checkout-page .ck-error {
+  background: rgba(224, 68, 60, .12) !important;
+  border-left-color: #ff5a4f !important;
+  color: #ffb3ad !important;
+}
+
+/* ── 10. Carrito, favoritos, menús y overlays ────────────────────────── */
+
+#root .cart-manifest {
+  background: var(--sn-void) !important;
+  color: var(--sn-ink) !important;
+  border-left: 1px solid var(--sn-line);
+}
+
+#root .cart-manifest .bg-\[\#0047FF\] { background: var(--sn-accent) !important; }
+
+#root .drawer-panel,
+#root .page-shell aside[role="dialog"],
+#root .products-page aside[role="dialog"],
+#root .detail-page aside[role="dialog"],
+#root .home-main aside[role="dialog"],
+#root .social-page aside[role="dialog"] {
+  background: var(--sn-panel) !important;
+  color: var(--sn-ink) !important;
+  border-color: var(--sn-line) !important;
+}
+
+#root .drawer-panel [class~="text-[#0A0A0A]"],
+#root aside[role="dialog"] [class~="text-[#0A0A0A]"] { color: var(--sn-ink) !important; }
+
+#root .fixed[role="dialog"] > div[class~="bg-[#F9F9F7]"] {
+  background: var(--sn-panel) !important;
+  color: var(--sn-ink) !important;
+  border-color: var(--sn-line) !important;
+}
+
+#root .fixed[role="dialog"] > div[class~="bg-[#F9F9F7]"] img { background: var(--sn-panel-2); }
+
+/* ── 11. VIP ─────────────────────────────────────────────────────────── */
+
+#root .vip-page { --vip-red: var(--sn-accent); }
+
+#root .vip-page .vip-hero {
+  background:
+    radial-gradient(circle at 82% 26%, rgba(61, 107, 255, .26), transparent 30%),
+    linear-gradient(115deg, #05060a 0%, #0b0f18 58%, #0d1730 100%) !important;
+}
+
+#root .vip-page .vip-photo img { filter: saturate(.8) contrast(1.1) brightness(.9); }
+
+#root .vip-page .vip-benefits {
+  background: var(--sn-panel) !important;
+  border-color: var(--sn-line) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root .vip-page .vip-benefits h2 { color: var(--sn-ink) !important; }
+
+#root .vip-page .vip-benefit-card {
+  background: var(--sn-panel-2) !important;
+  border: 1px solid var(--sn-line) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root .vip-page .vip-benefit-card h3 { color: var(--sn-accent) !important; }
+#root .vip-page .vip-benefit-card p { color: var(--sn-muted) !important; }
+#root .vip-page .vip-benefit-card svg { color: var(--sn-ink) !important; }
+
+#root .vip-page .vip-benefit-card:hover {
+  background: var(--sn-accent) !important;
+  border-color: var(--sn-accent) !important;
+}
+
+#root .vip-page .vip-benefit-card:hover h3,
+#root .vip-page .vip-benefit-card:hover p,
+#root .vip-page .vip-benefit-card:hover svg,
+#root .vip-page .vip-benefit-card:hover .font-mono { color: #fff !important; }
+
+#root .vip-page [class~="text-[#d73832]"],
+#root .vip-page [class~="text-[#e13832]"],
+#root .vip-page [class~="text-[#d52f2f]"],
+#root .vip-page [class~="text-[#e33a34]"] { color: var(--sn-accent) !important; }
+
+#root .vip-page [class~="border-[#d73832]"] { border-color: var(--sn-accent) !important; }
+#root .vip-page [class~="bg-[#e33a34]"] { background-color: var(--sn-accent) !important; }
+
+#root .vip-page .vip-button {
+  background: #fff !important;
+  color: #06070b !important;
+  box-shadow: 7px 7px 0 rgba(61, 107, 255, .28);
+}
+
+#root .vip-page .vip-button:hover {
+  background: var(--sn-accent) !important;
+  color: #fff !important;
+  box-shadow: 3px 3px 0 rgba(255, 255, 255, .16);
+}
+
+#root .vip-page .vip-editorial { background: var(--sn-void) !important; }
+#root .vip-page .vip-final-cta { background: var(--sn-bg) !important; }
+
+/* ── 12. Redes sociales ──────────────────────────────────────────────── */
+
+#root .social-page { background: var(--sn-bg) !important; }
+
+#root .social-page input,
+#root .social-page select,
+#root .social-page textarea {
+  background: var(--sn-panel-2) !important;
+  border: 1px solid var(--sn-line-strong) !important;
+  color: var(--sn-ink) !important;
+}
+
+#root .social-page input::placeholder,
+#root .social-page textarea::placeholder { color: rgba(243, 245, 248, .38) !important; }
+
+#root .social-page input:focus,
+#root .social-page select:focus,
+#root .social-page textarea:focus {
+  border-color: var(--sn-accent) !important;
+  box-shadow: 0 0 0 3px var(--sn-accent-soft) !important;
+}
+
+#root .social-page a[class*="border"] { border-color: var(--sn-line) !important; }
+
+/* ── 13. Movimiento y detalles ───────────────────────────────────────── */
+
+#root .home-main > section,
+#root .products-content > section,
+#root .collection-page .campaign-tile {
+  animation: snRise .6s cubic-bezier(.22, .61, .36, 1) both;
+}
+
+@keyframes snRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #root .home-main > section,
+  #root .products-content > section,
+  #root .collection-page .campaign-tile { animation: none; }
+  #root .products-page .product-card img,
+  #root .home-main #new-releases article img { transition: none; }
+}
+
+/* Píldoras claras sobre fotografía: conservan tinta oscura sobre su fondo blanco. */
+#root .product-favorite:not(.is-favorite) { color: #0b0d12 !important; }
+#root .product-favorite:not(.is-favorite):hover { color: #fff !important; }
+#root .product-rail-cart { color: #0b0d12 !important; }
+#root button[class*="bg-white/90"][class*="text-[#0A0A0A]"] { color: #0b0d12 !important; }
+
+#root .home-main #new-releases article button[class*="bg-white/95"] {
+  background: var(--sn-accent) !important;
+  color: #fff !important;
+}
+
+/* Unifica el oro heredado del bloque VIP con el acento eléctrico del tema. */
+#root .vip-page .vip-kicker { color: var(--sn-ink) !important; }
+#root .vip-page .vip-hero::after { border-color: rgba(61, 107, 255, .22) !important; }
+#root .vip-page .vip-red-line {
+  background: linear-gradient(180deg, transparent, var(--sn-accent), transparent) !important;
+  box-shadow: 0 0 14px rgba(61, 107, 255, .45) !important;
+}
+#root .vip-page .vip-final-cta button {
+  background: var(--sn-accent) !important;
+  color: #fff !important;
+}
+#root .vip-page .vip-final-cta button:hover { background: var(--sn-accent-strong) !important; }
+#root .vip-page .vip-live-dot { box-shadow: 0 0 10px rgba(61, 107, 255, .8) !important; }
+
+#root .desktop-nav button::after { background: var(--sn-accent) !important; }
+#root .products-page .product-card:hover .product-card-image { border-color: var(--sn-accent) !important; }
+#root .product-rail-cart:hover { background: var(--sn-accent) !important; color: #fff !important; }
+
+#root .checkout-page button[class~="bg-[#0A0A0A]"] {
+  background: var(--sn-accent) !important;
+  color: #fff !important;
+}
+
+#root [class~="text-[#b98d2f]"] { color: var(--sn-accent) !important; }
+
+/* Contenedores que heredaban tinta oscura y lienzo blanco desde las capas claras. */
+#root .collection-page > div:first-child,
+#root .products-content,
+#root .detail-content,
+#root .checkout-page main,
+#root .social-page {
+  color: var(--sn-ink) !important;
+}
+
+#root .home-main,
+#root .collection-page,
+#root .products-content,
+#root .detail-content,
+#root .checkout-page main,
+#root .social-page {
+  background: transparent !important;
+}
+
+#root .collection-page > div:first-child h1 {
+  color: var(--sn-ink) !important;
+}
+
+#root .products-page .products-content > section[aria-live="polite"],
+#root .detail-page .detail-content,
+#root .detail-page .detail-info,
+#root .detail-page .detail-content h2,
+#root .detail-page .detail-info h1,
+#root .detail-page .detail-info strong {
+  color: var(--sn-ink) !important;
+}
